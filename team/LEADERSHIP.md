@@ -1,4 +1,4 @@
-# Leadership Roles:
+# Leadership Roles
 
 Scrum Master: Palvi Sabherwal
 
