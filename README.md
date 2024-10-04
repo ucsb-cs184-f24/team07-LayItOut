@@ -4,6 +4,7 @@ Our team is working toward creating a layout planner app that helps with visuali
 
 # Team Members:
 * Emily Thai @emilythai
+  
 * Hannah Shakouri @Hannahshakouri01
 * Palvi Sabherwal @psabherwal
 * Charlene Patenaude @charlene-patenaude
