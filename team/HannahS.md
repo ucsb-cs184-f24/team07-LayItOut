@@ -1,4 +1,4 @@
-### Team Introductions
+# Team Introductions
 
 Team Member: Hannah Shakouri
 
