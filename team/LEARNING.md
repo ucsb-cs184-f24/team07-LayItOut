@@ -19,6 +19,9 @@
 ### Niyati Mummidivarapu:
 
 ### Vaani Arora:
+* React
+* Javascript
+* Java
 
 ### Palvi Sabherwal:
 * React
