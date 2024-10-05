@@ -10,6 +10,9 @@
 ### Hannah Shakouri:
 
 ### Charlene Patenaude:
+* Javascript
+* Java
+* CSS
 
 ### Bella Ward:
 
