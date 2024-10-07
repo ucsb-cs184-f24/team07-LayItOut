@@ -10,9 +10,10 @@
 * Vaani Arora
 
 ### Notes:
+* Discussing what platform we want to do our app (Unity, ReactNative)
+* Updating problem scenario
 
 ### Future Meetings:
-* Monday Lecture
-* Wednesday Lecture
+* Lectures
 * Thursdays between 1-3 (meetings outside of class time)
-* Friday Section
+* Sections
