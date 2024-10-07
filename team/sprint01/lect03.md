@@ -12,7 +12,9 @@
 ### Notes:
 * Discussing what platform we want to do our app (Unity, ReactNative)
 * Updating problem scenario
-* Library booking for meeting (10/10 1-2)
+* Library booking for meeting 
+  * 10/10 1-2pm
+  * 10/17 1-3pm
 
 ### Future Meetings:
 * Lectures
