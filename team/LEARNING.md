@@ -8,6 +8,9 @@
 * Java
   
 ### Hannah Shakouri:
+* React
+* Java
+* Javascript
 
 ### Charlene Patenaude:
 * Javascript
