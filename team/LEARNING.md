@@ -24,6 +24,9 @@
 * CSS
 
 ### Niyati Mummidivarapu:
+* React
+* Javascript
+* Java
 
 ### Vaani Arora:
 * React
