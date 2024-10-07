@@ -18,6 +18,10 @@
 * CSS
 
 ### Bella Ward:
+* React
+* JavaScript
+* HTML
+* CSS
 
 ### Niyati Mummidivarapu:
 
