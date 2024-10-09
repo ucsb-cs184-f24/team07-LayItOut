@@ -1,4 +1,4 @@
-# Team Meeting 1: Lecture03
+# Team Meeting 2: Lecture03
 
 ### Attendance: 
 * Emily Thai
