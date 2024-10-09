@@ -7,9 +7,9 @@ Lecture04
 Daily Scrum
 
 ### Team Attendance
+* Palvi Sabherwal (Meeting's Scribe)
 * Emily Thai
 * Hannah Shakouri
-* Palvi Sabherwal (Meeting's Scribe)
 * Charlene Patenaude
 * Bella Ward 
 * Niyati Mummidivarapu
