@@ -1,18 +1,33 @@
 # Team Meeting 3: Lecture04
 
-### Attendance: 
+### Meeting Time
+Lecture04
+
+### Type of Meeting
+Daily Scrum
+
+### Team Attendance
 * Emily Thai
 * Hannah Shakouri
-* Palvi Sabherwal
+* Palvi Sabherwal (Meeting's Scribe)
 * Charlene Patenaude
 * Bella Ward 
 * Niyati Mummidivarapu
 * Vaani Arora
 
-### Notes:
-*
+### Scribed Discussion:
+Vaani completed HW01 - HelloWorld App.
 
-### Future Meetings:
-* Lectures
-* Thursdays between 1-3 (meetings outside of class time)
-* Sections
+Niyati completed HW01 - HelloWorld App.
+
+Emily is working on HW01 - HelloWorld App.
+
+Bella is working on HW01 - HelloWorld App.
+
+Charlene is working on HW01 - HelloWorld App.
+
+Hannah is working on HW01 - HelloWorld App.
+
+Palvi is working on HW01 - HelloWorld App. 
+
+We completed the README file and added it to our repo. We also worked on finding a new meeting time.
