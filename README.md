@@ -11,3 +11,8 @@ Our team is working toward creating a layout planner app that helps with visuali
 * Bella Ward @bella-ward
 * Niyati Mummidivarapu @niyati-m
 * Vaani Arora @vaaniarora
+
+# Tech Stack:
+LayItOut will be built in React Native and deployed through Expo Go.
+
+# User Roles:
