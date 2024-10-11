@@ -30,4 +30,4 @@ Hannah completed HW01 - HelloWorld App.
 
 Palvi completed HW01 - HelloWorld App. 
 
-Everyone is getting started on the Sec02 (Part 1) assignment. 
+Everyone is getting started on the Sec02 (Part 1) assignment. We completed Sec02 (Part 1) during the section.
