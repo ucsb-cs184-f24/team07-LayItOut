@@ -20,12 +20,14 @@ Vaani completed HW01 - HelloWorld App.
 
 Niyati completed HW01 - HelloWorld App.
 
-Emily is working on HW01 - HelloWorld App.
+Emily completed HW01 - HelloWorld App.
 
-Bella is working on HW01 - HelloWorld App.
+Bella is almost done with HW01 - HelloWorld App.
 
-Charlene is working on HW01 - HelloWorld App.
+Charlene completed HW01 - HelloWorld App.
 
-Hannah is working on HW01 - HelloWorld App.
+Hannah completed HW01 - HelloWorld App.
 
-Palvi is working on HW01 - HelloWorld App. 
+Palvi completed HW01 - HelloWorld App. 
+
+Everyone is getting started on the Sec02 (Part 1) assignment. 
