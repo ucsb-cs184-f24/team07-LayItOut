@@ -15,6 +15,6 @@ Daily Scrum
 * Vaani Arora
 
 ### Scribed Discussion:
-Palvi is absent today because of an orthodontist appointment and has notified the team (and Prof. Hollerer) via Slack. Created the Kanban Board.
+Palvi is absent today because of an orthodontist appointment and has notified the team (and Prof. Hollerer) via Slack. Created the Kanban Board. Added .gitignore and LICENSE.md. Updated README.md with tech stack and user roles.
 
 
