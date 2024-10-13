@@ -13,7 +13,10 @@ Our team is working toward creating a layout planner app that helps with visuali
 * Vaani Arora @vaaniarora
 
 # Tech Stack:
-LayItOut will be built in React Native and deployed through Expo Go.
+* Framework: React Native
+* Database: Firebase
+* Deployment: Expo Go
+* Authentication: Google OAuth (restricted to UCSB emails)
 
 # User Roles:
 #### Registered User:
