@@ -16,3 +16,8 @@ Retrospective
 * Vaani Arora
 
 ### Scribed Discussion:
+#### STOP:
+
+#### START:
+
+#### CONTINUE:
