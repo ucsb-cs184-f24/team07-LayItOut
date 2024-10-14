@@ -45,6 +45,8 @@
 * https://reactnative.dev/docs/flexbox
 * https://www.bing.com/videos/riverview/relatedvideo?q=react+native+expo&mid=475CCB60CB308A4C8EC2475CCB60CB308A4C8EC2&FORM=VIRE
 * https://www.codecademy.com/learn/learn-react-native
+* https://medium.com/homestory-ar/building-an-ar-ai-furniture-app-with-react-native-1847bc1fcbaa
+* https://www.youtube.com/watch?v=mJ3bGvy0WAY
 
 ## React Native Framework (10/11 @10:40am)
 ### Benefits
