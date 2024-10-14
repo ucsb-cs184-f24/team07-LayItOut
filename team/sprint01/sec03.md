@@ -1,7 +1,7 @@
-# Team Meeting 7
+# Team Meeting 8
 
 ### Meeting Time
-Lecture06
+Section03
 
 ### Type of Meeting
 Retrospective
