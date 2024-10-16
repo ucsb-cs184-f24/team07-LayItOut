@@ -12,7 +12,7 @@ Retrospective
 * Hannah Shakouri
 * Charlene Patenaude
 * Bella Ward 
-* Niyati Mummidivarapu
+* Niyati Mummidivarapu [Retro Leader]
 * Vaani Arora
 
 ### Scribed Discussion:
