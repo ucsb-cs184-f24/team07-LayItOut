@@ -6,4 +6,4 @@ Project Owner: Emily Thai
 
 Scribe: Charlene Patenaude
 
-Retro Leader (Sprint01):
+Retro Leader (Sprint01): Niyati
