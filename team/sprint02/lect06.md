@@ -16,6 +16,12 @@ Sprint02 Planning
 * Vaani Arora
 
 ### Scribed Discussion:
-#### Goals for Sprint02:
+#### Goals for Sprint02: 
+* Complete all assigned deliverables on time.
+* Attend all team meetings.
+* Communicate effectively with team members.
 
 #### Tasks for Team:
+* Complete app's Home Screen.
+* Setup the Google OAuth for app's Home Screen.
+* Continue brainstorming for the app.
