@@ -1,22 +1,22 @@
-# Date of Retrospective: 10/20/23
+# Date of Retrospective: 10/18/23
 
 ### Meeting Time
 Section03
 
 ### Team Attendance
 * Led by: Niyati Mummidivarapu
-* Present: Palvi Sabherwal, Emily Thi, Charlene Patenaude, Bella Ward, Vaani Aurora
+* Present: Palvi Sabherwal, Emily Thai, Charlene Patenaude, Bella Ward, Vaani Arora
 * Absent: Hannah Shakouri
 
 ## Action item
-* a goal:
-* a change:
-* a measurement:
+* a goal: Allocating more time to get tasks done. 
+* a change: Create more issues towards the MVP to know what we need to do.
+* a measurement: Determine how many issues are in the Kanban board and see how many are Done.
 
 
 ### Scribed Discussion:
-#### STOP:
+#### STOP: Getting distracted by other tasks unrelated to the current issues.
 
-#### START:
+#### START: Doing some independent/individual work on the project too.
 
-#### CONTINUE:
+#### CONTINUE: Meeting outside of class to work on the project.
