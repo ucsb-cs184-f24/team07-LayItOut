@@ -1,19 +1,17 @@
-# Team RETRO
+# Date of Retrospective: 10/20/23
 
 ### Meeting Time
 Section03
 
-### Type of Meeting
-Retrospective
-
 ### Team Attendance
-* Palvi Sabherwal
-* Emily Thai
-* Hannah Shakouri
-* Charlene Patenaude
-* Bella Ward 
-* Niyati Mummidivarapu [Retro Leader]
-* Vaani Arora
+* Led by: Niyati Mummidivarapu
+* Present: Palvi Sabherwal, Emily Thi, Hannah Shakouri, Charlene Patenaude, Bella Ward, Vaani Aurora
+
+## Action item
+* a goal:
+* a change:
+* a measurement:
+
 
 ### Scribed Discussion:
 #### STOP:
