@@ -5,7 +5,8 @@ Section03
 
 ### Team Attendance
 * Led by: Niyati Mummidivarapu
-* Present: Palvi Sabherwal, Emily Thi, Hannah Shakouri, Charlene Patenaude, Bella Ward, Vaani Aurora
+* Present: Palvi Sabherwal, Emily Thi, Charlene Patenaude, Bella Ward, Vaani Aurora
+* Absent: Hannah Shakouri
 
 ## Action item
 * a goal:
