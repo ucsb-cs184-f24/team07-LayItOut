@@ -6,7 +6,7 @@ Section03
 ### Team Attendance
 * Led by: Niyati Mummidivarapu
 * Present: Palvi Sabherwal, Emily Thai, Charlene Patenaude, Bella Ward, Vaani Arora
-* Absent: Hannah Shakouri
+* Absent: Hannah Shakouri (participated in discussion virtually)
 
 ## Action item
 * a goal: Allocating more time to get tasks done. 
