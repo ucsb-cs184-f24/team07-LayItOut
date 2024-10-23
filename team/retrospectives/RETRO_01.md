@@ -24,3 +24,4 @@ Doing some independent/individual work on the project too.
 Meeting outside of class to work on the project.
 
 ### Retro Outcome:
+*We achieved our goal, we measured our progress by the number of issues on the kanban board. We have created more issues and completed more issues as well.
