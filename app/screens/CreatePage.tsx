@@ -4,7 +4,9 @@ import React from 'react';
 const CreateLayout = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Create Layout Page</Text>
+            <Text style={styles.title}>
+                Create Layout Page
+            </Text>
         </View>
     );
 };

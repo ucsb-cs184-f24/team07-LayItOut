@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Button } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import { User } from 'firebase/auth';
 import { useNavigation } from 'expo-router';
 
@@ -11,7 +11,7 @@ const HomePage: React.FC<HomePageProps> = ({ user }) => {
     const navigation = useNavigation<any>();
 
     const handleCreateLayout = () => {
-        navigation.navigate("Create Layout"); // Navigate to Create Layout screen
+        navigation.navigate("Create Layout");
     };
 
     return (
@@ -24,15 +24,15 @@ const HomePage: React.FC<HomePageProps> = ({ user }) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,  // Take the full height of the screen
-      justifyContent: 'center',  // Center vertically
-      alignItems: 'center',  // Center horizontally
-      backgroundColor: '#f8f8f8', // Optional: Change the background color
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#f8f8f8',
     },
     welcomeText: {
-      fontSize: 24,  // Change the font size
-      fontWeight: 'bold',  // Make the text bold
-      color: '#333',  // Optional: Change the text color
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: '#333',
     },
   });
   

@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, TextInput, ActivityIndicator, Button } from 'react-native';
+import { View, StyleSheet, TextInput, ActivityIndicator, Button } from 'react-native';
 import React, { useState } from 'react';
 import { fire_auth } from '../../FirebaseConfig'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
-const Login = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -37,9 +37,21 @@ const Login = () => {
 
     return (
         <View style={styles.container}>
-            {/* <KeyboardAvoidingView behavior="padding"> */}
-            <TextInput value={email} style={styles.input} placeholder='email' autoCapitalize='none' onChangeText={(text) => setEmail(text)}></TextInput>
-            <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder='password' autoCapitalize='none' onChangeText={(text) => setPassword(text)}></TextInput>
+            <TextInput
+                value={email}
+                style={styles.input}
+                placeholder='email'
+                autoCapitalize='none'
+                onChangeText={(text) => setEmail(text)}>
+            </TextInput>
+            <TextInput 
+                secureTextEntry={true}
+                value={password}
+                style={styles.input}
+                placeholder='password'
+                autoCapitalize='none'
+                onChangeText={(text) => setPassword(text)}>
+            </TextInput>
         
             { loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
@@ -49,12 +61,11 @@ const Login = () => {
                     <Button title="Create account" onPress={signUp} />                
                 </>
             )}
-            {/* </KeyboardAvoidingView> */}
         </View>
     );
 };
 
-export default Login;
+export default LoginPage;
 
 const styles = StyleSheet.create({
     container: {

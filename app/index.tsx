@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Login from './screens/Login'
+import LoginPage from './screens/LoginPage'
 import HomePage from './screens/HomePage'
 import CreatePage from './screens/CreatePage'
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -41,7 +41,7 @@ export default function App() {
           {() => <InsideLayout user={user} />}
         </Stack.Screen>
       ) : (
-        <Stack.Screen name='Login' component={Login} options={{ headerShown: false}}/>
+        <Stack.Screen name='Login' component={LoginPage} options={{ headerShown: false}}/>
       )}
     </Stack.Navigator>
   );
