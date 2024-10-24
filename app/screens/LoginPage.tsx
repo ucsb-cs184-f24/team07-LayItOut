@@ -57,8 +57,12 @@ const LoginPage = () => {
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <>
-                    <Button title="Login" onPress={signIn} />
-                    <Button title="Create account" onPress={signUp} />                
+                    <View style={styles.buttonContainer}>
+                        <Button title="Login" onPress={signIn} />
+                    </View>
+                    <View style={styles.buttonContainer}>
+                        <Button title="Create account" onPress={signUp} />
+                    </View>                
                 </>
             )}
         </View>
@@ -80,5 +84,8 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 10,
         backgroundColor: '#fff'
+    },
+    buttonContainer: {
+        marginVertical: 10,
     }
 });
