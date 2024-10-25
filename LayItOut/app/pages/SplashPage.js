@@ -1,28 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
 
 const SplashPage = () => {
   return (
-    <View>
-      <StatusBar bargroundColor="#000000"/>
-      <ImageBackground
-        source={require('../../images/splash.jpg')} // Adjust the path as needed
-        style={styles.background}
-      >
-        <View>
-          <Text style={styles.title}>Lay It Out</Text>
-          <Text style={styles.paragraph}>Begin planning your new space below!</Text>
+    <View style={styles.container}>
+        <StatusBar backgroundColor="transparent" translucent />
+      
+        <ImageBackground
+          source={require('../../images/splash.png')} // Adjust the path as needed
+          style={styles.background}
+        >
+          <View>
+            <Text style={styles.title}>Lay It Out</Text>
+            <Text style={styles.paragraph}>Begin planning your new space below!</Text>
 
-          <TouchableOpacity
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Get Started</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Get Started</Text>
+            </TouchableOpacity>
 
-        </View>
-      </ImageBackground>
+          </View>
+        </ImageBackground>
     </View>
   );
 };
@@ -39,7 +40,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        margin: 0, 
+        padding: 0,
     },
     title: {
         fontSize: 35,
