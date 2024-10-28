@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     room: {
-        width: '93%', 
-        height: '90%', 
+        width: 350, 
+        height: 350, 
         borderWidth: 3, 
         borderColor: 'white', 
         backgroundColor: 'rgba(255, 255, 255, 0.5)', 
