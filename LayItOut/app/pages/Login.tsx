@@ -1,6 +1,9 @@
-import { View, Text, StyleSheet, TextInput, Button, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ActivityIndicator, KeyboardAvoidingView, Image, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import loginButtonImage from '../../images/loginButton.png';
+import createAccountButtonImage from '../../images/createAccountButton.png';
+import backgroundImage from '../../images/Background.png';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
@@ -46,27 +49,36 @@ const Login = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView behavior='padding'>
-            <Text> Enter if you dare... </Text>
-            <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
-            <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
-            
-            {loading ? ( <ActivityIndicator size="large" color = "#000ff" /> 
-            ) : ( 
-                <> 
-                    <Button title="Login" onPress={() => signIn()}/>
-                    <Button title="Create Account" onPress={() => signUp()}/>
-                </>
-            )}
-            </KeyboardAvoidingView>
-        </View>
+        <ImageBackground source={backgroundImage} style={styles.background}>
+            <View style={styles.container}>
+                <KeyboardAvoidingView behavior='padding'>
+                <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
+                <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
+                
+                {loading ? ( <ActivityIndicator size="large" color = "#000ff" /> 
+                ) : ( 
+                    <>
+                            <TouchableOpacity style={styles.button} onPress={signIn}>
+                                <Image source={loginButtonImage} style={styles.buttonImage} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={signUp}>
+                                <Image source={createAccountButtonImage} style={styles.buttonImage} />
+                            </TouchableOpacity>
+                        </>
+                )}
+                </KeyboardAvoidingView>
+            </View>
+        </ImageBackground>
     );
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
+    background: {
+        flex: 1, // Make sure the background takes up the whole screen
+        justifyContent: 'center', // Center contents
+    },
     container: {
         marginHorizontal: 20,
         flex: 1, 
@@ -79,5 +91,15 @@ const styles = StyleSheet.create({
         borderRadius: 4, 
         padding: 10, 
         backgroundColor: '#fff'
+    },
+    button: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    buttonImage: {
+        width: '100%', // Adjust based on your design
+        height: 50,    // Adjust based on your design
+        resizeMode: 'contain', // or 'cover' based on your design
     }
 })
