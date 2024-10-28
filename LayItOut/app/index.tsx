@@ -14,7 +14,7 @@ function App() {
           options={{ title: 'Create a Room', 
             headerStyle: { height: 22, },
             headerTitleStyle: { 
-              fontSize: 18, // Adjust font size if needed
+              fontSize: 20, // Adjust font size if needed
               color: '#006EB9',
               marginTop: -85, // Adjust the position to move it up
             }, 

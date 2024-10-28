@@ -15,6 +15,25 @@ const CreatePage = () => {
         >
           <View>
 
+            <Text style={styles.paragraph}>Choose a default Room Option:</Text>
+
+            <TouchableOpacity
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Square</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Default Rectangle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Long Rectangle</Text>
+            </TouchableOpacity>
 
           </View>
         </ImageBackground>
@@ -28,8 +47,9 @@ const styles = StyleSheet.create({
         resizeMode: 'cover', // Make the image cover the entire background
         width: width,
         height: height,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',     //leave as center if not doing paddingTop
         alignItems: 'center',
+        paddingTop: 245,                // have to have flex-start
         ...StyleSheet.absoluteFillObject,
     },
     container: {
@@ -44,21 +64,23 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     paragraph: {
-        fontSize: 16,
+        fontSize: 22,
         color: '#fff',
-        textAlign: 'center',
-        marginBottom: 10,
+        textAlign: 'left',
+        marginBottom: 35,
     },
     button: {
         backgroundColor: 'white',
-        paddingVertical: 8,
+        paddingVertical: 14,
         paddingHorizontal: 15,
         borderRadius: 25,
-        marginBottom: 10,
+        width: 248,
+        alignSelf: 'center',
+        marginBottom: 13,
     },
     buttonText: {
         color: '#006EB9',
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
     },
