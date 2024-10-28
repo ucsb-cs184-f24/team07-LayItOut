@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StyleSheet, Text, View, ImageBackground, StatusBar, Dimensions } from 'react-native';
+import { SafeAreaFrameContext, SafeAreaView } from 'react-native-safe-area-context';
+
 
 const SquareRoom = () => {
   const [layout, setLayout] = useState({
@@ -23,15 +25,17 @@ const SquareRoom = () => {
   };
 
   return (
+    
     <View style={styles.container}>
-      <StatusBar backgroundColor="#000000"/>
+      <StatusBar backgroundColor="black"/>
       <ImageBackground
-        source={require('../../images/no-shapes.jpg')}
+        source={require('../../images/large-no-shapes.png')}
         style={styles.background}
       >
         <View style={styles.room} />
       </ImageBackground>
     </View>
+    
   );
 };
 
