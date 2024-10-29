@@ -5,10 +5,6 @@ import { SafeAreaFrameContext, SafeAreaView } from 'react-native-safe-area-conte
 
 
 const SquareRoom = () => {
-  const [layout, setLayout] = useState({
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-  });
     
   useEffect(() => {
     const setOrientation = async () => {
@@ -16,24 +12,11 @@ const SquareRoom = () => {
     };
     setOrientation();
   }, []);
-    
-  const onLayout = () => {
-    setLayout({
-      width: Dimensions.get('window').width,
-      height: Dimensions.get('window').height,
-    });
-  };
 
   return (
-    
     <View style={styles.container}>
-      <StatusBar backgroundColor="black"/>
-      <ImageBackground
-        source={require('../../images/large-no-shapes.png')}
-        style={styles.background}
-      >
-        <View style={styles.room} />
-      </ImageBackground>
+      <StatusBar backgroundColor="black" />
+      <View style={styles.room} />
     </View>
     
   );
@@ -43,24 +26,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-    },
-    background: {
-        flex: 1, // Ensures background covers the entire container
-        resizeMode: 'cover',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    contentContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     room: {
         width: 350, 
         height: 350, 
+        aspectRatio: 1,
         borderWidth: 3, 
-        borderColor: 'white', 
-        backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+        borderColor: 'blue', 
+        backgroundColor: '#ADD8E6', 
     },
 });
   
