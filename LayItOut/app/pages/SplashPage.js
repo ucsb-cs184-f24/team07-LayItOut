@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, 
 
 const { height, width } = Dimensions.get('window');
 
-const SplashPage = () => {
+const SplashPage = ({ navigation }) => {
   return (
     <View style={styles.container}>
         <StatusBar backgroundColor="transparent" translucent />
@@ -18,6 +18,7 @@ const SplashPage = () => {
 
             <TouchableOpacity
               style={styles.button}
+              onPress={() => navigation.navigate('Login')} // Navigate to Login
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
