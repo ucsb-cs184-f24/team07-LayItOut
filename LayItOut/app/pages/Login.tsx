@@ -2,8 +2,13 @@ import { View, Text, StyleSheet, TextInput, Button, ActivityIndicator, KeyboardA
 import React, { useState } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { NavigationProp } from '@react-navigation/native';
 
-const Login = () => {
+interface RouterProps {
+    navigation: NavigationProp<any, any>;
+}
+
+const Login = ({ navigation }: RouterProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false); 
@@ -15,6 +20,7 @@ const Login = () => {
             const response = await signInWithEmailAndPassword(auth, email, password);
             console.log(response);
             alert('Welcome ' + email)
+            navigation.navigate('Inside');
         } 
 
         catch (error: any) {
@@ -33,6 +39,7 @@ const Login = () => {
             const response = await createUserWithEmailAndPassword(auth, email, password);
             console.log(response);
             alert('Check your email!')
+            navigation.navigate('Inside');
         }
 
         catch (error: any) {
