@@ -61,7 +61,7 @@ const Login = () => {
                             <TouchableOpacity style={styles.button} onPress={signIn}>
                                 <Image source={loginButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={signUp}>
+                            <TouchableOpacity style={[styles.button, { marginVertical: -10 }]} onPress={signUp}>
                                 <Image source={createAccountButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
                         </>
@@ -90,7 +90,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4, 
         padding: 10, 
-        backgroundColor: '#fff'
+        //backgroundColor: '#fff'
+        backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
+        borderColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent border
     },
     button: {
         justifyContent: 'center',
