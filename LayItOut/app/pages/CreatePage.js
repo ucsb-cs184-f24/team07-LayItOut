@@ -1,10 +1,24 @@
-
 import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const { height, width } = Dimensions.get('window');
 
 const CreatePage = () => {
+  const navigation = useNavigation();
+
+  const handleSquareRoom = () => {
+    navigation.navigate('SquareRoom');  // Navigate to SquareRoom
+  };
+
+  const handleRectangleRoom = () => {
+    navigation.navigate('RectangleRoom');
+  };
+
+  const handleLongRectangleRoom = () => {
+    navigation.navigate('LongRectangleRoom'); 
+  };
+
   return (
     <View style={styles.container}>
         <StatusBar backgroundColor="transparent" translucent />
@@ -19,18 +33,21 @@ const CreatePage = () => {
 
             <TouchableOpacity
               style={styles.button}
+              onPress={handleSquareRoom}
             >
               <Text style={styles.buttonText}>Square</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.button}
+              onPress={handleRectangleRoom}
             >
               <Text style={styles.buttonText}>Default Rectangle</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.button}
+              onPress={handleLongRectangleRoom}
             >
               <Text style={styles.buttonText}>Long Rectangle</Text>
             </TouchableOpacity>
