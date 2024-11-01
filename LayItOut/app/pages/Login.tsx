@@ -21,8 +21,6 @@ const Login = ({ navigation }: RouterProps) => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            console.log(response);
-            alert('Welcome ' + email)
             navigation.navigate('Inside');
         } 
 
@@ -40,8 +38,6 @@ const Login = ({ navigation }: RouterProps) => {
         setLoading(true);
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-            console.log(response);
-            alert('Check your email!')
             navigation.navigate('Inside');
         }
 

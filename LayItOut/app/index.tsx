@@ -6,8 +6,7 @@ import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
-import List from './pages/List';
-import Details from './pages/Details';
+import HomePage from './pages/HomePage';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -15,8 +14,7 @@ const InsideStack = createNativeStackNavigator();
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen name="My app" component={List} />
-      <InsideStack.Screen name="Welcome" component={Details} />
+      <InsideStack.Screen name="HomePage" component={HomePage} />
     </InsideStack.Navigator>
   );
 }
