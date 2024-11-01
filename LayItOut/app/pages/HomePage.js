@@ -18,6 +18,10 @@ const HomePage = () => {
     }
   };
 
+  const handleCreateRoom = () => {
+    navigation.navigate('CreatePage');  // Navigate to CreatePage
+  };
+
   return (
     <View>
       <StatusBar bargroundColor="#000000"/>
@@ -28,6 +32,7 @@ const HomePage = () => {
         <View>
           <TouchableOpacity
               style={styles.button1}
+              onPress={handleCreateRoom}
             >
               <Text style={styles.buttonText}>Create a Room</Text>
           </TouchableOpacity>

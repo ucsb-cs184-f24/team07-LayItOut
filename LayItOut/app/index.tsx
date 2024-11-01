@@ -7,6 +7,7 @@ import { FIREBASE_AUTH } from '../FirebaseConfig';
 import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
 import HomePage from './pages/HomePage';
+import CreatePage from './pages/CreatePage';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ function InsideLayout() {
   return (
     <InsideStack.Navigator>
       <InsideStack.Screen name="HomePage" component={HomePage} />
+      <InsideStack.Screen name="CreatePage" component={CreatePage} options={{ title: 'Create a Room' }} />
     </InsideStack.Navigator>
   );
 }
