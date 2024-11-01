@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
@@ -11,13 +12,14 @@ import Details from './pages/Details';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 function InsideLayout() {
   return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="My app" component={List} />
-      <InsideStack.Screen name="Welcome" component={Details} />
-    </InsideStack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen name="My app" component={List} />
+      <Tab.Screen name="Welcome" component={Details} />
+    </Tab.Navigator>
   );
 }
 
