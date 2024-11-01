@@ -9,6 +9,7 @@ import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
 import List from './pages/List';
 import Details from './pages/Details';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -16,7 +17,24 @@ const Tab = createBottomTabNavigator();
 
 function InsideLayout() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName: string;
+
+        if (route.name === 'My app') {
+          iconName = focused ? 'home' : 'home-outline'; // Icon for "My app" tab
+        } else {
+          iconName = focused ? 'information-circle' : 'information-circle-outline'; // Icon for "Welcome" tab
+        }
+
+        // Return the icon component
+        return <Ionicons name = {iconName} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: 'blue',   // Active icon color
+      tabBarInactiveTintColor: 'gray', // Inactive icon color
+    })}
+    >
       <Tab.Screen name="My app" component={List} />
       <Tab.Screen name="Welcome" component={Details} />
     </Tab.Navigator> 
