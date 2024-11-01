@@ -14,6 +14,7 @@ const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
 
 function InsideLayout() {
+  
   return (
     <InsideStack.Navigator> 
       <InsideStack.Screen name="My app" component={List} />

@@ -6,6 +6,7 @@ import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
 interface RouterProps {
     navigation: NavigationProp<any, any>;
+    
 }
 
 const List = ({ navigation }: RouterProps) => {
@@ -24,7 +25,7 @@ const List = ({ navigation }: RouterProps) => {
             <Button onPress={() => navigation.navigate('Welcome')} title="Welcome" />
             <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
         </View>
-        
+
     )
 }
 
