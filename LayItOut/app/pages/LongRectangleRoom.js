@@ -3,7 +3,6 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { StyleSheet, Text, View, ImageBackground, StatusBar, Dimensions } from 'react-native';
 import { SafeAreaFrameContext, SafeAreaView } from 'react-native-safe-area-context';
 
-
 const LongRectangleRoom = () => {
     
   useEffect(() => {
