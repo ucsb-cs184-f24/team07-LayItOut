@@ -1,14 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ActivityIndicator, KeyboardAvoidingView, Image, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
-import loginButtonImage from '../../images/loginButton.png';
-import createAccountButtonImage from '../../images/createAccountButton.png';
-import backgroundImage from '../../images/Background.png';
+import loginButtonImage from '../../images/loginButton1.png';
+import createAccountButtonImage from '../../images/createAccountButton1.png';
+import backgroundImage from '../../images/Background1.png';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState(''); 
     const [loading, setLoading] = useState(false); 
     const auth = FIREBASE_AUTH;
 

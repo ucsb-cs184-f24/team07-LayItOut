@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './pages/Login';
 import List from './pages/List';
 import Details from './pages/Details';
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; 
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import React from 'react';
