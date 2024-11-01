@@ -19,7 +19,7 @@ function InsideLayout() {
     <Tab.Navigator>
       <Tab.Screen name="My app" component={List} />
       <Tab.Screen name="Welcome" component={Details} />
-    </Tab.Navigator>
+    </Tab.Navigator> 
   );
 }
 
