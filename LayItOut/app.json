@@ -12,6 +12,21 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "no-shapes": {
+      "image": "./assets/images/no-shapes.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "blue-splash": {
+      "image": "./assets/images/blue-splash.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "large-no-shapes": {
+      "image": "./assets/images/large-no-shapes.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true
     },
