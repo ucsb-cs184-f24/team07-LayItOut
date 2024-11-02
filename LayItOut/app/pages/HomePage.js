@@ -29,7 +29,9 @@ const HomePage = () => {
         source={require('../../images/no-shapes.jpg')} // Adjust the path as needed
         style={styles.background}
       >
-        <View>
+      <View>
+        <Text style={styles.title}>      Home Page</Text>
+        <Text style={styles.title}>      </Text>
           <TouchableOpacity
               style={styles.button1}
               onPress={handleCreateRoom}
@@ -69,6 +71,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+    },
+    innerContainer: {
+      flex: 1,
+      justifyContent: 'center', // Center vertically
+      alignItems: 'center', // Center horizontally
+      marginVertical: 20,
+      marginTop: 50,
     },
     title: {
         fontSize: 35,

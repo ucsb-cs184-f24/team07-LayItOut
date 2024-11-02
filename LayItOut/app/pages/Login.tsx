@@ -21,7 +21,7 @@ const Login = ({ navigation }: RouterProps) => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            navigation.navigate('Inside');
+            navigation.navigate('Back');
         } 
 
         catch (error: any) {
@@ -38,7 +38,7 @@ const Login = ({ navigation }: RouterProps) => {
         setLoading(true);
         try {
             const response = await createUserWithEmailAndPassword(auth, email, password);
-            navigation.navigate('Inside');
+            navigation.navigate('Back');
         }
 
         catch (error: any) {
