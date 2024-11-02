@@ -10,10 +10,19 @@ const RectangleRoom = () => {
   const viewShotRef = useRef(null); // Create a ref using useRef
 
   useEffect(() => {
+    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT); // Adjust as needed
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
+
+    // Cleanup function to unlock orientation when the component unmounts
+    return () => {
+      const unlockOrientation = async () => {
+        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
+      };
+      unlockOrientation();
+    };
   }, []);
 
   const takeScreenshot = async () => {

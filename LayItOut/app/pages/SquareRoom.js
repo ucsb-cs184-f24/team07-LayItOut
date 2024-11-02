@@ -1,20 +1,27 @@
 import React, { useEffect, useRef } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { StyleSheet, View, StatusBar, Button, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, StatusBar, Image, TouchableOpacity } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
-
 
 const SquareRoom = () => {
   const viewShotRef = useRef(null); // Create a ref using useRef
 
   useEffect(() => {
+    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT); // Adjust as needed
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
-  }, []);
+
+    // Cleanup function to unlock orientation when the component unmounts
+    return () => {
+      const unlockOrientation = async () => {
+        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
+      };
+      unlockOrientation();
+    };
+  }, []); // Empty dependency array ensures this runs on mount and unmount only
 
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
@@ -44,7 +51,7 @@ const SquareRoom = () => {
       }
     }
   };
-  
+
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
@@ -57,7 +64,6 @@ const SquareRoom = () => {
       </TouchableOpacity>
     </View>
   );
-
 };
 
 const styles = StyleSheet.create({
