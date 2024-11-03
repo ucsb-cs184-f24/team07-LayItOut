@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, Dimensions, SafeAreaView, StatusBar } from 'react-native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,8 +29,15 @@ const HomePage = () => {
         source={require('../../images/no-shapes.jpg')} // Adjust the path as needed
         style={styles.background}
       >
+      <View style={styles.logoContainer}>
+        <Image 
+          source={require('../../images/logo.png')} // Replace with your logo image path
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
       <View>
-        <Text style={styles.title}>      Home Page</Text>
+        <Text style={styles.title}>      </Text>
         <Text style={styles.title}>      </Text>
           <TouchableOpacity
               style={styles.button1}
@@ -71,6 +78,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+    },
+    logoContainer: {
+      position: 'absolute',
+      top: 30, // Adjust this value to move the logo up or down
+      alignItems: 'center',
+      width: '100%',
+    },
+    logo: {
+        width: 290, // Adjust the width to fit your logo size
+        height: 290, // Adjust the height as needed
     },
     innerContainer: {
       flex: 1,
