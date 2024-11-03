@@ -11,6 +11,7 @@ import CreatePage from './pages/CreatePage';
 import LongRectangleRoom from './pages/LongRectangleRoom';
 import RectangleRoom from './pages/RectangleRoom';
 import SquareRoom from './pages/SquareRoom';
+import PreviousRooms from "./pages/PreviousRooms";
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ function InsideLayout() {
       <InsideStack.Screen name="SquareRoom" component={SquareRoom} options={{ title: 'Square Room' }} />
       <InsideStack.Screen name="RectangleRoom" component={RectangleRoom} options={{ title: 'Rectangle Room' }} />
       <InsideStack.Screen name="LongRectangleRoom" component={LongRectangleRoom} options={{ title: 'Long Rectangle Room' }} />
+      <InsideStack.Screen name="PreviousRooms" component={PreviousRooms} options={{ title: 'View Previous Rooms' }}/>
     </InsideStack.Navigator>
   );
 }

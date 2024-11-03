@@ -22,6 +22,10 @@ const HomePage = () => {
     navigation.navigate('CreatePage');  // Navigate to CreatePage
   };
 
+  const handlePrevRoom = () => {
+    navigation.navigate('PreviousRooms');  // Navigate to PreviousRooms
+  };
+
   return (
     <View>
       <StatusBar bargroundColor="#000000"/>
@@ -39,6 +43,7 @@ const HomePage = () => {
 
           <TouchableOpacity
               style={styles.button1}
+              onPress={handlePrevRoom}
             >
               <Text style={styles.buttonText}>View Previous Rooms</Text>
           </TouchableOpacity>
