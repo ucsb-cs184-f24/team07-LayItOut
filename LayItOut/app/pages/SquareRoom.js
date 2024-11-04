@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { StyleSheet, Text, View, StatusBar, Image } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import chair from '../../images/Chair.png';
+import bed from '../../images/Bed.png';
+import bookshelf from '../../images/bookshelf_1.png';
 
 const Drawer = createDrawerNavigator();
 
@@ -11,33 +13,73 @@ const Drawer = createDrawerNavigator();
 const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.furnitureListContainer}>
-      <Text style={styles.title}>Furniture</Text>
-      <View style={styles.furnitureItem}>
-        <Image source={{ uri: 'https://example.com/sofa.png' }} style={styles.furnitureImage} />
-        <Text>Sofa</Text>
-      </View>
-      <View style={styles.furnitureItem}>
-        <Image source={{ uri: 'https://example.com/bed.png' }} style={styles.furnitureImage} />
-        <Text>Bed</Text>
-      </View>
-      <View style={styles.furnitureItem}>
-        <Image source={{ uri: 'https://example.com/shelf.png' }} style={styles.furnitureImage} />
-        <Text>Shelf</Text>
-      </View>
-      {/* Add more furniture items as needed */}
+      <Text style={styles.title}>Furniture List</Text>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair)}>
+        <Image source={chair} style={styles.furnitureImage} />
+        <Text style={styles.furnitureText}>Chair</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bed', bed)}>
+        <Image source={bed} style={styles.furnitureImage} />
+        <Text style={styles.furnitureText}>Bed</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bookshelf', bookshelf)}>
+        <Image source={bookshelf} style={styles.furnitureImage} />
+        <Text style={styles.furnitureText}>Bookshelf</Text>
+      </TouchableOpacity>
     </DrawerContentScrollView>
   );
 };
 
+// Draggable furniture component
+const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+  const positionRef = useRef(initialPosition);
+  const [position, setPosition] = useState(initialPosition);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        console.log('Drag started at:', position);
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        const newPosition = {
+          x: positionRef.current.x + gestureState.dx,
+          y: positionRef.current.y + gestureState.dy,
+        };
+        setPosition(newPosition);
+        console.log('Dragging to:', newPosition);
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        const finalPosition = {
+          x: positionRef.current.x + gestureState.dx,
+          y: positionRef.current.y + gestureState.dy,
+        };
+        positionRef.current = finalPosition;
+        setPosition(finalPosition);
+        onPositionChange(finalPosition);
+        console.log('Drag released at:', finalPosition);
+      },
+    })
+  ).current;
+
+  return (
+    <Image
+      source={image}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
+      {...panResponder.panHandlers}
+    />
+  );
+};
+
 // Main SquareRoom screen
-const SquareRoomScreen = () => {
+const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
       };
       lockLandscape();
-
       return async () => {
         await ScreenOrientation.unlockAsync();
       };
@@ -48,33 +90,72 @@ const SquareRoomScreen = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-        {/* Main room content goes here */}
+        {furnitureItems.map((item, index) => (
+          <DraggableFurniture
+            key={index}
+            image={item.image}
+            initialPosition={item.position}
+            onPositionChange={(newPosition) => {
+              const updatedItems = [...furnitureItems];
+              updatedItems[index] = { ...item, position: newPosition };
+              setFurnitureItems(updatedItems);
+              console.log('Updated position for', item.name, 'to', newPosition);
+            }}
+          />
+        ))}
       </View>
     </View>
   );
 };
 
-// Main SquareRoom component with custom drawer
 const SquareRoom = () => {
-  return (
+  const [furnitureItems, setFurnitureItems] = useState([]);
 
-      <Drawer.Navigator
-        initialRouteName="SquareRoomScreen"
-        drawerType="slide"
-        drawerPosition="left"               // Drawer on the left side
-        overlayColor="transparent"
-        drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom drawer content
-      >
-        <Drawer.Screen
-          name="SquareRoomScreen"
-          component={SquareRoomScreen}
-          options={{ title: 'Square Room' }}
-        />
-      </Drawer.Navigator>
+  const addFurniture = (name, image) => {
+    const newItem = { name, image, position: { x: 20, y: 20 } };
+    setFurnitureItems((prevItems) => [...prevItems, newItem]);
+    console.log(`Added ${name} to the room at position`, newItem.position);
+  };
+
+  return (
+    <Drawer.Navigator
+      initialRouteName="SquareRoomScreen"
+      drawerType="slide"
+      drawerPosition="left"
+      overlayColor="transparent"
+      drawerContent={(props) => <CustomDrawerContent {...props} addFurniture={addFurniture} />}
+      drawerStyle={styles.drawer}
+      screenOptions={({ navigation }) => ({
+        drawerStyle: {
+          width: 250,
+        },
+        headerTitle: '',
+        headerStyle: {
+          height: 50,
+        },
+        headerLeft: () => (
+          <TouchableOpacity
+            style={styles.menuButtonContainer}
+            onPress={() => navigation.toggleDrawer()}
+          >
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+        ),
+      })}
+    >
+      <Drawer.Screen
+        name="SquareRoomScreen"
+        children={() => (
+          <SquareRoomScreen 
+            furnitureItems={furnitureItems} 
+            setFurnitureItems={setFurnitureItems}
+          />
+        )}
+      />
+    </Drawer.Navigator>
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -83,21 +164,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    width: 350,
-    height: 350,
+    width: 310,
+    height: 310,
     aspectRatio: 1,
     borderWidth: 3,
-    borderColor: 'blue',
-    backgroundColor: '#ADD8E6',
+    borderColor: 'white',
+    backgroundColor: '#045497',
+    position: 'relative',
   },
   furnitureListContainer: {
     padding: 16,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#D5D5D5',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#045497',
   },
   furnitureItem: {
     flexDirection: 'row',
@@ -108,6 +191,31 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 10,
+  },
+  furnitureText: {
+    color: "black",
+  },
+  menuButtonContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D5D5D5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: '#045497',
+    fontWeight: 'bold',
+  },
+  drawer: {
+    width: 250,
+  },
+  furnitureInRoom: {
+    width: 50,
+    height: 50,
+    position: 'absolute',
   },
 });
 

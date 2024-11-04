@@ -16,24 +16,24 @@ const CustomDrawerContent = (props) => {
       <Text style={styles.title}>Furniture List</Text>
       <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair)}>
         <Image source={chair} style={styles.furnitureImage} />
-        <Text>Chair</Text>
+        <Text style={styles.furnitureText}>Chair</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bed', bed)}>
         <Image source={bed} style={styles.furnitureImage} />
-        <Text>Bed</Text>
+        <Text style={styles.furnitureText}>Bed</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bookshelf', bookshelf)}>
         <Image source={bookshelf} style={styles.furnitureImage} />
-        <Text>Bookshelf</Text>
+        <Text style={styles.furnitureText}>Bookshelf</Text>
       </TouchableOpacity>
     </DrawerContentScrollView>
   );
 };
 
-// Draggable furniture component
+// Keep your existing DraggableFurniture component unchanged
 const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   const positionRef = useRef(initialPosition);
-  const [position, setPosition] = useState(initialPosition); // Local state to manage position during drag
+  const [position, setPosition] = useState(initialPosition);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -43,23 +43,21 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
         console.log('Drag started at:', position);
       },
       onPanResponderMove: (evt, gestureState) => {
-        // Calculate new position based on gesture movement
         const newPosition = {
           x: positionRef.current.x + gestureState.dx,
           y: positionRef.current.y + gestureState.dy,
         };
-        setPosition(newPosition); // Update local position
+        setPosition(newPosition);
         console.log('Dragging to:', newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
-        // Calculate the final position on release
         const finalPosition = {
           x: positionRef.current.x + gestureState.dx,
           y: positionRef.current.y + gestureState.dy,
         };
-        positionRef.current = finalPosition; // Update ref to the new final position
-        setPosition(finalPosition); // Update local position
-        onPositionChange(finalPosition); // Notify parent about the new position
+        positionRef.current = finalPosition;
+        setPosition(finalPosition);
+        onPositionChange(finalPosition);
         console.log('Drag released at:', finalPosition);
       },
     })
@@ -74,7 +72,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   );
 };
 
-// Main LongRectangleRoom screen
+// Keep your existing LongRectangleRoomScreen component unchanged
 const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   useFocusEffect(
     React.useCallback(() => {
@@ -82,7 +80,6 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
       };
       lockLandscape();
-
       return async () => {
         await ScreenOrientation.unlockAsync();
       };
@@ -97,9 +94,8 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
           <DraggableFurniture
             key={index}
             image={item.image}
-            initialPosition={item.position} // Pass initial position here
+            initialPosition={item.position}
             onPositionChange={(newPosition) => {
-              // Update parent state with the latest position
               const updatedItems = [...furnitureItems];
               updatedItems[index] = { ...item, position: newPosition };
               setFurnitureItems(updatedItems);
@@ -113,10 +109,10 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
 };
 
 const LongRectangleRoom = () => {
-  const [furnitureItems, setFurnitureItems] = useState([]); // State to track added furniture items
+  const [furnitureItems, setFurnitureItems] = useState([]);
 
   const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } }; // Initial position
+    const newItem = { name, image, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
     console.log(`Added ${name} to the room at position`, newItem.position);
   };
@@ -128,19 +124,38 @@ const LongRectangleRoom = () => {
       drawerPosition="left"
       overlayColor="transparent"
       drawerContent={(props) => <CustomDrawerContent {...props} addFurniture={addFurniture} />}
+      drawerStyle={styles.drawer}
+      screenOptions={({ navigation }) => ({
+        drawerStyle: {
+          width: 250,
+        },
+        headerTitle: '',
+        headerStyle: {
+          height: 50,
+        },
+        headerLeft: () => (
+          <TouchableOpacity
+            style={styles.menuButtonContainer}
+            onPress={() => navigation.toggleDrawer()}
+          >
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+        ),
+      })}
     >
       <Drawer.Screen
         name="LongRectangleRoomScreen"
         children={() => (
-          <LongRectangleRoomScreen furnitureItems={furnitureItems} setFurnitureItems={setFurnitureItems} />
+          <LongRectangleRoomScreen 
+            furnitureItems={furnitureItems} 
+            setFurnitureItems={setFurnitureItems}
+          />
         )}
-        options={{ title: 'Furniture List' }}
       />
     </Drawer.Navigator>
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -164,6 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#045497',
   },
   furnitureItem: {
     flexDirection: 'row',
@@ -175,10 +191,30 @@ const styles = StyleSheet.create({
     height: 50,
     marginRight: 10,
   },
+  furnitureText: {
+    color: 'black',
+  },
   furnitureInRoom: {
     width: 50,
     height: 50,
     position: 'absolute',
+  },
+  menuButtonContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D5D5D5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: '#045497',
+    fontWeight: 'bold',
+  },
+  drawer: {
+    width: 250,
   },
 });
 
