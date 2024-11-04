@@ -1,4 +1,3 @@
-// index.js
 import { Text, View } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,7 +12,6 @@ import LongRectangleRoom from './pages/LongRectangleRoom';
 import RectangleRoom from './pages/RectangleRoom';
 import SquareRoom from './pages/SquareRoom';
 import PreviousRooms from "./pages/PreviousRooms";
-import { UserProvider } from './pages/UserContext'; // Import UserProvider
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -26,7 +24,7 @@ function InsideLayout() {
       <InsideStack.Screen name="SquareRoom" component={SquareRoom} options={{ title: 'Square Room' }} />
       <InsideStack.Screen name="RectangleRoom" component={RectangleRoom} options={{ title: 'Rectangle Room' }} />
       <InsideStack.Screen name="LongRectangleRoom" component={LongRectangleRoom} options={{ title: 'Long Rectangle Room' }} />
-      <InsideStack.Screen name="PreviousRooms" component={PreviousRooms} options={{ title: 'View Previous Rooms' }}/>
+      <InsideStack.Screen name="PreviousRooms" component={PreviousRooms} options={{ title: 'View Previous Rooms' }} />
     </InsideStack.Navigator>
   );
 }
@@ -43,27 +41,25 @@ export default function App() {
   }, []);
 
   return (
-    <Stack.Navigator initialRouteName="Splash">
-      <Stack.Screen
-        name="Splash"
-        component={SplashPage}
-        options={{ headerShown: false }}
-      />
-      {user ? (
+      <Stack.Navigator initialRouteName="Splash">
         <Stack.Screen
-          name="Inside"
-          component={InsideLayout}
+          name="Splash"
+          component={SplashPage}
           options={{ headerShown: false }}
         />
-      ) : (
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-      )}
-    </Stack.Navigator>
+        {user ? (
+          <Stack.Screen
+            name="Inside"
+            component={InsideLayout}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+        )}
+      </Stack.Navigator>
   );
 }
-
-
