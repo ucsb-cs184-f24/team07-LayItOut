@@ -6,6 +6,10 @@ import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigatio
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
 import bookshelf from '../../images/bookshelf_2.png';
+import { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
+
 
 const Drawer = createDrawerNavigator();
 
@@ -71,6 +75,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 
 // Keep your existing LongRectangleRoomScreen component unchanged
 const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
+  const viewShotRef = useRef(null); // Create a ref using useRef
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
@@ -82,9 +87,38 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
       };
     }, [])
   );
+  const takeScreenshot = async () => {
+    if (viewShotRef.current) {
+      try {
+        // Capture the screenshot using captureRef
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
+
+        const uri = await captureRef(viewShotRef.current, {
+          format: 'png',
+          quality: 0.8,
+        });
+        console.log("Screenshot captured:", uri);
+
+        // Request permissions for media library
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status === 'granted') {
+          // Move the screenshot to the appropriate location in the file system
+          const asset = await MediaLibrary.createAssetAsync(uri);
+          console.log('Screenshot saved to gallery!', asset);
+          alert('Screenshot saved successfully!');
+        } else {
+          alert('Permission to access media library is required!');
+        }
+      } catch (error) {
+        console.error("Error taking screenshot:", error);
+        alert('Failed to save screenshot.');
+      }
+    }
+  };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} ref={viewShotRef}>
+      <StatusBar backgroundColor="black" />
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
         {furnitureItems.map((item, index) => (
@@ -100,6 +134,12 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
           />
         ))}
       </View>
+      <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
+        <Image 
+          source={require('../../images/Camera.png')} // Update with your image path
+          style={styles.buttonImage}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -149,6 +189,7 @@ const LongRectangleRoom = () => {
       />
     </Drawer.Navigator>
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -211,6 +252,15 @@ const styles = StyleSheet.create({
   drawer: {
     width: 250,
   },
+  screenshotButton: {
+    position: 'absolute', // Position it at the bottom right
+    bottom: 0,
+    right: 0,
+  },
+  buttonImage: {
+    width: 40, // Set the desired width
+    height: 40, // Set the desired height
+  },
 });
-
+  
 export default LongRectangleRoom;
