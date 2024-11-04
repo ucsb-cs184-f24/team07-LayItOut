@@ -3,7 +3,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
 import bookshelf from '../../images/bookshelf_1.png';
@@ -14,7 +13,7 @@ const Drawer = createDrawerNavigator();
 const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.furnitureListContainer}>
-      <Text style={styles.title}>Furniture</Text>
+      <Text style={styles.title}>Furniture List</Text>
       <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair)}>
         <Image source={chair} style={styles.furnitureImage} />
         <Text>Chair</Text>
@@ -27,32 +26,41 @@ const CustomDrawerContent = (props) => {
         <Image source={bookshelf} style={styles.furnitureImage} />
         <Text>Bookshelf</Text>
       </TouchableOpacity>
-      {/* Add more furniture items as needed */}
     </DrawerContentScrollView>
   );
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition }) => {
-  const [position, setPosition] = useState(initialPosition);
+const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+  const positionRef = useRef(initialPosition);
+  const [position, setPosition] = useState(initialPosition); // Local state to manage position during drag
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
-        // When drag starts, set position to the current position
-        setPosition(prev => ({ ...prev })); // Keep the current position
+        console.log('Drag started at:', position);
       },
       onPanResponderMove: (evt, gestureState) => {
-        setPosition({
-          x: initialPosition.x + gestureState.dx, // Update position based on the drag
-          y: initialPosition.y + gestureState.dy,
-        });
+        // Calculate new position based on gesture movement
+        const newPosition = {
+          x: positionRef.current.x + gestureState.dx,
+          y: positionRef.current.y + gestureState.dy,
+        };
+        setPosition(newPosition); // Update local position
+        console.log('Dragging to:', newPosition);
       },
-      onPanResponderRelease: () => {
-        // Update the initial position to the current position when dragging ends
-        initialPosition.x = position.x;
-        initialPosition.y = position.y;
+      onPanResponderRelease: (evt, gestureState) => {
+        // Calculate the final position on release
+        const finalPosition = {
+          x: positionRef.current.x + gestureState.dx,
+          y: positionRef.current.y + gestureState.dy,
+        };
+        positionRef.current = finalPosition; // Update ref to the new final position
+        setPosition(finalPosition); // Update local position
+        onPositionChange(finalPosition); // Notify parent about the new position
+        console.log('Drag released at:', finalPosition);
       },
     })
   ).current;
@@ -61,13 +69,13 @@ const DraggableFurniture = ({ image, initialPosition }) => {
     <Image
       source={image}
       style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
-      {...panResponder.panHandlers} // Attach the pan responder
+      {...panResponder.panHandlers}
     />
   );
 };
 
 // Main LongRectangleRoom screen
-const LongRectangleRoomScreen = ({ furnitureItems }) => {
+const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
@@ -85,12 +93,18 @@ const LongRectangleRoomScreen = ({ furnitureItems }) => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-        {/* Render added furniture items in the room */}
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
             image={item.image}
-            initialPosition={{ x: 20, y: 20 }} // You can modify this starting position if needed
+            initialPosition={item.position} // Pass initial position here
+            onPositionChange={(newPosition) => {
+              // Update parent state with the latest position
+              const updatedItems = [...furnitureItems];
+              updatedItems[index] = { ...item, position: newPosition };
+              setFurnitureItems(updatedItems);
+              console.log('Updated position for', item.name, 'to', newPosition);
+            }}
           />
         ))}
       </View>
@@ -102,10 +116,9 @@ const LongRectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]); // State to track added furniture items
 
   const addFurniture = (name, image) => {
-    // Logic to add furniture to the room
-    const newItem = { name, image }; // No need for x and y here
-    setFurnitureItems(prevItems => [...prevItems, newItem]);
-    console.log(`Added ${name} to the room`, image);
+    const newItem = { name, image, position: { x: 20, y: 20 } }; // Initial position
+    setFurnitureItems((prevItems) => [...prevItems, newItem]);
+    console.log(`Added ${name} to the room at position`, newItem.position);
   };
 
   return (
@@ -118,8 +131,10 @@ const LongRectangleRoom = () => {
     >
       <Drawer.Screen
         name="LongRectangleRoomScreen"
-        children={() => <LongRectangleRoomScreen furnitureItems={furnitureItems} />}
-        options={{ title: 'Long Rectangle Room' }}
+        children={() => (
+          <LongRectangleRoomScreen furnitureItems={furnitureItems} setFurnitureItems={setFurnitureItems} />
+        )}
+        options={{ title: 'Furniture List' }}
       />
     </Drawer.Navigator>
   );
@@ -137,13 +152,13 @@ const styles = StyleSheet.create({
     width: 670,
     height: 340,
     borderWidth: 3,
-    borderColor: 'blue',
-    backgroundColor: '#ADD8E6',
-    position: 'relative', // Allow absolute positioning of furniture items
+    borderColor: 'white',
+    backgroundColor: '#045497',
+    position: 'relative',
   },
   furnitureListContainer: {
     padding: 16,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#D5D5D5',
   },
   title: {
     fontSize: 20,
@@ -163,7 +178,7 @@ const styles = StyleSheet.create({
   furnitureInRoom: {
     width: 50,
     height: 50,
-    position: 'absolute', // Allow positioning within the room
+    position: 'absolute',
   },
 });
 
