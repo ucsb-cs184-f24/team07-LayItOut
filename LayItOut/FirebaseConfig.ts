@@ -2,7 +2,11 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"; 
-import { getFirestore } from 'firebase/firestore'; 
+import { getFirestore } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes } from "firebase/storage"; 
+import firebase from 'firebase/app';
+import 'firebase/storage';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,3 +26,25 @@ const firebaseConfig = {
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const FIREBASE_DB = getFirestore(FIREBASE_APP);
+export const FIREBASE_STORAGE = getStorage(FIREBASE_APP);
+
+
+export const uploadImageToFirebase = async (uri: string) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    
+    const userId = FIREBASE_AUTH.currentUser?.uid; // Use optional chaining to avoid errors if user is not logged in
+    if (!userId) {
+        throw new Error("User is not authenticated");
+    }
+    
+    const storageRef = ref(FIREBASE_STORAGE, `screenshots/${userId}/${new Date().toISOString()}.png`); // Create a reference to the file
+
+    try {
+        const snapshot = await uploadBytes(storageRef, blob); // Use uploadBytes to upload the blob
+        console.log('Uploaded a blob or file!', snapshot);
+    } catch (error) {
+        console.error("Error uploading screenshot:", error);
+        throw error; // Throw the error to handle it in the calling function
+    }
+};
