@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { StyleSheet, Text, View, StatusBar, Image } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -11,20 +11,19 @@ const Drawer = createDrawerNavigator();
 const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.furnitureListContainer}>
-      <Text style={styles.title}>Furniture</Text>
+      <Text style={styles.title}>Furniture List</Text>
       <View style={styles.furnitureItem}>
         <Image source={{ uri: 'https://example.com/sofa.png' }} style={styles.furnitureImage} />
-        <Text>Sofa</Text>
+        <Text style={styles.furnitureText}>Sofa</Text>
       </View>
       <View style={styles.furnitureItem}>
         <Image source={{ uri: 'https://example.com/bed.png' }} style={styles.furnitureImage} />
-        <Text>Bed</Text>
+        <Text style={styles.furnitureText}>Bed</Text>
       </View>
       <View style={styles.furnitureItem}>
         <Image source={{ uri: 'https://example.com/shelf.png' }} style={styles.furnitureImage} />
-        <Text>Shelf</Text>
+        <Text style={styles.furnitureText}>Shelf</Text>
       </View>
-      {/* Add more furniture items as needed */}
     </DrawerContentScrollView>
   );
 };
@@ -37,7 +36,6 @@ const SquareRoomScreen = () => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
       };
       lockLandscape();
-
       return async () => {
         await ScreenOrientation.unlockAsync();
       };
@@ -57,20 +55,36 @@ const SquareRoomScreen = () => {
 // Main SquareRoom component with custom drawer
 const SquareRoom = () => {
   return (
-
-      <Drawer.Navigator
-        initialRouteName="SquareRoomScreen"
-        drawerType="slide"
-        drawerPosition="left"               // Drawer on the left side
-        overlayColor="transparent"
-        drawerContent={(props) => <CustomDrawerContent {...props} />} // Use custom drawer content
-      >
-        <Drawer.Screen
-          name="SquareRoomScreen"
-          component={SquareRoomScreen}
-          options={{ title: 'Square Room' }}
-        />
-      </Drawer.Navigator>
+    <Drawer.Navigator
+      initialRouteName="SquareRoomScreen"
+      drawerType="slide"
+      drawerPosition="left"
+      overlayColor="transparent"
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      drawerStyle={styles.drawer}
+      screenOptions={({ navigation }) => ({
+        drawerStyle: {
+          width: 250,
+        },
+        headerTitle: '',
+        headerStyle: {
+          height: 50,
+        },
+        headerLeft: () => (
+          <TouchableOpacity
+            style={styles.menuButtonContainer}
+            onPress={() => navigation.toggleDrawer()}
+          >
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+        ),
+      })}
+    >
+      <Drawer.Screen
+        name="SquareRoomScreen"
+        component={SquareRoomScreen}
+      />
+    </Drawer.Navigator>
   );
 };
 
@@ -83,21 +97,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    width: 350,
-    height: 350,
+    width: 310,
+    height: 310,
     aspectRatio: 1,
     borderWidth: 3,
-    borderColor: 'blue',
-    backgroundColor: '#ADD8E6',
+    borderColor: 'white',
+    backgroundColor: '#045497',
   },
   furnitureListContainer: {
     padding: 16,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#D5D5D5',
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#045497',
   },
   furnitureItem: {
     flexDirection: 'row',
@@ -108,6 +123,26 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 10,
+  },
+  furnitureText: {
+    color: "black",
+  },
+  menuButtonContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#D5D5D5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 15,
+  },
+  menuIcon: {
+    fontSize: 24,
+    color: '#045497',
+    fontWeight: 'bold',
+  },
+  drawer: {
+    width: 250,
   },
 });
 
