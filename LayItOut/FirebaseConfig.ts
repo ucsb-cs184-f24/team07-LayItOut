@@ -29,22 +29,39 @@ export const FIREBASE_DB = getFirestore(FIREBASE_APP);
 export const FIREBASE_STORAGE = getStorage(FIREBASE_APP);
 
 
-export const uploadImageToFirebase = async (uri: string) => {
+export const uploadImageToFirebaseViaREST = async (uri:string) => {
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+    const storageBucket = 'cs184-layitout.appspot.com';
+    if (!userId) throw new Error("User is not authenticated");
+  
+    const apiUrl = `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/screenshots%2F${userId}%2F${new Date().toISOString()}.png?uploadType=media`;
+  
     const response = await fetch(uri);
     const blob = await response.blob();
-    
-    const userId = FIREBASE_AUTH.currentUser?.uid; // Use optional chaining to avoid errors if user is not logged in
-    if (!userId) {
-        throw new Error("User is not authenticated");
-    }
-    
-    const storageRef = ref(FIREBASE_STORAGE, `screenshots/${userId}/${new Date().toISOString()}.png`); // Create a reference to the file
-
+  
     try {
-        const snapshot = await uploadBytes(storageRef, blob); // Use uploadBytes to upload the blob
-        console.log('Uploaded a blob or file!', snapshot);
-    } catch (error) {
-        console.error("Error uploading screenshot:", error);
-        throw error; // Throw the error to handle it in the calling function
+      const uploadResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          "Authorization": `Bearer ${await FIREBASE_AUTH.currentUser!.getIdToken()}`,
+          "Content-Type": "image/png",
+        },
+        body: blob
+      });
+  
+      const result = await uploadResponse.json();
+      if (!uploadResponse.ok) {
+        throw new Error(result.error.message || 'Failed to upload');
+      }
+  
+      console.log("Uploaded successfully via REST:", result);
+        } catch (error) {
+        if (error instanceof Error) {
+            console.error("Error uploading via REST API:", error);
+            alert("Failed to upload. Error: " + error.message);
+        } else {
+            console.error("Unknown error uploading:", error);
+            alert("Failed to upload. Unknown error occurred.");
+        }
     }
-};
+  };

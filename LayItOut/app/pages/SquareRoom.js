@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { StyleSheet, View, StatusBar, Image, TouchableOpacity } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
-import { uploadImageToFirebase } from '../../FirebaseConfig'; // Ensure the path is correct
+import { uploadImageToFirebaseViaREST } from '../../FirebaseConfig'; // Ensure the path is correct
+import * as FileSystem from 'expo-file-system';
 
 const SquareRoom = () => {
   const viewShotRef = useRef(null); // Create a ref using useRef
@@ -24,38 +25,24 @@ const SquareRoom = () => {
   }, []); // Empty dependency array ensures this runs on mount and unmount only
 
   const takeScreenshot = async () => {
-  if (viewShotRef.current) {
-    try {
-      // Lock the screen orientation to landscape left
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
-
-      // Capture the screenshot
-      const uri = await captureRef(viewShotRef.current, {
-        format: 'png',
-        quality: 0.8,
-      });
-
-      console.log("Screenshot captured:", uri); // Log the captured URI
-
-      // Check if the URI is defined
-      if (uri) {
-        await uploadImageToFirebase(uri); // Upload screenshot to Firebase
-      } else {
-        console.error("Failed to capture screenshot: URI is undefined");
-        alert('Failed to capture screenshot. URI is undefined.');
+    if (viewShotRef.current) {
+      try {
+        const uri = await captureRef(viewShotRef.current, {
+          format: 'png',
+          quality: 0.8,
+        });
+        
+        // Fetch the URI to retrieve the actual blob
+        const response = await fetch(uri);
+        const blob = await response.blob();
+  
+        await uploadImageToFirebaseViaREST(blob);
+      } catch (error) {
+        console.error("Error taking screenshot:", error);
+        alert("Failed to save screenshot. Error: " + error.message);
       }
-    } catch (error) {
-      console.error("Error taking screenshot:", error);
-      alert('Failed to save screenshot. Error: ' + error.message);
-    } finally {
-      // Optionally, unlock the orientation back to the default after capturing
-      await ScreenOrientation.unlockAsync();
     }
-  } else {
-    console.error("ViewShot reference is null or undefined");
-    alert('Failed to capture screenshot. ViewShot reference is not available.');
-  }
-};
+  };
 
   return (
     <View style={styles.container} ref={viewShotRef}>
