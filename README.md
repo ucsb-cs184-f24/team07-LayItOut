@@ -38,10 +38,10 @@ Welcome to LayItOut! Click on 'Get Started' to sign-in or login to our app.
 #### User Login:
 For first-time users, enter your email, set a password, and then click on 'Create Account'. For preexisting users, enter your account information and then click on 'Log In'.
 #### Home Page:
-After loggin in to our app, you will be directed to our app. Here you can 'Create a Room', 'View Previous Rooms', or 'Logout'. 
+After logging into our app, you will be directed to our app. Here you can 'Create a Room', 'View Previous Rooms', or 'Logout'. 
 #### Create Room:
-Once you click on 'Create a Room', you 
+Once you click on 'Create a Room', you will have the option to choose your desired room dimension ('Square', 'Default Rectangle', 'Long Rectangle'). Each room layout has a sidebar menu where you can drag and drop furniture pieces. After arranging the room to your desire, click on the camera icon on the bottom right corner to take a screenshot. 
 #### View Previous Rooms
-
+Once you click on 'View Previous Rooms', you can view your saved projects. 
 ### Logout
 Once you click on 'Logout', you will be logged out of your account and redirected to the Home Page.
