@@ -31,3 +31,17 @@ Users can create an account or log in via the home screen using their UCSB email
 6. Build the app and deploy it on the Expo Go app. Run this command in your terminal: npm expo start
 7. Then scan the QR code that appears on your terminal. If you are facing issues with the QR code, follow this documentation: https://docs.expo.dev/eas-update/introduction/
 8. LayItOut will load on your device and be ready to use. Enjoy our app!!
+
+# User Manual
+#### Get Started:
+Welcome to LayItOut! Click on 'Get Started' to sign-in or login to our app.
+#### User Login:
+For first-time users, enter your email, set a password, and then click on 'Create Account'. For preexisting users, enter your account information and then click on 'Log In'.
+#### Home Page:
+After loggin in to our app, you will be directed to our app. Here you can 'Create a Room', 'View Previous Rooms', or 'Logout'. 
+#### Create Room:
+Once you click on 'Create a Room', you 
+#### View Previous Rooms
+
+### Logout
+Once you click on 'Logout', you will be logged out of your account and redirected to the Home Page.
