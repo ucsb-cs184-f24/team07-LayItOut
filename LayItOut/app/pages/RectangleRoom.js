@@ -40,7 +40,6 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
-        console.log('Drag started at:', position);
       },
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
@@ -48,7 +47,6 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
           y: positionRef.current.y + gestureState.dy,
         };
         setPosition(newPosition);
-        console.log('Dragging to:', newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
@@ -58,7 +56,6 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
         positionRef.current = finalPosition;
         setPosition(finalPosition);
         onPositionChange(finalPosition);
-        console.log('Drag released at:', finalPosition);
       },
     })
   ).current;
@@ -99,7 +96,6 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
               const updatedItems = [...furnitureItems];
               updatedItems[index] = { ...item, position: newPosition };
               setFurnitureItems(updatedItems);
-              console.log('Updated position for', item.name, 'to', newPosition);
             }}
           />
         ))}
@@ -114,7 +110,6 @@ const RectangleRoom = () => {
   const addFurniture = (name, image) => {
     const newItem = { name, image, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
-    console.log(`Added ${name} to the room at position`, newItem.position);
   };
 
   return (
