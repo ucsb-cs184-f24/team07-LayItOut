@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponde
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
-import bookshelf from '../../images/bookshelf_1.png';
+import bookshelf from '../../images/bookshelf_2.png';
 
 const Drawer = createDrawerNavigator();
 
