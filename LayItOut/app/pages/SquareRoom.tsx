@@ -66,6 +66,8 @@ const SquareRoom = ({ navigation }: RouterProps) => {
           const firestore = getFirestore();
           await addDoc(collection(firestore, 'screenshots'), {
             downloadURL: downloadURL,
+            uid: uid, // Add the user's uid
+            createdAt: new Date(), // Optional: Add timestamp for better organization
           });
 
           alert('Screenshot saved successfully to Firebase and gallery!');
