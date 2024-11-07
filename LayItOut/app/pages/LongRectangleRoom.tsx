@@ -8,6 +8,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -15,6 +16,7 @@ interface RouterProps {
 
 const LongRectangleRoom = ({ navigation }: RouterProps) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
+  const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   useEffect(() => {
     // Lock orientation to landscape when the component mounts
@@ -51,7 +53,7 @@ const LongRectangleRoom = ({ navigation }: RouterProps) => {
 
           // Save screenshot to Firebase Storage
           const storage = getStorage();
-          const storageRef = ref(storage, `screenshots/${Date.now()}.png`);
+          const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
 
           const response = await fetch(uri); // Fetch the file from the uri
           const blob = await response.blob(); // Convert to blob for Firebase upload
