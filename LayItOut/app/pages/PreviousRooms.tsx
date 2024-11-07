@@ -1,14 +1,46 @@
-import React from 'react';
-import { StyleSheet, View, ImageBackground, FlatList, StatusBar, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, FlatList, ImageBackground, StatusBar, Image, Text, StyleSheet } from 'react-native';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { FIREBASE_APP } from '../../FirebaseConfig';  // Ensure the firebase config is correct
 
-const { height, width } = Dimensions.get('window');
+const SquareRoom = () => {
+  const [screenshots, setScreenshots] = useState<string[]>([]);
 
-const PreviousRooms = () => {
-  // Dummy data for demonstration (replace with your image URLs as needed)
-  const screenshots = new Array(6).fill(null); // Creates an array with 6 empty placeholders
+  // Fetch images from Firestore
+  useEffect(() => {
+    const fetchScreenshots = async () => {
+      try {
+        const firestore = getFirestore(FIREBASE_APP);
+        const screenshotCollection = collection(firestore, 'screenshots');
+        const snapshot = await getDocs(screenshotCollection);
 
-  const renderItem = () => (
-    <View style={styles.imageBox} />
+        const urls: string[] = [];
+        
+        snapshot.forEach((doc) => {
+          const downloadURL = doc.data().downloadURL;  // Assuming the Firestore document has a 'downloadURL' field
+          if (downloadURL) {
+            urls.push(downloadURL);  // Add URL to the array
+          }
+        });
+
+        setScreenshots(urls);  // Set the URLs in state
+      } catch (error) {
+        console.error('Error fetching screenshots: ', error);
+      }
+    };
+
+    fetchScreenshots();
+  }, []); // Empty dependency array ensures this runs once on mount
+
+  // Render each item in the FlatList
+  const renderItem = ({ item }: { item: string }) => (
+    <View style={styles.imageContainer}>
+      <Image
+        source={{ uri: item }}  // Use the image URL to display
+        style={styles.image}
+      />
+    </View>
   );
 
   return (
@@ -33,30 +65,24 @@ const PreviousRooms = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'white',
   },
   background: {
     flex: 1,
-    resizeMode: 'cover',
-    width: width,
-    height: height,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 50
   },
   columnWrapper: {
-    justifyContent: 'space-between', // Space out the columns evenly
-    marginHorizontal: 10, // Horizontal margin for columns
+    justifyContent: 'space-between',
   },
-  imageBox: {
-    width: width * 0.45, // Each box takes 45% of the width
-    height: width * 0.45, // Keep the height the same as the width for a square box
-    backgroundColor: '#d3d3d3', // Light gray color as placeholder
-    borderRadius: 30,
-    marginBottom: 15, // Space between rows
-    marginHorizontal: 5,
+  imageContainer: {
+    marginBottom: 10,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 8,
   },
 });
 
-export default PreviousRooms;
+export default SquareRoom;
