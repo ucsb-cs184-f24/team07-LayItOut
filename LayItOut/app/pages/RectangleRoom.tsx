@@ -1,13 +1,22 @@
+
 import React, { useEffect, useRef } from 'react';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { NavigationProp } from '@react-navigation/native';
 import { StyleSheet, View, StatusBar, Button, Image, TouchableOpacity} from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
+interface RouterProps {
+  navigation: NavigationProp<any, any>;
+}
 
-const RectangleRoom = () => {
+const RectangleRoom = ({ navigation }: RouterProps) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
+  const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   useEffect(() => {
     // Lock orientation to landscape when the component mounts
@@ -29,8 +38,6 @@ const RectangleRoom = () => {
     if (viewShotRef.current) {
       try {
         // Capture the screenshot using captureRef
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
-
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
@@ -43,7 +50,24 @@ const RectangleRoom = () => {
           // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
           console.log('Screenshot saved to gallery!', asset);
-          alert('Screenshot saved successfully!');
+
+          // Save screenshot to Firebase Storage
+          const storage = getStorage();
+          const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
+
+          const response = await fetch(uri); // Fetch the file from the uri
+          const blob = await response.blob(); // Convert to blob for Firebase upload
+
+          await uploadBytes(storageRef, blob); // Upload to Firebase storage
+          const downloadURL = await getDownloadURL(storageRef); // Get download URL
+
+          // Save the download URL to Firestore
+          const firestore = getFirestore();
+          await addDoc(collection(firestore, 'screenshots'), {
+            downloadURL: downloadURL,
+          });
+
+          alert('Screenshot saved successfully to Firebase and gallery!');
         } else {
           alert('Permission to access media library is required!');
         }
@@ -71,18 +95,18 @@ const RectangleRoom = () => {
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      backgroundColor: 'white',
-      justifyContent: 'center',
-      alignItems: 'center',
+    flex: 1,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   room: {
-      width: 550, 
-      height: 315, 
-      borderWidth: 3, 
-      borderColor: 'blue', 
-      backgroundColor: '#ADD8E6', 
-  },
+    width: 550, 
+    height: 315, 
+    borderWidth: 3, 
+    borderColor: 'blue', 
+    backgroundColor: '#ADD8E6', 
+},
   screenshotButton: {
     position: 'absolute', // Position it at the bottom right
     bottom: 0,
@@ -93,5 +117,6 @@ const styles = StyleSheet.create({
     height: 40, // Set the desired height
   },
 });
+
   
 export default RectangleRoom;
