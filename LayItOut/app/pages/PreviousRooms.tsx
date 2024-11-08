@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, ImageBackground, StatusBar, Image, StyleSheet, Modal, TouchableOpacity } from 'react-native';
-import { getFirestore, collection, getDocs, query, where } from 'firebase/firestore';
+import { View, FlatList, ImageBackground, StatusBar, Image, Text, StyleSheet, Modal, TouchableOpacity, Alert } from 'react-native';
+import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { getStorage, ref, deleteObject } from 'firebase/storage'; // Import for deleting from Storage
 import { FIREBASE_APP, FIREBASE_AUTH } from '../../FirebaseConfig';  // Ensure the firebase config and auth are correct
 
 const PreviousRooms = () => {
   const [screenshots, setScreenshots] = useState<string[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageDocId, setSelectedImageDocId] = useState<string | null>(null); // Store document ID
 
   // Fetch screenshots from Firestore
   useEffect(() => {
@@ -20,12 +22,12 @@ const PreviousRooms = () => {
           const q = query(screenshotCollection, where('uid', '==', uid)); // Filter by current user's uid
           const snapshot = await getDocs(q);
 
-          const urls: string[] = [];
+          const urls: { downloadURL: string; docId: string }[] = [];  // Store URLs and document IDs
           snapshot.forEach((doc) => {
             const downloadURL = doc.data().downloadURL;
             // Check if downloadURL is a valid string before pushing to the array
             if (typeof downloadURL === 'string' && downloadURL.trim().length > 0) {
-              urls.push(downloadURL);  // Add valid URL to the array
+              urls.push({ downloadURL, docId: doc.id });  // Add URL and document ID
             } else {
               console.error('Invalid downloadURL:', downloadURL);  // Log invalid URL for debugging
             }
@@ -42,8 +44,9 @@ const PreviousRooms = () => {
   }, []); // Empty dependency array ensures this runs once on mount
 
   // Function to open modal with the selected image
-  const openModal = (imageUrl: string) => {
+  const openModal = (imageUrl: string, docId: string) => {
     setSelectedImage(imageUrl);
+    setSelectedImageDocId(docId);  // Store the document ID of the image
     setModalVisible(true);
   };
 
@@ -51,13 +54,54 @@ const PreviousRooms = () => {
   const closeModal = () => {
     setModalVisible(false);
     setSelectedImage(null);
+    setSelectedImageDocId(null);
+  };
+
+  // Function to delete an image
+  const deleteImage = async () => {
+    if (!selectedImage || !selectedImageDocId) return;
+
+    try {
+      const storage = getStorage(FIREBASE_APP);
+      const firestore = getFirestore(FIREBASE_APP);
+
+      // Confirm deletion
+      Alert.alert(
+        "Delete Room",
+        "Are you sure you want to delete this room?",
+        [
+          { text: "Cancel", style: "cancel" },
+          {
+            text: "Delete", 
+            style: "destructive", 
+            onPress: async () => {
+              // Delete from Firebase Storage
+              const imageRef = ref(storage, selectedImage); // Use the image URL
+              await deleteObject(imageRef);
+
+              // Delete from Firestore
+              const imageDocRef = doc(firestore, 'screenshots', selectedImageDocId);
+              await deleteDoc(imageDocRef);
+
+              // Remove image from state
+              setScreenshots(screenshots.filter((img) => img.downloadURL !== selectedImage));
+
+              // Close the modal after deletion
+              closeModal();
+            }
+          }
+        ]
+      );
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
   };
 
   // Render each image in the grid
-  const renderItem = ({ item }: { item: string }) => (
-    <TouchableOpacity onPress={() => openModal(item)} style={styles.imageContainer}>
+  const renderItem = ({ item }: { item: { downloadURL: string; docId: string } }) => (
+    <TouchableOpacity onPress={() => openModal(item.downloadURL, item.docId)} style={styles.imageContainer}>
       <Image
-        source={{ uri: item }}  // Use the image URL to display
+        source={{ uri: item.downloadURL }}  // Use the image URL to display
         style={styles.image}
       />
     </TouchableOpacity>
@@ -102,6 +146,11 @@ const PreviousRooms = () => {
               resizeMode="contain"
             />
           )}
+
+          {/* Delete Button */}
+          <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
+            <Text style={styles.deleteText}>Delete</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -142,7 +191,7 @@ const styles = StyleSheet.create({
   },
   modalCloseButton: {
     position: 'absolute',
-    top: 80,  // Adjusted position to be closer to the top
+    top: 60,  // Adjusted position to be closer to the top
     right: 30,  // Adjusted to be closer to the right corner
     zIndex: 1,  // Make sure it appears on top
   },
@@ -152,8 +201,20 @@ const styles = StyleSheet.create({
     tintColor: 'white',  // Optional: Add tint color if you want the icon to be white
   },
   fullScreenImage: {
-    width: '110%',
-    height: '115%',
+    width: '115%',
+    height: '90%',
+  },
+  deleteButton: {
+    position: 'absolute',
+    bottom: 40,
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  deleteText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 
