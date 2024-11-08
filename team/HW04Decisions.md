@@ -13,3 +13,4 @@
 - Charlene: Make unit tests for 2 of our app pages.
 - Bella: Custom pages UI and grid for the blueprint.
 - Emily: Display distance between the object being moved around and the walls of the room.
+- Niyati: Make unit tests for navigation between pages.
