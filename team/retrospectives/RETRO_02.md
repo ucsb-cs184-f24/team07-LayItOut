@@ -1,12 +1,12 @@
-# Date of Retrospective: 10/18/23
+# Date of Retrospective: 11/8/23
 
 ### Meeting Time
-Section03
+Friday Meeting
 
 ### Team Attendance
 * Led by: Vaani Arora
-* Present: Palvi Sabherwal, Emily Thai, Charlene Patenaude, Bella Ward, Niyati Mummidivarapu
-* Absent: Hannah Shakouri (participated in discussion virtually)
+* Present: Palvi Sabherwal, Emily Thai, Charlene Patenaude, Bella Ward
+* Absent: Hannah Shakouri, Niyati Mummidivarapu (participated in discussion virtually)
 
 ## Action item
 * a goal: Everyone should finish their 2 issues so that we can merge on Friday.
