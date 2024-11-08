@@ -9,8 +9,13 @@ import bookshelf from '../../images/bookshelf_2.png';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
-
+interface RouterProps {
+  navigation: NavigationProp<any, any>;
+}
 const Drawer = createDrawerNavigator();
 
 // Custom drawer content with furniture items
@@ -74,25 +79,30 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 };
 
 // Keep your existing LongRectangleRoomScreen component unchanged
-const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
+const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }: RouterProps) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
-  useFocusEffect(
-    React.useCallback(() => {
-      const lockLandscape = async () => {
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
+
+  useEffect(() => {
+    // Lock orientation to landscape when the component mounts
+    const setOrientation = async () => {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
+    };
+    setOrientation();
+
+    // Cleanup function to unlock orientation when the component unmounts
+    return () => {
+      const unlockOrientation = async () => {
+        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
       };
-      lockLandscape();
-      return async () => {
-        await ScreenOrientation.unlockAsync();
-      };
-    }, [])
-  );
+      unlockOrientation();
+    };
+  }, []);
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
         // Capture the screenshot using captureRef
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
-
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
@@ -105,7 +115,26 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
           // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
           console.log('Screenshot saved to gallery!', asset);
-          alert('Screenshot saved successfully!');
+
+          // Save screenshot to Firebase Storage
+          const storage = getStorage();
+          const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
+
+          const response = await fetch(uri); // Fetch the file from the uri
+          const blob = await response.blob(); // Convert to blob for Firebase upload
+
+          await uploadBytes(storageRef, blob); // Upload to Firebase storage
+          const downloadURL = await getDownloadURL(storageRef); // Get download URL
+
+          // Save the download URL to Firestore
+          const firestore = getFirestore();
+          await addDoc(collection(firestore, 'screenshots'), {
+            downloadURL: downloadURL,
+            uid: uid, // Add the user's uid
+            createdAt: new Date(), // Optional: Add timestamp for better organization
+          });
+
+          alert('Screenshot saved successfully to Firebase and gallery!');
         } else {
           alert('Permission to access media library is required!');
         }
@@ -200,7 +229,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    width: 670,
+    width: 645,
     height: 340,
     borderWidth: 3,
     borderColor: 'white',
@@ -255,11 +284,11 @@ const styles = StyleSheet.create({
   screenshotButton: {
     position: 'absolute', // Position it at the bottom right
     bottom: 0,
-    right: 0,
+    right: 2,
   },
   buttonImage: {
-    width: 40, // Set the desired width
-    height: 40, // Set the desired height
+    width: 35, // Set the desired width
+    height: 35, // Set the desired height
   },
 });
   
