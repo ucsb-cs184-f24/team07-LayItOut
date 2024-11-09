@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ActivityIndicator, KeyboardAvoidingView, Image, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Button, ActivityIndicator, KeyboardAvoidingView, Image, Dimensions, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import loginButtonImage from '../../images/loginButton.png';
 import createAccountButtonImage from '../../images/createAccountButton.png';
-import backgroundImage from '../../images/Background.png';
+import backgroundImage from '../../images/splash.png';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { NavigationProp } from '@react-navigation/native';
+
+const { height, width } = Dimensions.get('window');
+
 
 interface RouterProps {
     navigation: NavigationProp<any, any>;
@@ -54,6 +57,7 @@ const Login = ({ navigation }: RouterProps) => {
     return (
         <ImageBackground source={backgroundImage} style={styles.background}>
             <View style={styles.container}>
+                <Text style={styles.title}> Log In/Sign Up</Text>
                 <KeyboardAvoidingView behavior='padding'>
                 <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
                 <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
@@ -64,7 +68,7 @@ const Login = ({ navigation }: RouterProps) => {
                             <TouchableOpacity style={styles.button} onPress={signIn}>
                                 <Image source={loginButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, { marginVertical: -10 }]} onPress={signUp}>
+                            <TouchableOpacity style={[styles.button]} onPress={signUp}>
                                 <Image source={createAccountButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
                         </>
@@ -81,6 +85,17 @@ const styles = StyleSheet.create({
     background: {
         flex: 1, // Make sure the background takes up the whole screen
         justifyContent: 'center', // Center contents
+        width: width,
+        height: height,
+        justifyContent: 'center',
+        alignItems: 'center',
+        ...StyleSheet.absoluteFillObject,
+    },
+    title: {
+        fontSize: 35,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginBottom: 4,
     },
     container: {
         marginHorizontal: 20,
@@ -88,11 +103,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }, 
     input: {
-        marginVertical: 4, 
+        marginVertical: 5, 
         height: 50, 
         borderWidth: 1,
-        borderRadius: 4, 
-        padding: 10, 
+        borderRadius: 20, 
+        padding: 20,
+        width: 300,
         //backgroundColor: '#fff'
         backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
         borderColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent border
@@ -100,11 +116,11 @@ const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 10,
+        marginVertical: 2,
     },
     buttonImage: {
         width: '100%', // Adjust based on your design
-        height: 50,    // Adjust based on your design
+        height: 30,    // Adjust based on your design
         resizeMode: 'contain', // or 'cover' based on your design
     }
 })
