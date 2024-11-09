@@ -3,6 +3,7 @@ import { View, FlatList, ImageBackground, StatusBar, Image, Text, StyleSheet, Mo
 import { getFirestore, collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { getStorage, ref, deleteObject } from 'firebase/storage'; // Import for deleting from Storage
 import { FIREBASE_APP, FIREBASE_AUTH } from '../../FirebaseConfig';  // Ensure the firebase config and auth are correct
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const PreviousRooms = () => {
   const [screenshots, setScreenshots] = useState<string[]>([]);
@@ -132,10 +133,7 @@ const PreviousRooms = () => {
         <View style={styles.modalContainer}>
           {/* Close Button */}
           <TouchableOpacity style={styles.modalCloseButton} onPress={closeModal}>
-            <Image 
-              source={require('../../images/Close_Circle.png')}  // Ensure the path is correct
-              style={styles.buttonImage}  // Style for the button
-            />
+            <Ionicons name="close-circle-outline" size={40} color="white" />
           </TouchableOpacity>
 
           {/* Display selected image if available */}
@@ -149,7 +147,7 @@ const PreviousRooms = () => {
 
           {/* Delete Button */}
           <TouchableOpacity style={styles.deleteButton} onPress={deleteImage}>
-            <Text style={styles.deleteText}>Delete</Text>
+            <Ionicons name="trash-outline" size={35} color="white" />
           </TouchableOpacity>
         </View>
       </Modal>
@@ -192,7 +190,7 @@ const styles = StyleSheet.create({
   modalCloseButton: {
     position: 'absolute',
     top: 60,  // Adjusted position to be closer to the top
-    right: 30,  // Adjusted to be closer to the right corner
+    right: 20,  // Adjusted to be closer to the right corner
     zIndex: 1,  // Make sure it appears on top
   },
   buttonImage: {
