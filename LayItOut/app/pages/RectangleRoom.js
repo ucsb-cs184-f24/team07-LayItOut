@@ -10,23 +10,23 @@ import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
 
-
 const Drawer = createDrawerNavigator();
+const scaleFactor = 25
 
 // Custom drawer content with furniture items
 const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props} contentContainerStyle={styles.furnitureListContainer}>
       <Text style={styles.title}>Furniture List</Text>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair)}>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair, { width: 2.2, height: 1.3 })}>
         <Image source={chair} style={styles.furnitureImage} />
         <Text style={styles.furnitureText}>Chair</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bed', bed)}>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bed', bed, { width: 5, height: 6.7 })}>
         <Image source={bed} style={styles.furnitureImage} />
         <Text style={styles.furnitureText}>Bed</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bookshelf', bookshelf)}>
+      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bookshelf', bookshelf, { width: 2.6, height: 3 })}>
         <Image source={bookshelf} style={styles.furnitureImage} />
         <Text style={styles.furnitureText}>Bookshelf</Text>
       </TouchableOpacity>
@@ -35,7 +35,7 @@ const CustomDrawerContent = (props) => {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -64,10 +64,14 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
     })
   ).current;
 
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor 
+
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+      resizeMode='contain'
       {...panResponder.panHandlers}
     />
   );
@@ -125,6 +129,7 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
             key={index}
             image={item.image}
             initialPosition={item.position}
+            dimensions={item.dimensions}
             onPositionChange={(newPosition) => {
               const updatedItems = [...furnitureItems];
               updatedItems[index] = { ...item, position: newPosition };
@@ -146,8 +151,8 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
 const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
 
-  const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
@@ -199,7 +204,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    width: 430,
+    // using scale factor of 50 so this is a 9 x 6 room
+    width: 450,
     height: 300,
     borderWidth: 3,
     borderColor: 'white',
