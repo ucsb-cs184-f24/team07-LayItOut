@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ImageBackground } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
@@ -9,6 +9,7 @@ import bookshelf from '../../images/bookshelf_2.png';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
+import backgroundRoom from '../../images/room_background.jpeg';  //JPEG gridlines background for rooms
 
 
 const Drawer = createDrawerNavigator();
@@ -120,7 +121,7 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <StatusBar backgroundColor="black" />
-      <View style={styles.room}>
+      <ImageBackground source={backgroundRoom} style={styles.room}>
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
@@ -133,7 +134,7 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
             }}
           />
         ))}
-      </View>
+      </ImageBackground>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
         <Image 
           source={require('../../images/Camera.png')} // Update with your image path
@@ -204,7 +205,6 @@ const styles = StyleSheet.create({
     height: 340,
     borderWidth: 3,
     borderColor: 'white',
-    backgroundColor: '#045497',
     position: 'relative',
   },
   furnitureListContainer: {
