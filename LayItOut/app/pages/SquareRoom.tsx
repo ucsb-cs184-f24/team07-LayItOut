@@ -275,8 +275,8 @@ const styles = StyleSheet.create({
   },
   screenshotButton: {
     position: 'absolute',
-    bottom: 20,
-    right: 20,
+    bottom: 25,
+    right: 100,
   },
   buttonImage: {
     width: 35,
