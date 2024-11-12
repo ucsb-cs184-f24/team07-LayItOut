@@ -28,7 +28,7 @@ Users can create an account or log in via the home screen using their UCSB email
 3. Git clone our team's project repo. Run this command in your terminal: git clone https://github.com/ucsb-cs184-f24/team07-LayItOut.git
 4. Once you have cloned our team's project repo, cd into the LayItOut folder.
 5. Install the required npm dependencies. Run this command in your terminal: npm install
-6. Build the app and deploy it on the Expo Go app. Run this command in your terminal: npm expo start
+6. Build the app and deploy it on the Expo Go app. Run this command in your terminal: npx expo start
 7. Then scan the QR code that appears on your terminal. If you are facing issues with the QR code, follow this documentation: https://docs.expo.dev/eas-update/introduction/
 8. LayItOut will load on your device and be ready to use. Enjoy our app!!
 
