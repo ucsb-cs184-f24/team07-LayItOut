@@ -74,6 +74,53 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 // Main SquareRoom screen
 const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
+
+  //GRID LINES: 
+  const renderGridLines = (roomWidth, roomHeight) => {
+    const gridLines = []
+    const numLines = 8;    // # of grid squares
+    const lineOffset = 1.5;
+
+    //Horizontal lines 
+    for (let i = 0; i < numLines; i++) {
+      gridLines.push(
+        <View
+          key={`h-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              top: (i * roomHeight) / numLines - lineOffset, 
+              width: roomWidth, 
+              height: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    //Vertical lines
+    for (let i = 0; i < numLines; i++) {
+      gridLines.push(
+        <View
+          key={`v-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              left: (i * roomWidth) / numLines - lineOffset, 
+              height: roomHeight, 
+              width: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    return gridLines; 
+
+  };
+
+
+
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
@@ -85,6 +132,7 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
       };
     }, [])
   );
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
@@ -114,10 +162,13 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     }
   };
 
+
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
+        {renderGridLines(310, 310)}
+
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
@@ -203,6 +254,10 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
+  },
+  gridLine: {
+    position: 'absolute', 
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
   },
   furnitureListContainer: {
     padding: 16,
