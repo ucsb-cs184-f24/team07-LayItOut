@@ -78,18 +78,20 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   //GRID LINES: 
   const renderGridLines = (roomWidth, roomHeight) => {
     const gridLines = []
-    const numLines = 8;    // # of grid squares
-    const lineOffset = 1.5;
+    const numSquares = 10;    // # of grid squares
+
+    const horizontalSpacing = roomHeight / numSquares; 
+    const verticalSpacing = roomWidth / numSquares; 
 
     //Horizontal lines 
-    for (let i = 0; i < numLines; i++) {
+    for (let i = 0; i < numSquares; i++) {
       gridLines.push(
         <View
           key={`h-${i}`}
           style={[
             styles.gridLine, 
             {
-              top: (i * roomHeight) / numLines - lineOffset, 
+              top: Math.round(i * horizontalSpacing), 
               width: roomWidth, 
               height: 1,                  //thickness of line
             },
@@ -99,14 +101,14 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     }
 
     //Vertical lines
-    for (let i = 0; i < numLines; i++) {
+    for (let i = 0; i < numSquares; i++) {
       gridLines.push(
         <View
           key={`v-${i}`}
           style={[
             styles.gridLine, 
             {
-              left: (i * roomWidth) / numLines - lineOffset, 
+              left: Math.round(i * verticalSpacing), 
               height: roomHeight, 
               width: 1,                  //thickness of line
             },
@@ -116,9 +118,7 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     }
 
     return gridLines; 
-
   };
-
 
 
   useFocusEffect(
@@ -167,7 +167,7 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-        {renderGridLines(310, 310)}
+        {renderGridLines(300, 300)}
 
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
@@ -247,8 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    width: 310,
-    height: 310,
+    width: 300,
+    height: 300,
     aspectRatio: 1,
     borderWidth: 3,
     borderColor: 'white',

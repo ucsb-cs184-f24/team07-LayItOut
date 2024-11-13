@@ -76,6 +76,54 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 // Keep your existing LongRectangleRoomScreen component unchanged
 const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
+
+  //GRID LINES: 
+  const renderGridLines = (roomWidth, roomHeight) => {
+    const gridLines = []
+    const numSquaresV = 15;    // # of grid squares
+    const numSquaresH = 24; 
+
+    const horizontalSpacing = roomHeight / numSquaresV; 
+    const verticalSpacing = roomWidth / numSquaresH; 
+
+    //Horizontal lines 
+    for (let i = 1; i < numSquaresV; i++) {
+      gridLines.push(
+        <View
+          key={`h-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              top: Math.round(i * horizontalSpacing), 
+              width: roomWidth, 
+              height: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    //Vertical lines
+    for (let i = 1; i < numSquaresH; i++) {
+      gridLines.push(
+        <View
+          key={`v-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              left: Math.round(i * verticalSpacing), 
+              height: roomHeight, 
+              width: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    return gridLines; 
+  };  
+
+
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
@@ -121,6 +169,7 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
       <StatusBar backgroundColor="black" />
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
+        {renderGridLines(670, 340)}
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
@@ -206,6 +255,10 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
+  },
+  gridLine: {
+    position: 'absolute', 
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
   },
   furnitureListContainer: {
     padding: 16,

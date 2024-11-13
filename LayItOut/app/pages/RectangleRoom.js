@@ -76,6 +76,54 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 // Main RectangleRoom screen
 const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
   const viewShotRef = useRef(null); // Create a ref using useRef
+
+  //GRID LINES: 
+  const renderGridLines = (roomWidth, roomHeight) => {
+    const gridLines = []
+    const numSquaresV = 10;    // # of grid squares
+    const numSquaresH = 16; 
+
+    const horizontalSpacing = roomHeight / numSquaresV; 
+    const verticalSpacing = roomWidth / numSquaresH; 
+
+    //Horizontal lines 
+    for (let i = 1; i < numSquaresV; i++) {
+      gridLines.push(
+        <View
+          key={`h-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              top: Math.round(i * horizontalSpacing), 
+              width: roomWidth, 
+              height: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    //Vertical lines
+    for (let i = 1; i < numSquaresH; i++) {
+      gridLines.push(
+        <View
+          key={`v-${i}`}
+          style={[
+            styles.gridLine, 
+            {
+              left: Math.round(i * verticalSpacing), 
+              height: roomHeight, 
+              width: 1,                  //thickness of line
+            },
+          ]}
+        />
+      );
+    }
+
+    return gridLines; 
+  };  
+
+
   useFocusEffect(
     React.useCallback(() => {
       const lockLandscape = async () => {
@@ -87,6 +135,7 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
       };
     }, [])
   );
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
@@ -120,6 +169,7 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }) => {
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
+        {renderGridLines(430, 300)}
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
@@ -206,6 +256,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#045497',
     position: 'relative',
   },
+  gridLine: {
+    position: 'absolute', 
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
+  },
   furnitureListContainer: {
     padding: 16,
     backgroundColor: '#D5D5D5',
@@ -263,3 +317,5 @@ const styles = StyleSheet.create({
 });
 
 export default RectangleRoom;
+
+
