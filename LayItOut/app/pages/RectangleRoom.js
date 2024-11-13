@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   room: {
-    // using scale factor of 50 so this is a 9 x 6 room
+    // using scale factor of 25 so this is a 18 x 12 room
     width: 450,
     height: 300,
     borderWidth: 3,
