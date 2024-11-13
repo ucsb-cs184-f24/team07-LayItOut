@@ -24,3 +24,4 @@ Start merging earlier as we go rather than bulk merging at the end.
 Continue meeting a lot outside of class to ease the communication between the team members.
 
 ### Retro Outcome:
+We are on track to making our goal of everyone finishing their 2 issues by Friday. We already have made some merges, working towards this goal.
