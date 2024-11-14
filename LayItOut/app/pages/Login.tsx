@@ -62,13 +62,13 @@ const Login = ({ navigation }: RouterProps) => {
                 <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
                 <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
                 
-                {loading ? ( <ActivityIndicator size="large" color = "#000ff" /> 
+                {loading ? ( <ActivityIndicator size="large" color = "#000ff" testID="activity-indicator" /> 
                 ) : ( 
                     <>
-                            <TouchableOpacity style={styles.button} onPress={signIn}>
+                            <TouchableOpacity style={styles.button} onPress={signIn} testID="login-button" >
                                 <Image source={loginButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button]} onPress={signUp}>
+                            <TouchableOpacity style={[styles.button]} onPress={signUp} testID="signup-button" >
                                 <Image source={createAccountButtonImage} style={styles.buttonImage} />
                             </TouchableOpacity>
                         </>
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center', // Center contents
         width: width,
         height: height,
-        justifyContent: 'center',
         alignItems: 'center',
         ...StyleSheet.absoluteFillObject,
     },
