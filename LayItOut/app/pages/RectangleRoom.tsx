@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
@@ -72,31 +72,42 @@ const FurnitureSidebar = ({ addFurniture }) => {
   return (
     <View style={styles.sidebar}>
       <Text style={styles.title}>Furniture List</Text>
-      
-      {Object.entries(furnitureCategories).map(([category, items]) => (
-        <View key={category} style={styles.categoryContainer}>
-          <TouchableOpacity 
-            style={styles.categoryHeader}
-            onPress={() => toggleCategory(category)}
-          >
-            <Text style={styles.categoryTitle}>{category}</Text>
-            <Text style={styles.expandIcon}>
-              {expandedCategory === category ? '−' : '+'}
-            </Text>
-          </TouchableOpacity>
+      <View style={styles.scrollViewContainer}>
+        <ScrollView 
+          style={[styles.scrollView, { transform: [{ scaleX: -1 }] }]}
+          showsVerticalScrollIndicator={true}
+          bounces={false}
+          contentContainerStyle={styles.scrollViewContent}
+          scrollIndicatorInsets={{ right: 1 }}
+        >
+          <View style={[styles.scrollViewInner, { transform: [{ scaleX: -1 }] }]}>
+            {Object.entries(furnitureCategories).map(([category, items]) => (
+              <View key={category} style={styles.categoryContainer}>
+                <TouchableOpacity 
+                  style={styles.categoryHeader}
+                  onPress={() => toggleCategory(category)}
+                >
+                  <Text style={styles.categoryTitle}>{category}</Text>
+                  <Text style={styles.expandIcon}>
+                    {expandedCategory === category ? '−' : '+'}
+                  </Text>
+                </TouchableOpacity>
 
-          {expandedCategory === category && items.map((item, index) => (
-            <TouchableOpacity 
-              key={`${category}-${index}`}
-              style={styles.furnitureItem} 
-              onPress={() => addFurniture(item.name.toLowerCase(), item.image)}
-            >
-              <Image source={item.image} style={styles.furnitureImage} />
-              <Text style={styles.furnitureText}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
+                {expandedCategory === category && items.map((item, index) => (
+                  <TouchableOpacity 
+                    key={`${category}-${index}`}
+                    style={styles.furnitureItem} 
+                    onPress={() => addFurniture(item.name.toLowerCase(), item.image)}
+                  >
+                    <Image source={item.image} style={styles.furnitureImage} />
+                    <Text style={styles.furnitureText}>{item.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -202,9 +213,25 @@ const styles = StyleSheet.create({
   },
   sidebar: {
     width: 200,
-    backgroundColor: '#D5D5D5',
-    padding: 12,
+    backgroundColor: '#abc2da',
     height: '100%',
+    paddingTop: 12,
+    paddingRight: 12,
+    paddingLeft: 1,
+  },
+  scrollViewContainer: {
+    flex: 1,
+    marginRight: -2,
+  },
+  scrollView: {
+    flex: 1,
+    marginBottom: 12,
+  },
+  scrollViewContent: {
+    paddingRight: 1,
+  },
+  scrollViewInner: {
+    paddingLeft: 9,
   },
   mainContent: {
     flex: 1,
@@ -221,11 +248,12 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#045497',
     textAlign: 'center',
+    paddingLeft: 9,
   },
   categoryContainer: {
     marginBottom: 5,
@@ -264,7 +292,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   furnitureText: {
-    color: "black",
+    color: "#1c4f88",
     fontSize: 16,
   },
   furnitureInRoom: {
@@ -274,8 +302,8 @@ const styles = StyleSheet.create({
   },
   screenshotButton: {
     position: 'absolute',
-    bottom: 32,
-    right: 50,
+    bottom: 25,
+    right: 20,
   },
   buttonImage: {
     width: 35,
