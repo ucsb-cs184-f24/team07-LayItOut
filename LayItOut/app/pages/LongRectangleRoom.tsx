@@ -99,6 +99,14 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { naviga
     };
   }, []);
 
+  // Add the debugging useEffect here
+  useEffect(() => {
+    console.log('Furniture items updated:');
+    furnitureItems.forEach((item, idx) => {
+      console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
+    });
+  }, [furnitureItems]); // This will run whenever furnitureItems changes
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
@@ -150,18 +158,22 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { naviga
       <StatusBar backgroundColor="black" />
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-        {furnitureItems.map((item, index) => (
-          <DraggableFurniture
-            key={index}
-            image={item.image}
-            initialPosition={item.position}
-            onPositionChange={(newPosition) => {
-              const updatedItems = [...furnitureItems];
-              updatedItems[index] = { ...item, position: newPosition };
-              setFurnitureItems(updatedItems);
-            }}
-          />
-        ))}
+      {furnitureItems.map((item: { id: React.Key | null | undefined; image: any; position: any; }) => (
+  <DraggableFurniture
+    key={item.id}
+    image={item.image}
+    initialPosition={item.position}
+    onPositionChange={(newPosition) => {
+      const updatedItems = furnitureItems.map((furniture) =>
+        furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
+      );
+      updatedItems.forEach((furniture, idx) => {
+        console.log(`Furniture ${idx}: ${furniture.name}, Position: x=${furniture.position.x}, y=${furniture.position.y}`);
+      });
+      setFurnitureItems(updatedItems);
+      }}
+    />
+    ))}
       </View>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
         <Image 
@@ -177,7 +189,7 @@ const LongRectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
 
   const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
+    const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
