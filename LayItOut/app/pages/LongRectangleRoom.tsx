@@ -40,7 +40,7 @@ const CustomDrawerContent = (props) => {
 };
 
 // Keep your existing DraggableFurniture component unchanged
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, wallX, onTargetLinePositionChange, onPositionChange, onTargetLineHeightChange, onDraggingChange }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -49,6 +49,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
+        onDraggingChange(true); // Notify parent that dragging has started
       },
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
@@ -56,6 +57,11 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
           y: positionRef.current.y + gestureState.dy,
         };
         setPosition(newPosition);
+
+        // Calculate midpoint between furniture and the wall
+        const midpoint = (newPosition.x + wallX) / 2;
+        onTargetLineHeightChange(newPosition.y + 5);
+        onTargetLinePositionChange(newPosition.x + 25); // Update line position
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
@@ -65,6 +71,10 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
         positionRef.current = finalPosition;
         setPosition(finalPosition);
         onPositionChange(finalPosition);
+
+        // Hide the target line and text once the furniture is released
+        onTargetLinePositionChange(null);
+        onDraggingChange(false);
       },
     })
   ).current;
@@ -80,8 +90,15 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 
 // Keep your existing LongRectangleRoomScreen component unchanged
 const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }: RouterProps) => {
+  const wallX = 100; // Example x-coordinate of the wall (width of room container)
+  const [targetLinePosition, setTargetLinePosition] = useState(null);
+  const [targetLineHeight, setTargetLineHeight] = useState(null);
+  const [isDragging, setIsDragging] = useState(false); // Track dragging state
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
+  const calculateDistanceText = (height) => {
+    return `${Math.round(height)} px`;
+  };
 
   useEffect(() => {
     // Lock orientation to landscape when the component mounts
@@ -148,18 +165,38 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { naviga
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
-      <StatusBar backgroundColor="black" />
       <View style={styles.room}>
+        {/* Conditionally render the target line at a dynamic position */}
+        {targetLinePosition !== null && (
+          <View
+            style={[
+              styles.targetLine,
+              { left: targetLinePosition },
+              { height: targetLineHeight },
+            ]}
+          />
+          
+        )}
+        {isDragging && (
+          <Text style={[styles.distanceText, { left: targetLinePosition + 5, top: targetLineHeight / 2 }]}>
+            {calculateDistanceText(targetLineHeight - 22)}
+          </Text>
+        )}
+        
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}
             image={item.image}
             initialPosition={item.position}
+            wallX={wallX} // Pass wall x-coordinate to DraggableFurniture
+            onTargetLinePositionChange={(position) => setTargetLinePosition(position)}
             onPositionChange={(newPosition) => {
               const updatedItems = [...furnitureItems];
               updatedItems[index] = { ...item, position: newPosition };
               setFurnitureItems(updatedItems);
             }}
+            onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
+            onDraggingChange={setIsDragging} // Track dragging state
           />
         ))}
       </View>
@@ -289,6 +326,28 @@ const styles = StyleSheet.create({
   buttonImage: {
     width: 35, // Set the desired width
     height: 35, // Set the desired height
+  },
+  distanceText: {
+    position: 'absolute',
+    fontSize: 12,
+    color: 'black',
+    fontWeight: 'bold',
+    backgroundColor: 'white',
+    padding: 2,
+    borderRadius: 3,
+  },
+  targetLine: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 2,
+    backgroundColor: 'red',
+  },
+  targetText: {
+    position: 'absolute',
+    left: 10,
+    fontSize: 14,
+    color: 'black',
   },
 });
   
