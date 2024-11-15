@@ -24,7 +24,7 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, width, height }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -55,7 +55,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
+      style={[styles.furnitureInRoom, { width:width, height:height, left: position.x, top: position.y }]}
       {...panResponder.panHandlers}
     />
   );
@@ -131,8 +131,8 @@ const RectangleRoom = () => {
     };
   }, []);
 
-  const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
+  const addFurniture = (name, image, width, height) => {
+    const newItem = { name, image, width, height, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
@@ -185,6 +185,8 @@ const RectangleRoom = () => {
             <DraggableFurniture
               key={index}
               image={item.image}
+              width={item.width} 
+              height={item.width} 
               initialPosition={item.position}
               onPositionChange={(newPosition) => {
                 const updatedItems = [...furnitureItems];
