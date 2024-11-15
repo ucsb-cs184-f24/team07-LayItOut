@@ -29,20 +29,25 @@ const CreatePage = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const handleSaveCustomRoom = async () => {
-    
     if (customHeight && customWidth) {
       try {
         // Add room dimensions to Firestore
         const docRef = await addDoc(collection(FIREBASE_DB, `rooms/${uid}/userRooms`), {
           height: customHeight,
           width: customWidth,
-          createdAt: new Date(),  // Add timestamp to the document
+          createdAt: new Date(),
         });
         console.log('Room saved with ID:', docRef.id);
         Alert.alert('Alert', 'Custom room dimensions saved successfully!');
-        setShowCustomInputs(false);  // Hide the input fields
-        setCustomHeight('');  // Clear inputs
+        
+        // Clear inputs and navigate to LongRectangleRoom
+        setShowCustomInputs(false);
+        setCustomHeight('');
         setCustomWidth('');
+        
+        // Navigate to LongRectangleRoom
+        navigation.navigate('LongRectangleRoom');
+        
       } catch (error) {
         console.error('Error saving custom room dimensions: ', error);
         Alert.alert('Error', 'Failed to save custom room dimensions.');
@@ -51,7 +56,7 @@ const CreatePage = () => {
       Alert.alert('Input Error', 'Please enter valid height and width values.');
     }
   };
-
+  
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>

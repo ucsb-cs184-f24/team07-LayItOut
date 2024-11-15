@@ -1,20 +1,46 @@
 
-import React from 'react';
+import React, { useEffect} from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, Dimensions, SafeAreaView, StatusBar } from 'react-native';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
+import { collection, getDocs, deleteDoc } from 'firebase/firestore';
 
 const { height, width } = Dimensions.get('window');
 
 const HomePage = () => {
   const navigation = useNavigation();
 
+  // This will be triggered when the user's authentication state changes
+  useEffect(() => {
+    const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
+      if (user) {
+        // If the user is logged in, delete their data
+        await deleteUserData(user.uid);
+      }
+    });
+
+    // Cleanup listener on component unmount
+    return () => unsubscribe();
+  }, []);
+
+  const deleteUserData = async (uid) => {
+    try {
+      const querySnapshot = await getDocs(collection(FIREBASE_DB, `rooms/${uid}/userRooms`));
+      querySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref); // Delete each room document
+      });
+      console.log('User data deleted successfully from Firestore');
+    } catch (error) {
+      console.error("Error deleting data on login: ", error);
+    }
+  };
+
+  
   const handleSignOut = async () => {
     try {
       await FIREBASE_AUTH.signOut();
-      navigation.navigate('Login');  // Navigate to Login after sign-out
     } catch (error) {
-      console.error("Error signing out: ", error);
+      console.error("Error deleting data on logout: ", error);
     }
   };
 
