@@ -10,21 +10,23 @@ import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
 import bookshelf from '../../images/bookshelf_2.png';
 
+const scaleFactor = 25
+
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Chair', image: chair, width: 2.2, height: 1.3 },
-    { name: 'Bookshelf', image: bookshelf, width: 2.6, height: 3 }
+    { name: 'Chair', image: chair, dimensions:{width: 2.2, height: 1.3} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.6, height: 3} }
   ],
   'Bedroom': [
-    { name: 'Bed', image: bed, width: 5, height: 6.7 }
+    { name: 'Bed', image: bed, dimensions:{width: 5, height: 6.7} }
   ],
   'Kitchen': [],
   'Bathroom': []
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, width, height }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -52,10 +54,13 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, width, h
     })
   ).current;
 
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor 
+
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { width:width, height:height, left: position.x, top: position.y }]}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
       {...panResponder.panHandlers}
     />
   );
@@ -131,8 +136,8 @@ const RectangleRoom = () => {
     };
   }, []);
 
-  const addFurniture = (name, image, width, height) => {
-    const newItem = { name, image, width, height, position: { x: 20, y: 20 } };
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
@@ -185,8 +190,7 @@ const RectangleRoom = () => {
             <DraggableFurniture
               key={index}
               image={item.image}
-              width={item.width} 
-              height={item.width} 
+              dimensions={item.dimensions}
               initialPosition={item.position}
               onPositionChange={(newPosition) => {
                 const updatedItems = [...furnitureItems];
@@ -242,7 +246,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    width: 430,
+    // using scale factor of 25 so this is a 18 x 12 room
+    width: 450,
     height: 300,
     borderWidth: 3,
     borderColor: 'white',
