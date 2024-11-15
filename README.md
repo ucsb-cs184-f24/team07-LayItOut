@@ -20,7 +20,7 @@ Our team is working toward creating a layout planner app that helps with visuali
 
 # User Roles:
 #### Registered User:
-Users can create an account or log in via the home screen using their UCSB email. This restriction ensures that only UCSB-affiliated users access the app. Registered users can input room dimensions, save multiple room layouts, and fully customize their designs for future reference.
+Users can create an account or log in via the home screen using their UCSB or personal email. Registered users can input room dimensions, save multiple room layouts, and fully customize their designs for future reference.
 
 # Installation Instructions
 1. Install the Expo Go app on your smartphone. Follow this link: https://expo.dev/go 
