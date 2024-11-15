@@ -39,8 +39,10 @@ Users can create an account or log in via the home screen using their UCSB or pe
 
 **Home Page:** After logging into our app, you will be directed to our app. Here you can 'Create a Room', 'View Previous Rooms', or 'Logout'. 
 
-**Create Room:** Once you click on 'Create a Room', you will have the option to choose your desired room dimension ('Square', 'Default Rectangle', 'Long Rectangle'). Each room layout has a sidebar menu where you can drag and drop furniture pieces. After arranging the room to your desire, click on the camera icon on the bottom right corner to take a screenshot. 
+**Create Room:** Once you click on 'Create a Room', you will have the option to choose your desired room dimension ('Square', 'Default Rectangle', 'Custom Room'). Each room layout has a sidebar menu where you can drag and drop furniture pieces. After arranging the room to your desire, click on the camera icon on the bottom right corner to take a screenshot. 
 
 **View Previous Rooms:** Once you click on 'View Previous Rooms', you can view your saved projects. 
 
 **Logout:** Once you click on 'Logout', you will be logged out of your account and redirected to the Home Page.
+
+For a more detailed manual: [Click Here](https://github.com/ucsb-cs184-f24/team07-LayItOut/blob/main/docs/MANUAL.md)
