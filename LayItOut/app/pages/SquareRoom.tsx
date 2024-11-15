@@ -13,11 +13,11 @@ import bookshelf from '../../images/bookshelf_2.png';
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Chair', image: chair },
-    { name: 'Bookshelf', image: bookshelf }
+    { name: 'Chair', image: chair, width: 2.2, height: 1.3 },
+    { name: 'Bookshelf', image: bookshelf, width: 2.6, height: 3 }
   ],
   'Bedroom': [
-    { name: 'Bed', image: bed }
+    { name: 'Bed', image: bed, width: 5, height: 6.7 }
   ],
   'Kitchen': [],
   'Bathroom': []
