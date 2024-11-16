@@ -70,89 +70,107 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
   );
 };
 
-// Keep your existing CustomRoomScreen component unchanged
-const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
-  const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
-  const viewShotRef = useRef(null); // Create a ref using useRef
+// Furniture sidebar component
+const FurnitureSidebar = ({ addFurniture }) => {
+  const [expandedCategory, setExpandedCategory] = useState(null);
+
+  const toggleCategory = (category) => {
+    setExpandedCategory(expandedCategory === category ? null : category);
+  };
+
+  return (
+    <View style={styles.sidebar}>
+      <Text style={styles.title}>Furniture List</Text>
+      <View style={styles.scrollViewContainer}>
+        <ScrollView 
+          style={[styles.scrollView, { transform: [{ scaleX: -1 }] }]}
+          showsVerticalScrollIndicator={true}
+          bounces={false}
+          contentContainerStyle={styles.scrollViewContent}
+          scrollIndicatorInsets={{ right: 1 }}
+        >
+          <View style={[styles.scrollViewInner, { transform: [{ scaleX: -1 }] }]}>
+            {Object.entries(furnitureCategories).map(([category, items]) => (
+              <View key={category} style={styles.categoryContainer}>
+                <TouchableOpacity 
+                  style={styles.categoryHeader}
+                  onPress={() => toggleCategory(category)}
+                >
+                  <Text style={styles.categoryTitle}>{category}</Text>
+                  <Text style={styles.expandIcon}>
+                    {expandedCategory === category ? '−' : '+'}
+                  </Text>
+                </TouchableOpacity>
+
+                {expandedCategory === category && items.map((item, index) => (
+                  <TouchableOpacity 
+                    key={`${category}-${index}`}
+                    style={styles.furnitureItem} 
+                    onPress={() => addFurniture(item.name.toLowerCase(), item.image, item.dimensions)}
+                  >
+                    <Image source={item.image} style={styles.furnitureImage} />
+                    <Text style={styles.furnitureText}>{item.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
+
+const CustomRoom = () => {
+  const [furnitureItems, setFurnitureItems] = useState([]);
+  const viewShotRef = useRef(null);
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   useEffect(() => {
-    const fetchRoomData = async () => {
-      if (!uid) return; // Only fetch data if user is logged in
-
-      try {
-        // Create a query to get the most recent room by sorting by `createdAt` and limiting to 1 document
-        const roomRef = collection(FIREBASE_DB, `rooms/${uid}/userRooms`);
-        const most_recent = query(roomRef, orderBy('createdAt', 'desc'), limit(1)); // Assuming `createdAt` field exists
-
-        const querySnapshot = await getDocs(most_recent);
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          // Check if the data contains valid width and height
-          if (data.width && data.height) {
-            setRoomDimensions({
-              width: parseInt(data.width) * 50, // Adjust width if necessary
-              height: parseInt(data.height) * 50, // Adjust height if necessary
-            });
-          }
-        });
-      } catch (error) {
-        console.error("Error fetching room data: ", error);
-      }
-    };
-
-    // Call fetchRoomData function to fetch data when component mounts
-    fetchRoomData();
-  }, [uid]);
-  useEffect(() => {
-    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
 
-    // Cleanup function to unlock orientation when the component unmounts
     return () => {
       const unlockOrientation = async () => {
-        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
+        await ScreenOrientation.unlockAsync();
       };
       unlockOrientation();
     };
   }, []);
 
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
+    setFurnitureItems((prevItems) => [...prevItems, newItem]);
+  };
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
-        // Capture the screenshot using captureRef
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
         });
-        console.log("Screenshot captured:", uri);
 
-        // Request permissions for media library
         const { status } = await MediaLibrary.requestPermissionsAsync();
         if (status === 'granted') {
-          // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
-          console.log('Screenshot saved to gallery!', asset);
-
-          // Save screenshot to Firebase Storage
+          
           const storage = getStorage();
           const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
 
-          const response = await fetch(uri); // Fetch the file from the uri
-          const blob = await response.blob(); // Convert to blob for Firebase upload
+          const response = await fetch(uri);
+          const blob = await response.blob();
 
-          await uploadBytes(storageRef, blob); // Upload to Firebase storage
-          const downloadURL = await getDownloadURL(storageRef); // Get download URL
+          await uploadBytes(storageRef, blob);
+          const downloadURL = await getDownloadURL(storageRef);
 
-          // Save the download URL to Firestore
           const firestore = getFirestore();
           await addDoc(collection(firestore, 'screenshots'), {
             downloadURL: downloadURL,
-            uid: uid, // Add the user's uid
-            createdAt: new Date(), // Optional: Add timestamp for better organization
+            uid: uid,
+            createdAt: new Date(),
           });
 
           alert('Screenshot saved successfully to Firebase and gallery!');
@@ -167,79 +185,34 @@ const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any
   };
 
   return (
-    <View style={styles.container} ref={viewShotRef}>
+    <View style={styles.container}>
       <StatusBar backgroundColor="black" />
-      <StatusBar backgroundColor="black" />
-      <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
-        {furnitureItems.map((item, index) => (
-          <DraggableFurniture
-            key={index}
-            image={item.image}
-            initialPosition={item.position}
-            onPositionChange={(newPosition) => {
-              const updatedItems = [...furnitureItems];
-              updatedItems[index] = { ...item, position: newPosition };
-              setFurnitureItems(updatedItems);
-            }}
+      <FurnitureSidebar addFurniture={addFurniture} />
+      <View style={styles.mainContent} ref={viewShotRef}>
+        <View style={styles.room}>
+          {furnitureItems.map((item, index) => (
+            <DraggableFurniture
+              key={index}
+              image={item.image}
+              dimensions={item.dimensions}
+              initialPosition={item.position}
+              onPositionChange={(newPosition) => {
+                const updatedItems = [...furnitureItems];
+                updatedItems[index] = { ...item, position: newPosition };
+                setFurnitureItems(updatedItems);
+              }}
+            />
+          ))}
+        </View>
+        <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
+          <Image 
+            source={require('../../images/Camera.png')}
+            style={styles.buttonImage}
           />
-        ))}
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
-        <Image 
-          source={require('../../images/Camera.png')} // Update with your image path
-          style={styles.buttonImage}
-        />
-      </TouchableOpacity>
     </View>
   );
-};
-
-const CustomRoom = () => {
-  const [furnitureItems, setFurnitureItems] = useState([]);
-
-  const addFurniture = (name, image, dimensions) => {
-    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => [...prevItems, newItem]);
-  };
-
-  return (
-    <Drawer.Navigator
-      initialRouteName="CustomRoomScreen"
-      drawerType="slide"
-      drawerPosition="left"
-      overlayColor="transparent"
-      drawerContent={(props) => <CustomDrawerContent {...props} addFurniture={addFurniture} />}
-      drawerStyle={styles.drawer}
-      screenOptions={({ navigation }) => ({
-        drawerStyle: {
-          width: 250,
-        },
-        headerTitle: '',
-        headerStyle: {
-          height: 50,
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-            style={styles.menuButtonContainer}
-            onPress={() => navigation.toggleDrawer()}
-          >
-            <Text style={styles.menuIcon}>☰</Text>
-          </TouchableOpacity>
-        ),
-      })}
-    >
-      <Drawer.Screen
-        name="CustomRoomScreen"
-        children={() => (
-          <CustomRoomScreen 
-            furnitureItems={furnitureItems} 
-            setFurnitureItems={setFurnitureItems}
-          />
-        )}
-      />
-    </Drawer.Navigator>
-  );
-
 };
 
 const styles = StyleSheet.create({
