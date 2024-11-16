@@ -143,25 +143,28 @@ const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           // Check if the data contains valid width and height
-          if ((data.width && data.height) && (data.width <= 450 && data.height <= 300)) {
-            setRoomDimensions({
-              width: parseInt(data.width) * 25, // Adjust width if necessary
-              height: parseInt(data.height) * 25, // Adjust height if necessary
-            });
-          }
-          else {
-            const baseWidth = 450; 
-            const baseHeight = 300; 
-
-            const widthScale = parseInt(data.width) / baseWidth;
-            const heightScale = parseInt(data.height) / baseHeight; 
-            setWidthScaleFactor(widthScale)
-            setHeightScaleFactor(heightScale)
-
-            setRoomDimensions({
-              width: parseInt(data.width) * widthScale,
-              height: parseInt(data.height) * heightScale,
-            })
+          if (data.width && data.height) {
+            if ((data.width > 450 && data.height > 300)) {
+              const baseWidth = 450; 
+              const baseHeight = 300; 
+  
+              const widthScale = parseInt(data.width) / baseWidth;
+              const heightScale = parseInt(data.height) / baseHeight; 
+              setWidthScaleFactor(widthScale)
+              setHeightScaleFactor(heightScale)
+  
+              setRoomDimensions({
+                width: parseInt(data.width) * widthScale,
+                height: parseInt(data.height) * heightScale,
+              });
+            }
+          
+            else {
+              setRoomDimensions({
+                width: parseInt(data.width) * widthScale,
+                height: parseInt(data.height) * heightScale,
+              });
+            }
           }
         });
       } catch (error) {
