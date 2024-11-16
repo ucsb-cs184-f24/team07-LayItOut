@@ -28,7 +28,7 @@ const furnitureCategories = {
 };
 
 // Keep your existing DraggableFurniture component unchanged
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, scaledWidth, scaledHeight }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -57,13 +57,13 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
     })
   ).current;
 
-  const scaledWidth = dimensions.width * scaleFactor
-  const scaledHeight = dimensions.height * scaleFactor
+  const newWidth = dimensions.width * scaledWidth
+  const newHeight = dimensions.height * scaledHeight
 
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: newWidth, height: newHeight }]}
       resizeMode='contain'
       {...panResponder.panHandlers}
     />
@@ -123,9 +123,12 @@ const FurnitureSidebar = ({ addFurniture }) => {
 
 // Keep your existing CustomRoomScreen component unchanged
 const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
-  const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
+  const [roomDimensions, setRoomDimensions] = useState({ width: 450, height: 300 });
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
+  const [widthScale, setWidthScaleFactor] = useState(25); // Default value
+  const [heightScale, setHeightScaleFactor] = useState(25); // Default value
+
 
   useEffect(() => {
     const fetchRoomData = async () => {
@@ -140,11 +143,25 @@ const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           // Check if the data contains valid width and height
-          if (data.width && data.height) {
+          if ((data.width && data.height) && (data.width <= 450 && data.height <= 300)) {
             setRoomDimensions({
-              width: parseInt(data.width) * 50, // Adjust width if necessary
-              height: parseInt(data.height) * 50, // Adjust height if necessary
+              width: parseInt(data.width) * 25, // Adjust width if necessary
+              height: parseInt(data.height) * 25, // Adjust height if necessary
             });
+          }
+          else {
+            const baseWidth = 450; 
+            const baseHeight = 300; 
+
+            const widthScale = parseInt(data.width) / baseWidth;
+            const heightScale = parseInt(data.height) / baseHeight; 
+            setWidthScaleFactor(widthScale)
+            setHeightScaleFactor(heightScale)
+
+            setRoomDimensions({
+              width: parseInt(data.width) * widthScale,
+              height: parseInt(data.height) * heightScale,
+            })
           }
         });
       } catch (error) {
