@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center', // Center contents
         width: width,
         height: height,
-        justifyContent: 'center',
         alignItems: 'center',
         ...StyleSheet.absoluteFillObject,
     },
@@ -106,12 +105,15 @@ const styles = StyleSheet.create({
         marginVertical: 5, 
         height: 50, 
         borderWidth: 1,
-        borderRadius: 20, 
-        padding: 20,
+        borderRadius: 15, 
+        paddingHorizontal: 15, // Only horizontal padding for width adjustment
+        paddingVertical: 10,
         width: 300,
         //backgroundColor: '#fff'
         backgroundColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent white
-        borderColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent border
+        borderColor: 'rgba(255, 255, 255, 0.8)', // Optional: semi-transparent border,
+        textAlignVertical: 'center', // Centers text vertically
+        textAlign: 'left' // Aligns text to the left
     },
     button: {
         justifyContent: 'center',

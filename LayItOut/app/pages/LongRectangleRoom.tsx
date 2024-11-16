@@ -9,9 +9,9 @@ import bookshelf from '../../images/bookshelf_2.png';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
+
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -79,10 +79,39 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
 };
 
 // Keep your existing LongRectangleRoomScreen component unchanged
-const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }: RouterProps) => {
+const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
+  const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      if (!uid) return; // Only fetch data if user is logged in
+
+      try {
+        // Create a query to get the most recent room by sorting by `createdAt` and limiting to 1 document
+        const roomRef = collection(FIREBASE_DB, `rooms/${uid}/userRooms`);
+        const most_recent = query(roomRef, orderBy('createdAt', 'desc'), limit(1)); // Assuming `createdAt` field exists
+
+        const querySnapshot = await getDocs(most_recent);
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          // Check if the data contains valid width and height
+          if (data.width && data.height) {
+            setRoomDimensions({
+              width: parseInt(data.width) * 50, // Adjust width if necessary
+              height: parseInt(data.height) * 50, // Adjust height if necessary
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching room data: ", error);
+      }
+    };
+
+    // Call fetchRoomData function to fetch data when component mounts
+    fetchRoomData();
+  }, [uid]);
   useEffect(() => {
     // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
@@ -149,7 +178,7 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { naviga
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <StatusBar backgroundColor="black" />
-      <View style={styles.room}>
+      <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
             key={index}

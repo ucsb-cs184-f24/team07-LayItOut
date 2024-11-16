@@ -40,8 +40,12 @@ function TabNavigator() {
 
         if (route.name === 'HomePage') {
           iconName = focused ? 'home' : 'home-outline'; // Icon for "My app" tab
-        } else {
+        }
+        else if (route.name === 'CreatePage') {
           iconName = focused ? 'add-circle' : 'add-circle-outline'; // Icon for "Welcome" tab
+        }
+        else {
+          iconName = focused ? 'arrow-undo' : 'arrow-undo-outline'; // Icon for "Welcome" tab
         }
 
         // Return the icon component
