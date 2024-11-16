@@ -10,7 +10,7 @@ import SplashPage from './pages/SplashPage';
 import Login from './pages/Login';
 import HomePage from './pages/HomePage';
 import CreatePage from './pages/CreatePage';
-import LongRectangleRoom from './pages/LongRectangleRoom';
+import CustomRoom from './pages/CustomRoom';
 import RectangleRoom from './pages/RectangleRoom';
 import SquareRoom from './pages/SquareRoom';
 import PreviousRooms from "./pages/PreviousRooms";
@@ -26,7 +26,7 @@ function InsideLayout() {
       <InsideStack.Screen name="CreatePage" component={CreatePage} options={{ title: 'Create a Room' }} />
       <InsideStack.Screen name="SquareRoom" component={SquareRoom} options={{ title: 'Square Room' }} />
       <InsideStack.Screen name="RectangleRoom" component={RectangleRoom} options={{ title: 'Rectangle Room' }} />
-      <InsideStack.Screen name="LongRectangleRoom" component={LongRectangleRoom} options={{ title: 'Long Rectangle Room' }} />
+      <InsideStack.Screen name="CustomRoom" component={CustomRoom} options={{ title: 'Custom Room' }} />
       <InsideStack.Screen name="PreviousRooms" component={PreviousRooms} options={{ title: 'Previous Rooms' }} />
     </InsideStack.Navigator>
   );
@@ -90,7 +90,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="SquareRoom" component={SquareRoom} options={{ title: 'Square Room' }} />
-          <Stack.Screen name="LongRectangleRoom" component={LongRectangleRoom} options={{ title: 'Long Rectangle Room' }} />
+          <Stack.Screen name="CustomRoom" component={CustomRoom} options={{ title: 'Custom Room' }} />
           <Stack.Screen name="RectangleRoom" component={RectangleRoom} options={{ title: 'Rectangle Room' }} />
           </>
         ) : (
