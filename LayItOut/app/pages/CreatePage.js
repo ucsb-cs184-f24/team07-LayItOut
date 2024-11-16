@@ -40,13 +40,13 @@ const CreatePage = () => {
         console.log('Room saved with ID:', docRef.id);
         Alert.alert('Alert', 'Custom room dimensions saved successfully!');
         
-        // Clear inputs and navigate to LongRectangleRoom
+        // Clear inputs and navigate to CustomRoom
         setShowCustomInputs(false);
         setCustomHeight('');
         setCustomWidth('');
         
-        // Navigate to LongRectangleRoom
-        navigation.navigate('LongRectangleRoom');
+        // Navigate to CustomRoom
+        navigation.navigate('CustomRoom');
         
       } catch (error) {
         console.error('Error saving custom room dimensions: ', error);
