@@ -70,8 +70,8 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
   );
 };
 
-// Keep your existing LongRectangleRoomScreen component unchanged
-const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
+// Keep your existing CustomRoomScreen component unchanged
+const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
   const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
@@ -194,7 +194,7 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems, navigation
   );
 };
 
-const LongRectangleRoom = () => {
+const CustomRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
 
   const addFurniture = (name, image, dimensions) => {
@@ -204,7 +204,7 @@ const LongRectangleRoom = () => {
 
   return (
     <Drawer.Navigator
-      initialRouteName="LongRectangleRoomScreen"
+      initialRouteName="CustomRoomScreen"
       drawerType="slide"
       drawerPosition="left"
       overlayColor="transparent"
@@ -229,9 +229,9 @@ const LongRectangleRoom = () => {
       })}
     >
       <Drawer.Screen
-        name="LongRectangleRoomScreen"
+        name="CustomRoomScreen"
         children={() => (
-          <LongRectangleRoomScreen 
+          <CustomRoomScreen 
             furnitureItems={furnitureItems} 
             setFurnitureItems={setFurnitureItems}
           />
@@ -313,4 +313,4 @@ const styles = StyleSheet.create({
   },
 });
   
-export default LongRectangleRoom;
+export default CustomRoom;
