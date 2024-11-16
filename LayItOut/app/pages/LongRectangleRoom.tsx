@@ -156,23 +156,22 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { naviga
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
-      <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-      {furnitureItems.map((item: { id: React.Key | null | undefined; image: any; position: any; }) => (
-  <DraggableFurniture
-    key={item.id}
-    image={item.image}
-    initialPosition={item.position}
-    onPositionChange={(newPosition) => {
-      const updatedItems = furnitureItems.map((furniture) =>
-        furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
-      );
-      updatedItems.forEach((furniture, idx) => {
-        console.log(`Furniture ${idx}: ${furniture.name}, Position: x=${furniture.position.x}, y=${furniture.position.y}`);
-      });
-      setFurnitureItems(updatedItems);
-      }}
-    />
+      {furnitureItems.map((item, index) => (
+        <DraggableFurniture
+          key={item.id}
+          image={item.image}
+          initialPosition={item.position}
+          onPositionChange={(newPosition) => {
+            setFurnitureItems((prevItems) => {
+              const updatedItems = prevItems.map((furniture, idx) =>
+                idx === index ? { ...furniture, position: newPosition } : furniture
+              );
+              console.log('Furniture array after move:', updatedItems);
+              return updatedItems;
+            });
+          }}
+          />
     ))}
       </View>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
