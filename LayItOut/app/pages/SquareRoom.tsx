@@ -61,6 +61,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
     <Image
       source={image}
       style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+      resizeMode='contain'
       {...panResponder.panHandlers}
     />
   );
