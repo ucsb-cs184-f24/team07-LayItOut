@@ -101,9 +101,9 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation
   }, []);
 
   useEffect(() => {
-    console.log('Furniture items updated:');
+    //console.log('Furniture items updated:');
     furnitureItems.forEach((item, idx) => {
-      console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
+      //console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
     });
   }, [furnitureItems]);
 
@@ -167,7 +167,7 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation
                 const updatedItems = prevItems.map((furniture, idx) =>
                   idx === index ? { ...furniture, position: newPosition } : furniture
                 );
-                console.log('Furniture array after move:', updatedItems);
+                //console.log('Furniture array after move:', updatedItems);
                 return updatedItems;
               });
             }}
