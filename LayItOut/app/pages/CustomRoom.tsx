@@ -12,35 +12,23 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 
+const scaleFactor = 25
 
-interface RouterProps {
-  navigation: NavigationProp<any, any>;
-}
-const Drawer = createDrawerNavigator();
-
-// Custom drawer content with furniture items
-const CustomDrawerContent = (props) => {
-  return (
-    <DrawerContentScrollView {...props} contentContainerStyle={styles.furnitureListContainer}>
-      <Text style={styles.title}>Furniture List</Text>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('chair', chair)}>
-        <Image source={chair} style={styles.furnitureImage} />
-        <Text style={styles.furnitureText}>Chair</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bed', bed)}>
-        <Image source={bed} style={styles.furnitureImage} />
-        <Text style={styles.furnitureText}>Bed</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.furnitureItem} onPress={() => props.addFurniture('bookshelf', bookshelf)}>
-        <Image source={bookshelf} style={styles.furnitureImage} />
-        <Text style={styles.furnitureText}>Bookshelf</Text>
-      </TouchableOpacity>
-    </DrawerContentScrollView>
-  );
+// Furniture categories organization
+const furnitureCategories = {
+  'Living Room': [
+    { name: 'Chair', image: chair, dimensions:{width: 2.2, height: 1.3} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.6, height: 3} }
+  ],
+  'Bedroom': [
+    { name: 'Bed', image: bed, dimensions:{width: 5, height: 6.7} }
+  ],
+  'Kitchen': [],
+  'Bathroom': []
 };
 
 // Keep your existing DraggableFurniture component unchanged
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -69,10 +57,14 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
     })
   ).current;
 
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor
+
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+      resizeMode='contain'
       {...panResponder.panHandlers}
     />
   );
@@ -205,8 +197,8 @@ const LongRectangleRoomScreen = ({ furnitureItems, setFurnitureItems, navigation
 const LongRectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
 
-  const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
