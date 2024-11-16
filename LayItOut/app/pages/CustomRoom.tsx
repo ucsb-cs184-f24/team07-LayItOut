@@ -121,56 +121,89 @@ const FurnitureSidebar = ({ addFurniture }) => {
   );
 };
 
-const CustomRoom = () => {
-  const [furnitureItems, setFurnitureItems] = useState([]);
-  const viewShotRef = useRef(null);
+// Keep your existing CustomRoomScreen component unchanged
+const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
+  const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
+  const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   useEffect(() => {
+    const fetchRoomData = async () => {
+      if (!uid) return; // Only fetch data if user is logged in
+
+      try {
+        // Create a query to get the most recent room by sorting by `createdAt` and limiting to 1 document
+        const roomRef = collection(FIREBASE_DB, `rooms/${uid}/userRooms`);
+        const most_recent = query(roomRef, orderBy('createdAt', 'desc'), limit(1)); // Assuming `createdAt` field exists
+
+        const querySnapshot = await getDocs(most_recent);
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          // Check if the data contains valid width and height
+          if (data.width && data.height) {
+            setRoomDimensions({
+              width: parseInt(data.width) * 50, // Adjust width if necessary
+              height: parseInt(data.height) * 50, // Adjust height if necessary
+            });
+          }
+        });
+      } catch (error) {
+        console.error("Error fetching room data: ", error);
+      }
+    };
+
+    // Call fetchRoomData function to fetch data when component mounts
+    fetchRoomData();
+  }, [uid]);
+  useEffect(() => {
+    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
 
+    // Cleanup function to unlock orientation when the component unmounts
     return () => {
       const unlockOrientation = async () => {
-        await ScreenOrientation.unlockAsync();
+        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
       };
       unlockOrientation();
     };
   }, []);
 
-  const addFurniture = (name, image, dimensions) => {
-    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => [...prevItems, newItem]);
-  };
-
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
+        // Capture the screenshot using captureRef
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
         });
+        console.log("Screenshot captured:", uri);
 
+        // Request permissions for media library
         const { status } = await MediaLibrary.requestPermissionsAsync();
         if (status === 'granted') {
+          // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
-          
+          console.log('Screenshot saved to gallery!', asset);
+
+          // Save screenshot to Firebase Storage
           const storage = getStorage();
           const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
 
-          const response = await fetch(uri);
-          const blob = await response.blob();
+          const response = await fetch(uri); // Fetch the file from the uri
+          const blob = await response.blob(); // Convert to blob for Firebase upload
 
-          await uploadBytes(storageRef, blob);
-          const downloadURL = await getDownloadURL(storageRef);
+          await uploadBytes(storageRef, blob); // Upload to Firebase storage
+          const downloadURL = await getDownloadURL(storageRef); // Get download URL
 
+          // Save the download URL to Firestore
           const firestore = getFirestore();
           await addDoc(collection(firestore, 'screenshots'), {
             downloadURL: downloadURL,
-            uid: uid,
-            createdAt: new Date(),
+            uid: uid, // Add the user's uid
+            createdAt: new Date(), // Optional: Add timestamp for better organization
           });
 
           alert('Screenshot saved successfully to Firebase and gallery!');
@@ -182,6 +215,43 @@ const CustomRoom = () => {
         alert('Failed to save screenshot.');
       }
     }
+  };
+
+  return (
+    <View style={styles.container} ref={viewShotRef}>
+      <StatusBar backgroundColor="black" />
+      <StatusBar backgroundColor="black" />
+      <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
+        {furnitureItems.map((item, index) => (
+          <DraggableFurniture
+            key={index}
+            image={item.image}
+            dimensions={item.dimensions}
+            initialPosition={item.position}
+            onPositionChange={(newPosition) => {
+              const updatedItems = [...furnitureItems];
+              updatedItems[index] = { ...item, position: newPosition };
+              setFurnitureItems(updatedItems);
+            }}
+          />
+        ))}
+      </View>
+      <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
+        <Image 
+          source={require('../../images/Camera.png')} // Update with your image path
+          style={styles.buttonImage}
+        />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const CustomRoom = () => {
+  const [furnitureItems, setFurnitureItems] = useState([]);
+
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
+    setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
   return (
