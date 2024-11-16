@@ -15,7 +15,7 @@ const scaleFactor = 25
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Chair', image: chair, dimensions:{width: 2.2, height: 1.3} },
+    { name: 'Chair', image: chair, dimensions:{width: 2.8, height: 2} },
     { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.6, height: 3} }
   ],
   'Bedroom': [
