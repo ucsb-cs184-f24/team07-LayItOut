@@ -11,7 +11,6 @@ import * as MediaLibrary from 'expo-media-library';
 import { NavigationProp } from '@react-navigation/native';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
-import storage from '@react-native-firebase/storage';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 
 interface RouterProps {
@@ -42,7 +41,7 @@ const CustomDrawerContent = (props) => {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -50,8 +49,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-      },
+      onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
           x: positionRef.current.x + gestureState.dx,
@@ -72,29 +70,33 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   ).current;
 
   return (
-    <Image
-      source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
-      {...panResponder.panHandlers}
-    />
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+      <Image source={image} style={styles.furnitureImage} {...panResponder.panHandlers} />
+      
+      {/* Delete Button */}
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => onDelete(id)}
+      >
+        <Text style={styles.deleteButtonText}>🗑️</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }: RouterProps) => {
-  const viewShotRef = useRef(null); // Create a ref using useRef
+  const viewShotRef = useRef(null);
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   useEffect(() => {
-    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
 
-    // Cleanup function to unlock orientation when the component unmounts
     return () => {
       const unlockOrientation = async () => {
-        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
+        await ScreenOrientation.unlockAsync();
       };
       unlockOrientation();
     };
@@ -103,36 +105,31 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
-        // Capture the screenshot using captureRef
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
         });
         console.log("Screenshot captured:", uri);
 
-        // Request permissions for media library
         const { status } = await MediaLibrary.requestPermissionsAsync();
         if (status === 'granted') {
-          // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
           console.log('Screenshot saved to gallery!', asset);
 
-          // Save screenshot to Firebase Storage
           const storage = getStorage();
           const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
 
-          const response = await fetch(uri); // Fetch the file from the uri
-          const blob = await response.blob(); // Convert to blob for Firebase upload
+          const response = await fetch(uri); 
+          const blob = await response.blob();
 
-          await uploadBytes(storageRef, blob); // Upload to Firebase storage
-          const downloadURL = await getDownloadURL(storageRef); // Get download URL
+          await uploadBytes(storageRef, blob); 
+          const downloadURL = await getDownloadURL(storageRef); 
 
-          // Save the download URL to Firestore
           const firestore = getFirestore();
           await addDoc(collection(firestore, 'screenshots'), {
             downloadURL: downloadURL,
-            uid: uid, // Add the user's uid
-            createdAt: new Date(), // Optional: Add timestamp for better organization
+            uid: uid, 
+            createdAt: new Date(), 
           });
 
           alert('Screenshot saved successfully to Firebase and gallery!');
@@ -146,30 +143,36 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
     }
   };
 
+  // Handle furniture item deletion
+  const handleDelete = (id) => {
+    setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
+  };
+
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
       <View style={styles.room}>
-        {furnitureItems.map((item, index) => (
+        {furnitureItems.map((item) => (
           <DraggableFurniture
-          key={index.id}
-          image={item.image}
-          initialPosition={item.position}
-          onPositionChange={(newPosition) => {
-            setFurnitureItems((prevItems) => {
-              const updatedItems = prevItems.map((furniture, idx) =>
-                idx === index ? { ...furniture, position: newPosition } : furniture
-              );
-              //console.log('Furniture array after move:', updatedItems);
-              return updatedItems;
-            });
-          }}
-        />
+            key={item.id}
+            id={item.id} 
+            image={item.image}
+            initialPosition={item.position}
+            onPositionChange={(newPosition) => {
+              setFurnitureItems((prevItems) => {
+                const updatedItems = prevItems.map((furniture) =>
+                  furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
+                );
+                return updatedItems;
+              });
+            }}
+            onDelete={handleDelete} // Pass handleDelete function
+          />
         ))}
       </View>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
         <Image 
-          source={require('../../images/Camera.png')} // Update with your image path
+          source={require('../../images/Camera.png')}
           style={styles.buttonImage}
         />
       </TouchableOpacity>
@@ -182,11 +185,7 @@ const SquareRoom = () => {
 
   const addFurniture = (name, image) => {
     const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => {
-      const updatedItems = [...prevItems, newItem];
-      //console.log('Furniture array after addition:', updatedItems);
-      return updatedItems;
-    });
+    setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
   return (
@@ -289,14 +288,26 @@ const styles = StyleSheet.create({
     height: 50,
     position: 'absolute',
   },
+  deleteButton: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    backgroundColor: 'red',
+    borderRadius: 20,
+    padding: 5,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 18,
+  },
   screenshotButton: {
-    position: 'absolute', // Position it at the bottom right
+    position: 'absolute', 
     bottom: 0,
     right: 170,
   },
   buttonImage: {
-    width: 35, // Set the desired width
-    height: 35, // Set the desired height
+    width: 35, 
+    height: 35, 
   },
 });
 
