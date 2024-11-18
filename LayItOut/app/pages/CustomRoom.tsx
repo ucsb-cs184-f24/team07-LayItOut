@@ -238,29 +238,32 @@ const CustomRoom = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
   };
 
   return (
-    <View style={styles.container} ref={viewShotRef}>
+    <View style={styles.container}>
       <StatusBar backgroundColor="black" />
-      <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
-        {furnitureItems.map((item, index) => (
-          <DraggableFurniture
-            key={index}
-            image={item.image}
-            dimensions={item.dimensions}
-            initialPosition={item.position}
-            onPositionChange={(newPosition) => {
-              const updatedItems = [...furnitureItems];
-              updatedItems[index] = { ...item, position: newPosition };
-              setFurnitureItems(updatedItems);
-            }}
+      <FurnitureSidebar addFurniture={addFurniture} />
+      <View style={styles.mainContent} ref={viewShotRef}>
+        <View style={styles.room}>
+          {furnitureItems.map((item, index) => (
+            <DraggableFurniture
+              key={index}
+              image={item.image}
+              dimensions={item.dimensions}
+              initialPosition={item.position}
+              onPositionChange={(newPosition) => {
+                const updatedItems = [...furnitureItems];
+                updatedItems[index] = { ...item, position: newPosition };
+                setFurnitureItems(updatedItems);
+              }}
+            />
+          ))}
+        </View>
+        <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
+          <Image 
+            source={require('../../images/Camera.png')}
+            style={styles.buttonImage}
           />
-        ))}
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
-        <Image 
-          source={require('../../images/Camera.png')} // Update with your image path
-          style={styles.buttonImage}
-        />
-      </TouchableOpacity>
     </View>
   );
 };
