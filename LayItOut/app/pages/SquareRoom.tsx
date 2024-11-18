@@ -6,73 +6,74 @@ import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import camera from '../../images/Camera.png';
+
+
+
 
 // Direct imports for all furniture
 import bathsink from '../../images/bathsink.png';
-import bathtub from '../../images/bathtub3.png';
-import p from '../../images/p.png';
-import lamp from '../../images/lamp.png';
-import bookshelf from '../../images/bookshelf3.png';
-import sidebed from '../../images/sidebed.png';
-import table from '../../images/table.png';
-import side2 from '../../images/side2.png';
-import officeChair from '../../images/office_chair.png';
-import queenbed from '../../images/queenbed.png';
-import singlebed from '../../images/singlebed.png';
-import wardrobe from '../../images/wardrobe.png';
-import kitchenTable from '../../images/kitchen_table.png';
-import kitchenIsland from '../../images/kitchen_island.png';
-import washingMachine from '../../images/washing_machine.png';
+import bathtub from '../../images/bathub 3.png';
+import bookshelf from '../../images/bookshelf_2.png';
+import chair from '../../images/Chair.png';
+import chair2 from '../../images/chair2.png';
+import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
+import dining from '../../images/dining.png';
+import fireplace from '../../images/fireplace.png';
 import fridge from '../../images/fridge.png';
+import kitchenIsland from '../../images/kitcehn island.png';
+import kitchenTable from '../../images/kitchen table.png';
+import lamp from '../../images/lamp.png';
+import officeChair from '../../images/office chair.png';
 import oven from '../../images/oven.png';
+import p from '../../images/p.png';
+import queenbed from '../../images/queenbed.png';
+import side1 from '../../images/side1.png';
+import side2 from '../../images/side2.png';
+import sidebed from '../../images/sidebed.png';
 import sofa2 from '../../images/sofa2.png';
 import sofa3 from '../../images/sofa3.png';
-import side1 from '../../images/side1.png';
-import consoleTable from '../../images/console.png';
-import fireplace from '../../images/fireplace.png';
+import stove from '../../images/stove.png';
+import table from '../../images/table.png';
 import table1 from '../../images/table1.png';
 import table2 from '../../images/table2.png';
-import chair2 from '../../images/chair2.png';
-import dining from '../../images/dining.png';
-import stove from '../../images/stove.png';
-import toilet from '../../images/toilet.png';
 import table3 from '../../images/table3.png';
+import toilet from '../../images/toilet.png';
 import trashcan from '../../images/trashcan.png';
-import plant from '../../images/plant.png';
-import sink from '../../images/sink.png';
-import camera from '../../images/Camera.png';
+import wardrobe from '../../images/wardropbe.png';
+import washingMachine from '../../images/washing machine.png';
+import Chair from '../../images/Chair.png';
+
 
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2 },
     { name: 'Sofa (3-Seater)', image: sofa3 },
+    { name: 'Chair', image: chair },
     { name: 'Side Table 1', image: side1 },
     { name: 'Side Table 2', image: side2 },
+    { name: 'Bookshelf', image: bookshelf },
     { name: 'Console Table', image: consoleTable },
     { name: 'Fireplace', image: fireplace },
     { name: 'Coffee Table', image: table1 },
-    { name: 'Bookshelf', image: bookshelf },
-    { name: 'Plant', image: plant },
     { name: 'Lamp', image: lamp }
   ],
   'Bedroom': [
     { name: 'Queen Bed', image: queenbed },
-    { name: 'Single Bed', image: singlebed },
     { name: 'Bedside Table', image: sidebed },
     { name: 'Wardrobe', image: wardrobe },
     { name: 'Office Chair', image: officeChair },
     { name: 'Table', image: table }
   ],
   'Kitchen': [
+    { name: 'Refrigerator', image: fridge },
     { name: 'Kitchen Island', image: kitchenIsland },
     { name: 'Kitchen Table', image: kitchenTable },
     { name: 'Countertop', image: countertop },
-    { name: 'Refrigerator', image: fridge },
     { name: 'Oven', image: oven },
     { name: 'Stove', image: stove },
-    { name: 'Sink', image: sink },
     { name: 'Dining Set', image: dining },
     { name: 'Dining Chair', image: chair2 },
     { name: 'Dining Table', image: table3 },
