@@ -44,6 +44,8 @@ import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
 import Chair from '../../images/Chair.png';
+import sink from '../../images/sink.png';
+
 
 
 // Furniture categories organization
@@ -69,6 +71,7 @@ const furnitureCategories = {
   ],
   'Kitchen': [
     { name: 'Refrigerator', image: fridge },
+    { name: 'Sink', image: sink }, 
     { name: 'Kitchen Island', image: kitchenIsland },
     { name: 'Kitchen Table', image: kitchenTable },
     { name: 'Countertop', image: countertop },
