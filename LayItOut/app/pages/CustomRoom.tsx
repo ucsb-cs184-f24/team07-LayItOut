@@ -122,7 +122,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
 };
 
 // Keep your existing CustomRoomScreen component unchanged
-const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
+const CustomRoom = ({ furnitureItems, setFurnitureItems, navigation }: any) => {
   const [roomDimensions, setRoomDimensions] = useState({ width: 450, height: 300 });
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
@@ -240,7 +240,6 @@ const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any
   return (
     <View style={styles.container} ref={viewShotRef}>
       <StatusBar backgroundColor="black" />
-      <StatusBar backgroundColor="black" />
       <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
@@ -262,45 +261,6 @@ const CustomRoomScreen = ({ furnitureItems, setFurnitureItems, navigation }: any
           style={styles.buttonImage}
         />
       </TouchableOpacity>
-    </View>
-  );
-};
-
-const CustomRoom = () => {
-  const [furnitureItems, setFurnitureItems] = useState([]);
-
-  const addFurniture = (name, image, dimensions) => {
-    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => [...prevItems, newItem]);
-  };
-
-  return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="black" />
-      <FurnitureSidebar addFurniture={addFurniture} />
-      <View style={styles.mainContent} ref={viewShotRef}>
-        <View style={styles.room}>
-          {furnitureItems.map((item, index) => (
-            <DraggableFurniture
-              key={index}
-              image={item.image}
-              dimensions={item.dimensions}
-              initialPosition={item.position}
-              onPositionChange={(newPosition) => {
-                const updatedItems = [...furnitureItems];
-                updatedItems[index] = { ...item, position: newPosition };
-                setFurnitureItems(updatedItems);
-              }}
-            />
-          ))}
-        </View>
-        <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
-          <Image 
-            source={require('../../images/Camera.png')}
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
