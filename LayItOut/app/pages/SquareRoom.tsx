@@ -45,6 +45,8 @@ import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
 import Chair from '../../images/Chair.png';
 import sink from '../../images/sink.png';
+import diningtable from '../../images/diningtable.png';
+import stovee from '../../images/stovee.png';
 
 
 
@@ -76,11 +78,11 @@ const furnitureCategories = {
     { name: 'Kitchen Table', image: kitchenTable },
     { name: 'Countertop', image: countertop },
     { name: 'Oven', image: oven },
-    { name: 'Stove', image: stove },
-    { name: 'Dining Set', image: dining },
+    { name: 'Stove', image: stovee }, 
+    { name: 'Dining Set', image: diningtable },
     { name: 'Dining Chair', image: chair2 },
     { name: 'Dining Table', image: table3 },
-    { name: 'Trash Can', image: trashcan }
+    { name: 'Trash Can', image: trashcan }, 
   ],
   'Bathroom': [
     { name: 'Bathtub', image: bathtub },

@@ -6,24 +6,88 @@ import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
-import chair from '../../images/Chair.png';
-import bed from '../../images/Bed.png';
+import camera from '../../images/Camera.png';
+
+// Direct imports for all furniture
+import bathsink from '../../images/bathsink.png';
+import bathtub from '../../images/bathub 3.png';
 import bookshelf from '../../images/bookshelf_2.png';
+import chair from '../../images/Chair.png';
+import chair2 from '../../images/chair2.png';
+import consoleTable from '../../images/consule.png';
+import countertop from '../../images/countertop.png';
+import dining from '../../images/dining.png';
+import fireplace from '../../images/fireplace.png';
+import fridge from '../../images/fridge.png';
+import kitchenIsland from '../../images/kitcehn island.png';
+import kitchenTable from '../../images/kitchen table.png';
+import lamp from '../../images/lamp.png';
+import officeChair from '../../images/office chair.png';
+import oven from '../../images/oven.png';
+import p from '../../images/p.png';
+import queenbed from '../../images/queenbed.png';
+import side1 from '../../images/side1.png';
+import side2 from '../../images/side2.png';
+import sidebed from '../../images/sidebed.png';
+import sofa2 from '../../images/sofa2.png';
+import sofa3 from '../../images/sofa3.png';
+import stove from '../../images/stove.png';
+import table from '../../images/table.png';
+import table1 from '../../images/table1.png';
+import table2 from '../../images/table2.png';
+import table3 from '../../images/table3.png';
+import toilet from '../../images/toilet.png';
+import trashcan from '../../images/trashcan.png';
+import wardrobe from '../../images/wardropbe.png';
+import washingMachine from '../../images/washing machine.png';
+import Chair from '../../images/Chair.png';
+import sink from '../../images/sink.png';
+import diningtable from '../../images/diningtable.png';
+import stovee from '../../images/stovee.png';
 
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
+    { name: 'Sofa (2-Seater)', image: sofa2 },
+    { name: 'Sofa (3-Seater)', image: sofa3 },
     { name: 'Chair', image: chair },
-    { name: 'Bookshelf', image: bookshelf }
+    { name: 'Side Table 1', image: side1 },
+    { name: 'Side Table 2', image: side2 },
+    { name: 'Bookshelf', image: bookshelf },
+    { name: 'Console Table', image: consoleTable },
+    { name: 'Fireplace', image: fireplace },
+    { name: 'Coffee Table', image: table1 },
+    { name: 'Lamp', image: lamp }
   ],
   'Bedroom': [
-    { name: 'Bed', image: bed }
+    { name: 'Queen Bed', image: queenbed },
+    { name: 'Bedside Table', image: sidebed },
+    { name: 'Wardrobe', image: wardrobe },
+    { name: 'Office Chair', image: officeChair },
+    { name: 'Table', image: table }
   ],
-  'Kitchen': [],
-  'Bathroom': []
+  'Kitchen': [
+    { name: 'Refrigerator', image: fridge },
+    { name: 'Sink', image: sink }, 
+    { name: 'Kitchen Island', image: kitchenIsland },
+    { name: 'Kitchen Table', image: kitchenTable },
+    { name: 'Countertop', image: countertop },
+    { name: 'Oven', image: oven },
+    { name: 'Stove', image: stovee }, 
+    { name: 'Dining Set', image: diningtable },
+    { name: 'Dining Chair', image: chair2 },
+    { name: 'Dining Table', image: table3 },
+    { name: 'Trash Can', image: trashcan }
+  ],
+  'Bathroom': [
+    { name: 'Bathtub', image: bathtub },
+    { name: 'Sink', image: bathsink },
+    { name: 'Toilet', image: toilet },
+    { name: 'Washing Machine', image: washingMachine }
+  ]
 };
 
-// Draggable furniture component
+// Draggable furniture component stays the same
 const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
@@ -61,7 +125,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   );
 };
 
-// Furniture sidebar component
+// Furniture sidebar component stays the same
 const FurnitureSidebar = ({ addFurniture }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
 
@@ -97,7 +161,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
                   <TouchableOpacity 
                     key={`${category}-${index}`}
                     style={styles.furnitureItem} 
-                    onPress={() => addFurniture(item.name.toLowerCase(), item.image)}
+                    onPress={() => addFurniture(item.name, item.image)}
                   >
                     <Image source={item.image} style={styles.furnitureImage} />
                     <Text style={styles.furnitureText}>{item.name}</Text>
@@ -112,6 +176,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
   );
 };
 
+// Main component
 const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
   const viewShotRef = useRef(null);
@@ -196,7 +261,7 @@ const RectangleRoom = () => {
         </View>
         <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
           <Image 
-            source={require('../../images/Camera.png')}
+            source={camera}
             style={styles.buttonImage}
           />
         </TouchableOpacity>
@@ -303,7 +368,7 @@ const styles = StyleSheet.create({
   screenshotButton: {
     position: 'absolute',
     bottom: 25,
-    right: 20,
+    right: 70,
   },
   buttonImage: {
     width: 35,
