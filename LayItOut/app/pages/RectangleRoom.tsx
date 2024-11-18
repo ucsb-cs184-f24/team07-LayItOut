@@ -100,6 +100,13 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation
     };
   }, []);
 
+  useEffect(() => {
+    //console.log('Furniture items updated:');
+    furnitureItems.forEach((item, idx) => {
+      //console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
+    });
+  }, [furnitureItems]);
+
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
@@ -152,13 +159,17 @@ const RectangleRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation
       <View style={styles.room}>
         {furnitureItems.map((item, index) => (
           <DraggableFurniture
-            key={index}
+            key = {item.id}
             image={item.image}
             initialPosition={item.position}
             onPositionChange={(newPosition) => {
-              const updatedItems = [...furnitureItems];
-              updatedItems[index] = { ...item, position: newPosition };
-              setFurnitureItems(updatedItems);
+              setFurnitureItems((prevItems) => {
+                const updatedItems = prevItems.map((furniture, idx) =>
+                  idx === index ? { ...furniture, position: newPosition } : furniture
+                );
+                //console.log('Furniture array after move:', updatedItems);
+                return updatedItems;
+              });
             }}
           />
         ))}
@@ -177,8 +188,12 @@ const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
 
   const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => [...prevItems, newItem]);
+    const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
+    setFurnitureItems((prevItems) => {
+      const updatedItems = [...prevItems, newItem];
+      console.log('Furniture array after addition:', updatedItems);
+      return updatedItems;
+    });
   };
 
   return (
