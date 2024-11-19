@@ -180,6 +180,10 @@ const SquareRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent} ref={viewShotRef}>
+        {/* Added Room Dimensions */}
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 310</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 310</Text>
+        
         <View style={styles.room}>
           {furnitureItems.map((item, index) => (
             <DraggableFurniture
@@ -194,6 +198,7 @@ const SquareRoom = () => {
             />
           ))}
         </View>
+
         <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
           <Image 
             source={require('../../images/Camera.png')}
@@ -205,6 +210,7 @@ const SquareRoom = () => {
   );
 };
 
+// Added styles to implement display dimensions:
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -255,6 +261,30 @@ const styles = StyleSheet.create({
     color: '#045497',
     textAlign: 'center',
     paddingLeft: 9,
+  },
+  dimensionText: {
+    position: 'absolute', 
+    color: 'black', 
+    fontWeight: 'bold', 
+    fontSize: 14,         //adjust size to be smaller if needed. 
+    backgroundColor: 'transparent',
+    paddingVertical: 4, 
+    paddingHorizontal: 8, 
+    borderRadius: 4, 
+    zIndex: 10, 
+  },
+  topDimension: {
+    top: 5,     //so its above the room
+    left: '50%', 
+    transform: [{ translateX: -50 }], 
+  },
+  leftDimension: {
+    left: 140,    //so its to left of room
+    top: '50%', 
+    transform: [
+      { translateX: -50 },
+      { rotate: '-90deg' }
+    ], 
   },
   categoryContainer: {
     marginBottom: 5,
