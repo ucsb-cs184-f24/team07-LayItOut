@@ -8,6 +8,8 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import camera from '../../images/Camera.png';
 
+const scaleFactor = 25
+
 // Direct imports for all furniture
 import bathsink from '../../images/bathsink.png';
 import bathtub from '../../images/bathub 3.png';
@@ -48,47 +50,47 @@ import stovee from '../../images/stovee.png';
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Sofa (2-Seater)', image: sofa2 },
-    { name: 'Sofa (3-Seater)', image: sofa3 },
-    { name: 'Chair', image: chair },
-    { name: 'Side Table 1', image: side1 },
-    { name: 'Side Table 2', image: side2 },
-    { name: 'Bookshelf', image: bookshelf },
-    { name: 'Console Table', image: consoleTable },
-    { name: 'Fireplace', image: fireplace },
-    { name: 'Coffee Table', image: table1 },
-    { name: 'Lamp', image: lamp }
+    { name: 'Sofa (2-Seater)', image: sofa2, dimmensions:{width: 4, height: 3} },
+    { name: 'Sofa (3-Seater)', image: sofa3, dimmensions:{width: 5, height: 3} },
+    { name: 'Chair', image: chair, dimmensions:{width: 2.8, height: 2} },
+    { name: 'Side Table 1', image: side1, dimmensions:{width: 1, height: 2} },
+    { name: 'Side Table 2', image: side2, dimmensions:{width: 1.5, height: 2} },
+    { name: 'Bookshelf', image: bookshelf, dimmensions:{width: 2.5, height: 3} },
+    { name: 'Console Table', image: consoleTable, dimmensions:{width: 4.8, height: 4.8} },
+    { name: 'Fireplace', image: fireplace, dimmensions:{width: 3, height: 2.5} },
+    { name: 'Coffee Table', image: table1, dimmensions:{width: 2, height: 3} },
+    { name: 'Lamp', image: lamp, dimmensions:{width: 2, height: 5} }
   ],
   'Bedroom': [
-    { name: 'Queen Bed', image: queenbed },
-    { name: 'Bedside Table', image: sidebed },
-    { name: 'Wardrobe', image: wardrobe },
-    { name: 'Office Chair', image: officeChair },
-    { name: 'Table', image: table }
+    { name: 'Queen Bed', image: queenbed, dimmensions:{width: 5, height: 6.7} },
+    { name: 'Bedside Table', image: sidebed, dimmensions:{width: 1, height: 2} },
+    { name: 'Wardrobe', image: wardrobe, dimmensions:{width: 2.5, height: 6} },
+    { name: 'Office Chair', image: officeChair, dimmensions:{width: 1.6, height: 1.3} },
+    { name: 'Table', image: table, dimmensions:{width: 4, height: 2.5} }
   ],
   'Kitchen': [
-    { name: 'Refrigerator', image: fridge },
-    { name: 'Sink', image: sink }, 
-    { name: 'Kitchen Island', image: kitchenIsland },
-    { name: 'Kitchen Table', image: kitchenTable },
-    { name: 'Countertop', image: countertop },
-    { name: 'Oven', image: oven },
-    { name: 'Stove', image: stovee }, 
-    { name: 'Dining Set', image: diningtable },
-    { name: 'Dining Chair', image: chair2 },
-    { name: 'Dining Table', image: table3 },
-    { name: 'Trash Can', image: trashcan }
+    { name: 'Refrigerator', image: fridge, dimmensions:{width: 29/12, height: 62/12} },
+    { name: 'Sink', image: sink, dimmensions:{width: 22/12, height: 30/12} }, 
+    { name: 'Kitchen Island', image: kitchenIsland, dimmensions:{width: 40/12, height: 80/12} },
+    { name: 'Kitchen Table', image: kitchenTable, dimmensions:{width: 4, height: 4} },
+    { name: 'Countertop', image: countertop, dimmensions:{width: 25/12, height: 3} },
+    { name: 'Oven', image: oven, dimmensions:{width: 2.5, height: 3} },
+    { name: 'Stove', image: stovee, dimmensions:{width: 2.5, height: 3} }, 
+    { name: 'Dining Set', image: diningtable, dimmensions:{width: 4, height: 4} },
+    { name: 'Dining Chair', image: chair2, dimmensions:{width: 2, height: 2} },
+    { name: 'Dining Table', image: table3, dimmensions:{width: 4, height: 4} },
+    { name: 'Trash Can', image: trashcan, dimmensions:{width: 2.5, height: 3} }, 
   ],
   'Bathroom': [
-    { name: 'Bathtub', image: bathtub },
-    { name: 'Sink', image: bathsink },
-    { name: 'Toilet', image: toilet },
-    { name: 'Washing Machine', image: washingMachine }
+    { name: 'Bathtub', image: bathtub, dimmensions:{width: 2.5, height: 14/12} },
+    { name: 'Sink', image: bathsink, dimmensions:{width: 19/12, height: 16/12} },
+    { name: 'Toilet', image: toilet, dimmensions:{width: 20/12, height: 27/12} },
+    { name: 'Washing Machine', image: washingMachine, dimmensions:{width: 27/12, height: 39/12} }
   ]
 };
 
 // Draggable furniture component stays the same
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -116,10 +118,14 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
     })
   ).current;
 
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor
+
   return (
     <Image
       source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
+      style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+      resizeMode='contain'
       {...panResponder.panHandlers}
     />
   );
@@ -196,8 +202,8 @@ const RectangleRoom = () => {
     };
   }, []);
 
-  const addFurniture = (name, image) => {
-    const newItem = { name, image, position: { x: 20, y: 20 } };
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { name, image, dimensions, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => [...prevItems, newItem]);
   };
 
@@ -250,6 +256,7 @@ const RectangleRoom = () => {
             <DraggableFurniture
               key={index}
               image={item.image}
+              dimensions={item.dimensions}
               initialPosition={item.position}
               onPositionChange={(newPosition) => {
                 const updatedItems = [...furnitureItems];
@@ -305,7 +312,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    width: 430,
+    // using scale factor of 25 so this is a 18 x 12 room
+    width: 450,
     height: 300,
     borderWidth: 3,
     borderColor: 'white',
