@@ -11,7 +11,9 @@ import * as MediaLibrary from 'expo-media-library';
 import { NavigationProp } from '@react-navigation/native';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Firebase storage
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -41,7 +43,7 @@ const CustomDrawerContent = (props) => {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id, deleteMode}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -49,7 +51,8 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {},
+      onPanResponderGrant: () => {
+      },
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
           x: positionRef.current.x + gestureState.dx,
@@ -72,31 +75,40 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete
   return (
     <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
       <Image source={image} style={styles.furnitureImage} {...panResponder.panHandlers} />
-      
-      {/* Delete Button */}
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => onDelete(id)}
-      >
-        <Text style={styles.deleteButtonText}>🗑️</Text>
-      </TouchableOpacity>
+      {deleteMode && (
+        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
+          <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }: RouterProps) => {
-  const viewShotRef = useRef(null);
+  const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const toggleDeleteMode = () => {
+    setDeleteMode(!deleteMode);
+  };
+
+  const handleDelete = (id) => {
+    setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
+  };
+
   useEffect(() => {
+    // Lock orientation to landscape when the component mounts
     const setOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
     };
     setOrientation();
 
+    // Cleanup function to unlock orientation when the component unmounts
     return () => {
       const unlockOrientation = async () => {
-        await ScreenOrientation.unlockAsync();
+        await ScreenOrientation.unlockAsync(); // Unlock to return to the default orientation
       };
       unlockOrientation();
     };
@@ -105,31 +117,36 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
       try {
+        // Capture the screenshot using captureRef
         const uri = await captureRef(viewShotRef.current, {
           format: 'png',
           quality: 0.8,
         });
         console.log("Screenshot captured:", uri);
 
+        // Request permissions for media library
         const { status } = await MediaLibrary.requestPermissionsAsync();
         if (status === 'granted') {
+          // Move the screenshot to the appropriate location in the file system
           const asset = await MediaLibrary.createAssetAsync(uri);
           console.log('Screenshot saved to gallery!', asset);
 
+          // Save screenshot to Firebase Storage
           const storage = getStorage();
           const storageRef = ref(storage, `users/${uid}/${Date.now()}.png`);
 
-          const response = await fetch(uri); 
-          const blob = await response.blob();
+          const response = await fetch(uri); // Fetch the file from the uri
+          const blob = await response.blob(); // Convert to blob for Firebase upload
 
-          await uploadBytes(storageRef, blob); 
-          const downloadURL = await getDownloadURL(storageRef); 
+          await uploadBytes(storageRef, blob); // Upload to Firebase storage
+          const downloadURL = await getDownloadURL(storageRef); // Get download URL
 
+          // Save the download URL to Firestore
           const firestore = getFirestore();
           await addDoc(collection(firestore, 'screenshots'), {
             downloadURL: downloadURL,
-            uid: uid, 
-            createdAt: new Date(), 
+            uid: uid, // Add the user's uid
+            createdAt: new Date(), // Optional: Add timestamp for better organization
           });
 
           alert('Screenshot saved successfully to Firebase and gallery!');
@@ -143,19 +160,14 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
     }
   };
 
-  // Handle furniture item deletion
-  const handleDelete = (id) => {
-    setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
-  };
-
   return (
-    <View style={styles.container} ref={viewShotRef}>
+    <View style={styles.container}>
       <StatusBar backgroundColor="black" />
-      <View style={styles.room}>
+      <View ref={viewShotRef} style={styles.room}>
         {furnitureItems.map((item) => (
           <DraggableFurniture
             key={item.id}
-            id={item.id} 
+            id={item.id}
             image={item.image}
             initialPosition={item.position}
             onPositionChange={(newPosition) => {
@@ -166,15 +178,20 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
                 return updatedItems;
               });
             }}
-            onDelete={handleDelete} // Pass handleDelete function
+            onDelete={handleDelete}
+            deleteMode={deleteMode}
           />
         ))}
       </View>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
         <Image 
-          source={require('../../images/Camera.png')}
+          source={require('../../images/Camera.png')} // Update with your image path
           style={styles.buttonImage}
         />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
+        <Ionicons name="trash-outline" size={35} color="white" />
+        <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -185,7 +202,11 @@ const SquareRoom = () => {
 
   const addFurniture = (name, image) => {
     const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
-    setFurnitureItems((prevItems) => [...prevItems, newItem]);
+    setFurnitureItems((prevItems) => {
+      const updatedItems = [...prevItems, newItem];
+      //console.log('Furniture array after addition:', updatedItems);
+      return updatedItems;
+    });
   };
 
   return (
@@ -288,26 +309,48 @@ const styles = StyleSheet.create({
     height: 50,
     position: 'absolute',
   },
-  deleteButton: {
-    position: 'absolute',
-    top: -10,
-    right: -10,
-    backgroundColor: 'red',
-    borderRadius: 20,
-    padding: 5,
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontSize: 18,
-  },
   screenshotButton: {
-    position: 'absolute', 
+    position: 'absolute', // Position it at the bottom right
     bottom: 0,
     right: 170,
   },
   buttonImage: {
-    width: 35, 
-    height: 35, 
+    width: 35, // Set the desired width
+    height: 35, // Set the desired height
+  },
+  deleteButton: { 
+    position: 'absolute', 
+    top: -10, 
+    right: -10,  
+    width: 25,  // Set width of the circle slightly bigger than the icon
+    height: 25,  // Set height of the circle slightly bigger than the icon
+    backgroundColor: 'white',
+    borderRadius: 15,  // Half of the width/height to make it circular
+    justifyContent: 'center',  // Center the icon horizontally
+    alignItems: 'center',  // Center the icon vertically
+    fontWeight: 'bold'
+  },
+  deleteButtonText: { 
+    color: 'white', 
+    fontSize: 16 
+  },
+  globalDeleteButton: { 
+    position: 'absolute', 
+    right: 100, 
+    top: 10, 
+    width: 120,  // Set a fixed width for the background box
+    height: 50, // Set a fixed height for the background box
+    backgroundColor: 'red',
+    justifyContent: 'center', // Center contents vertically
+    alignItems: 'center', // Center contents horizontally
+    borderRadius: 20, // Optional: make the background box rounded
+    flexDirection: 'row', // Ensure the icon and text are in a row
+  },
+  
+  globalDeleteButtonText: { 
+    color: 'white',
+    textAlign: 'center',  // Center the text
+    marginLeft: 5,  // Optional: add space between icon and text
   },
 });
 
