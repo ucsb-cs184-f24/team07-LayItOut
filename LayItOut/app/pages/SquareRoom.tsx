@@ -181,8 +181,8 @@ const SquareRoom = () => {
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent} ref={viewShotRef}>
         {/* Added Room Dimensions */}
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 310</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 310</Text>
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 11 ft</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 11 ft</Text>
         
         <View style={styles.room}>
           {furnitureItems.map((item, index) => (
@@ -264,14 +264,15 @@ const styles = StyleSheet.create({
   },
   dimensionText: {
     position: 'absolute', 
-    color: 'black', 
+    color: '#A0A0A0', 
     fontWeight: 'bold', 
     fontSize: 14,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
-    zIndex: 10, 
+    zIndex: 10,
+    letterSpacing: 0.75,
   },
   topDimension: {
     top: 5,     //so its above the room
@@ -279,8 +280,8 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -50 }], 
   },
   leftDimension: {
-    left: 140,    //so its to left of room
-    top: '50%', 
+    left: 130,    //so its to left of room
+    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
     transform: [
       { translateX: -50 },
       { rotate: '-90deg' }
