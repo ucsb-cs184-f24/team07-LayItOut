@@ -63,10 +63,10 @@ const furnitureCategories = {
   ],
   'Bedroom': [
     { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.7} },
-    { name: 'Bedside Table', image: sidebed, dimensions:{width: 1, height: 2} },
-    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 2.5, height: 6} },
-    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.6, height: 1.3} },
-    { name: 'Table', image: table, dimensions:{width: 4, height: 2.5} }
+    { name: 'Bedside Table', image: sidebed, dimensions:{width: 2.5, height: 3} },
+    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3, height: 6.7} },
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.8, height: 1.5} },
+    { name: 'Table', image: table, dimensions:{width: 4.5, height: 3} }
   ],
   'Kitchen': [
     { name: 'Refrigerator', image: fridge, dimensions:{width: 2.4, height: 5.2} },

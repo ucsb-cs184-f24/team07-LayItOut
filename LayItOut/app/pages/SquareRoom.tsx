@@ -53,20 +53,20 @@ const furnitureCategories = {
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4, height: 3} },
     { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5, height: 3} },
     { name: 'Chair', image: chair, dimensions:{width: 2.8, height: 2} },
-    { name: 'Side Table 1', image: side1, dimensions:{width: 1, height: 2} },
+    { name: 'Side Table 1', image: side1, dimensions:{width: 2, height: 2} },
     { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
-    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 3} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 5} },
     { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 4.8} },
-    { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
-    { name: 'Coffee Table', image: table1, dimensions:{width: 2, height: 3} },
+    { name: 'Fireplace', image: fireplace, dimensions:{width: 5, height: 2} },
+    { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 3} },
     { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} }
   ],
   'Bedroom': [
     { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.7} },
-    { name: 'Bedside Table', image: sidebed, dimensions:{width: 1, height: 2} },
-    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 2.5, height: 6} },
-    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.6, height: 1.3} },
-    { name: 'Table', image: table, dimensions:{width: 4, height: 2.5} }
+    { name: 'Bedside Table', image: sidebed, dimensions:{width: 2.5, height: 3} },
+    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3, height: 6.7} },
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.8, height: 1.5} },
+    { name: 'Table', image: table, dimensions:{width: 4.5, height: 3} }
   ],
   'Kitchen': [
     { name: 'Refrigerator', image: fridge, dimensions:{width: 2.4, height: 5.2} },
