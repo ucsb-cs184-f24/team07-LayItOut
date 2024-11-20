@@ -50,42 +50,42 @@ import stovee from '../../images/stovee.png';
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Sofa (2-Seater)', image: sofa2, dimmensions:{width: 4, height: 3} },
-    { name: 'Sofa (3-Seater)', image: sofa3, dimmensions:{width: 5, height: 3} },
-    { name: 'Chair', image: chair, dimmensions:{width: 2.8, height: 2} },
-    { name: 'Side Table 1', image: side1, dimmensions:{width: 1, height: 2} },
-    { name: 'Side Table 2', image: side2, dimmensions:{width: 1.5, height: 2} },
-    { name: 'Bookshelf', image: bookshelf, dimmensions:{width: 2.5, height: 3} },
-    { name: 'Console Table', image: consoleTable, dimmensions:{width: 4.8, height: 4.8} },
-    { name: 'Fireplace', image: fireplace, dimmensions:{width: 3, height: 2.5} },
-    { name: 'Coffee Table', image: table1, dimmensions:{width: 2, height: 3} },
-    { name: 'Lamp', image: lamp, dimmensions:{width: 2, height: 5} }
+    { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4, height: 3} },
+    { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5, height: 3} },
+    { name: 'Chair', image: chair, dimensions:{width: 2.8, height: 2} },
+    { name: 'Side Table 1', image: side1, dimensions:{width: 1, height: 2} },
+    { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 3} },
+    { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 4.8} },
+    { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
+    { name: 'Coffee Table', image: table1, dimensions:{width: 2, height: 3} },
+    { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} }
   ],
   'Bedroom': [
-    { name: 'Queen Bed', image: queenbed, dimmensions:{width: 5, height: 6.7} },
-    { name: 'Bedside Table', image: sidebed, dimmensions:{width: 1, height: 2} },
-    { name: 'Wardrobe', image: wardrobe, dimmensions:{width: 2.5, height: 6} },
-    { name: 'Office Chair', image: officeChair, dimmensions:{width: 1.6, height: 1.3} },
-    { name: 'Table', image: table, dimmensions:{width: 4, height: 2.5} }
+    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.7} },
+    { name: 'Bedside Table', image: sidebed, dimensions:{width: 1, height: 2} },
+    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 2.5, height: 6} },
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.6, height: 1.3} },
+    { name: 'Table', image: table, dimensions:{width: 4, height: 2.5} }
   ],
   'Kitchen': [
-    { name: 'Refrigerator', image: fridge, dimmensions:{width: 29/12, height: 62/12} },
-    { name: 'Sink', image: sink, dimmensions:{width: 22/12, height: 30/12} }, 
-    { name: 'Kitchen Island', image: kitchenIsland, dimmensions:{width: 40/12, height: 80/12} },
-    { name: 'Kitchen Table', image: kitchenTable, dimmensions:{width: 4, height: 4} },
-    { name: 'Countertop', image: countertop, dimmensions:{width: 25/12, height: 3} },
-    { name: 'Oven', image: oven, dimmensions:{width: 2.5, height: 3} },
-    { name: 'Stove', image: stovee, dimmensions:{width: 2.5, height: 3} }, 
-    { name: 'Dining Set', image: diningtable, dimmensions:{width: 4, height: 4} },
-    { name: 'Dining Chair', image: chair2, dimmensions:{width: 2, height: 2} },
-    { name: 'Dining Table', image: table3, dimmensions:{width: 4, height: 4} },
-    { name: 'Trash Can', image: trashcan, dimmensions:{width: 2.5, height: 3} }, 
+    { name: 'Refrigerator', image: fridge, dimensions:{width: 29/12, height: 62/12} },
+    { name: 'Sink', image: sink, dimensions:{width: 22/12, height: 30/12} }, 
+    { name: 'Kitchen Island', image: kitchenIsland, dimensions:{width: 40/12, height: 80/12} },
+    { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4, height: 4} },
+    { name: 'Countertop', image: countertop, dimensions:{width: 25/12, height: 3} },
+    { name: 'Oven', image: oven, dimensions:{width: 2.5, height: 3} },
+    { name: 'Stove', image: stovee, dimensions:{width: 2.5, height: 3} }, 
+    { name: 'Dining Set', image: diningtable, dimensions:{width: 4, height: 4} },
+    { name: 'Dining Chair', image: chair2, dimensions:{width: 2, height: 2} },
+    { name: 'Dining Table', image: table3, dimensions:{width: 4, height: 4} },
+    { name: 'Trash Can', image: trashcan, dimensions:{width: 2.5, height: 3} }, 
   ],
   'Bathroom': [
-    { name: 'Bathtub', image: bathtub, dimmensions:{width: 2.5, height: 14/12} },
-    { name: 'Sink', image: bathsink, dimmensions:{width: 19/12, height: 16/12} },
-    { name: 'Toilet', image: toilet, dimmensions:{width: 20/12, height: 27/12} },
-    { name: 'Washing Machine', image: washingMachine, dimmensions:{width: 27/12, height: 39/12} }
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 2.5, height: 14/12} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 19/12, height: 16/12} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 20/12, height: 27/12} },
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 27/12, height: 39/12} }
   ]
 };
 
