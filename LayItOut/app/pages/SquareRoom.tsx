@@ -56,7 +56,7 @@ const furnitureCategories = {
     { name: 'Side Table 1', image: side1, dimensions:{width: 2, height: 2} },
     { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
     { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 5} },
-    { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 4.8} },
+    { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 2.5} },
     { name: 'Fireplace', image: fireplace, dimensions:{width: 5, height: 2} },
     { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 3} },
     { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} }
@@ -73,18 +73,18 @@ const furnitureCategories = {
     { name: 'Sink', image: sink, dimensions:{width: 1.8, height: 2.5} }, 
     { name: 'Kitchen Island', image: kitchenIsland, dimensions:{width: 3.3, height: 6.6} },
     { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4, height: 4} },
-    { name: 'Countertop', image: countertop, dimensions:{width: 2.1, height: 3} },
+    { name: 'Countertop', image: countertop, dimensions:{width: 5, height: 3.2} },
     { name: 'Oven', image: oven, dimensions:{width: 2.5, height: 3} },
     { name: 'Stove', image: stovee, dimensions:{width: 2.5, height: 3} }, 
     { name: 'Dining Set', image: diningtable, dimensions:{width: 4, height: 4} },
-    { name: 'Dining Chair', image: chair2, dimensions:{width: 2, height: 2} },
+    { name: 'Dining Chair', image: chair2, dimensions:{width: 2, height: 4} },
     { name: 'Dining Table', image: table3, dimensions:{width: 4, height: 4} },
-    { name: 'Trash Can', image: trashcan, dimensions:{width: 2.5, height: 3} }, 
+    { name: 'Trash Can', image: trashcan, dimensions:{width: 3, height: 4} }, 
   ],
   'Bathroom': [
-    { name: 'Bathtub', image: bathtub, dimensions:{width: 2.5, height: 1.2} },
-    { name: 'Sink', image: bathsink, dimensions:{width: 1.6, height: 1.3} },
-    { name: 'Toilet', image: toilet, dimensions:{width: 1.7, height: 2.3} },
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 5, height: 2.5} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 2.5, height: 4} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 2, height: 2.6} },
     { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.42, height: 3.3} }
   ]
 };
