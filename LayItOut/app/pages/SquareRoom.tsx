@@ -134,7 +134,7 @@ const SquareRoom = () => {
   }, []);
 
   const addFurniture = (name, image) => {
-    const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
+    const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 155, y: 155 } };
     setFurnitureItems((prevItems) => {
       const updatedItems = [...prevItems, newItem];
       //console.log('Furniture array after addition:', updatedItems);

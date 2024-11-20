@@ -238,7 +238,7 @@ const LongRectangleRoom = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={(name, image) => {
-        const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: 20, y: 20 } };
+        const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent} ref={viewShotRef}>
