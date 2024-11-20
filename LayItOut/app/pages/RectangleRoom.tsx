@@ -167,7 +167,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
                   <TouchableOpacity 
                     key={`${category}-${index}`}
                     style={styles.furnitureItem} 
-                    onPress={() => addFurniture(item.name, item.image)}
+                    onPress={() => addFurniture(item.name, item.image, item.dimensions)}
                   >
                     <Image source={item.image} style={styles.furnitureImage} />
                     <Text style={styles.furnitureText}>{item.name}</Text>
