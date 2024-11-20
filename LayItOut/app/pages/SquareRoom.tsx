@@ -81,10 +81,10 @@ const furnitureCategories = {
     { name: 'Trash Can', image: trashcan, dimensions:{width: 3, height: 4} }, 
   ],
   'Bathroom': [
-    { name: 'Bathtub', image: bathtub, dimensions:{width: 5, height: 2.5} },
-    { name: 'Sink', image: bathsink, dimensions:{width: 2.5, height: 4} },
-    { name: 'Toilet', image: toilet, dimensions:{width: 2, height: 2.6} },
-    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.42, height: 3.3} }
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 6, height: 3} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 2.3, height: 3.8} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 2.2, height: 3} },
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.2, height: 3} }
   ]
 };
 
