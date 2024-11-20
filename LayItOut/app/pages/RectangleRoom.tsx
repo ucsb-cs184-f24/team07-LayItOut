@@ -191,6 +191,10 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent} ref={viewShotRef}>
+        {/* Added Room Dimensions */}
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 18 ft</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 12 ft</Text>
+
         <View style={styles.room}>
           {furnitureItems.map((item, index) => (
             <DraggableFurniture
@@ -269,6 +273,31 @@ const styles = StyleSheet.create({
     color: '#045497',
     textAlign: 'center',
     paddingLeft: 9,
+  },
+  dimensionText: {
+    position: 'absolute', 
+    color: '#A0A0A0', 
+    fontWeight: 500, 
+    fontSize: 14,         //adjust size to be smaller if needed. 
+    backgroundColor: 'transparent',
+    paddingVertical: 4, 
+    paddingHorizontal: 8, 
+    borderRadius: 4, 
+    zIndex: 10,
+    letterSpacing: 0.75,
+  },
+  topDimension: {
+    top: 10,     //so its above the room
+    left: '50%', 
+    transform: [{ translateX: -50 }], 
+  },
+  leftDimension: {
+    left: 75,    //so its to left of room
+    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+    transform: [
+      { translateX: -50 },
+      { rotate: '-90deg' }
+    ], 
   },
   categoryContainer: {
     marginBottom: 5,
