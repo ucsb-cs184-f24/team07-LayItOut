@@ -243,8 +243,18 @@ const LongRectangleRoom = () => {
       }} />
       <View style={styles.mainContent} ref={viewShotRef}>
         {/* Added Room Dimensions */}
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: {roomDimensions.width/50} ft</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: {roomDimensions.height/50} ft</Text>
+        <Text 
+          style={[
+            styles.dimensionText,
+            styles.leftDimension,
+            {
+              left: roomDimensions.width / 2 - 20, 
+              top: roomDimensions.height / 2, 
+            },
+          ]}
+        >
+          Height: {roomDimensions.height / 50} ft 
+        </Text>
 
       <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {furnitureItems.map((item, index) => (
@@ -329,15 +339,15 @@ const styles = StyleSheet.create({
     letterSpacing: 0.75,
   },
   topDimension: {
-    top: 5,     //so its above the room
+    top: -20,     //so its above the room
     left: '50%', 
     transform: [{ translateX: -50 }], 
   },
   leftDimension: {
-    left: 75,    //so its to left of room
-    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+    left: -35,    //so its to left of room
+    top: '50%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
     transform: [
-      { translateX: -50 },
+      { translateX: 0 },
       { rotate: '-90deg' }
     ], 
   },
