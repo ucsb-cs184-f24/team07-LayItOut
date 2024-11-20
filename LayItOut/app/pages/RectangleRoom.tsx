@@ -46,6 +46,7 @@ import Chair from '../../images/Chair.png';
 import sink from '../../images/sink.png';
 import diningtable from '../../images/diningtable.png';
 import stovee from '../../images/stovee.png';
+import tv from '../../images/tv.png';
 
 // Furniture categories organization
 const furnitureCategories = {

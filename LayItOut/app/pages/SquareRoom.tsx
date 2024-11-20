@@ -43,6 +43,7 @@ import washingMachine from '../../images/washing machine.png';
 import Chair from '../../images/Chair.png';
 import sink from '../../images/sink.png';
 import diningtable from '../../images/diningtable.png';
+import tv from '../../images/tv.png';
 import stovee from '../../images/stovee.png';
 
 const scaleFactor = 25
