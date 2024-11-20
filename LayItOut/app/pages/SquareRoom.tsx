@@ -47,7 +47,7 @@ import Chair from '../../images/Chair.png';
 import sink from '../../images/sink.png';
 import diningtable from '../../images/diningtable.png';
 import stovee from '../../images/stovee.png';
-
+import tv from '../../images/tv.png';
 
 
 // Furniture categories organization
@@ -56,6 +56,7 @@ const furnitureCategories = {
     { name: 'Sofa (2-Seater)', image: sofa2 },
     { name: 'Sofa (3-Seater)', image: sofa3 },
     { name: 'Chair', image: chair },
+    { name: 'TV', image: tv },
     { name: 'Side Table 1', image: side1 },
     { name: 'Side Table 2', image: side2 },
     { name: 'Bookshelf', image: bookshelf },
