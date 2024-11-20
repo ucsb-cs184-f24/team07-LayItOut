@@ -53,12 +53,12 @@ const furnitureCategories = {
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4, height: 3} },
     { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5, height: 3} },
     { name: 'Chair', image: chair, dimensions:{width: 2.8, height: 2} },
-    { name: 'Side Table 1', image: side1, dimensions:{width: 1, height: 2} },
+    { name: 'Side Table 1', image: side1, dimensions:{width: 2, height: 2} },
     { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
-    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 3} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 5} },
     { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 4.8} },
-    { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
-    { name: 'Coffee Table', image: table1, dimensions:{width: 2, height: 3} },
+    { name: 'Fireplace', image: fireplace, dimensions:{width: 5, height: 2} },
+    { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 3} },
     { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} }
   ],
   'Bedroom': [
@@ -69,11 +69,11 @@ const furnitureCategories = {
     { name: 'Table', image: table, dimensions:{width: 4, height: 2.5} }
   ],
   'Kitchen': [
-    { name: 'Refrigerator', image: fridge, dimensions:{width: 29/12, height: 62/12} },
-    { name: 'Sink', image: sink, dimensions:{width: 22/12, height: 30/12} }, 
-    { name: 'Kitchen Island', image: kitchenIsland, dimensions:{width: 40/12, height: 80/12} },
+    { name: 'Refrigerator', image: fridge, dimensions:{width: 2.4, height: 5.2} },
+    { name: 'Sink', image: sink, dimensions:{width: 1.8, height: 2.5} }, 
+    { name: 'Kitchen Island', image: kitchenIsland, dimensions:{width: 3.3, height: 6.6} },
     { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4, height: 4} },
-    { name: 'Countertop', image: countertop, dimensions:{width: 25/12, height: 3} },
+    { name: 'Countertop', image: countertop, dimensions:{width: 2.1, height: 3} },
     { name: 'Oven', image: oven, dimensions:{width: 2.5, height: 3} },
     { name: 'Stove', image: stovee, dimensions:{width: 2.5, height: 3} }, 
     { name: 'Dining Set', image: diningtable, dimensions:{width: 4, height: 4} },
@@ -82,10 +82,10 @@ const furnitureCategories = {
     { name: 'Trash Can', image: trashcan, dimensions:{width: 2.5, height: 3} }, 
   ],
   'Bathroom': [
-    { name: 'Bathtub', image: bathtub, dimensions:{width: 2.5, height: 14/12} },
-    { name: 'Sink', image: bathsink, dimensions:{width: 19/12, height: 16/12} },
-    { name: 'Toilet', image: toilet, dimensions:{width: 20/12, height: 27/12} },
-    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 27/12, height: 39/12} }
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 2.5, height: 1.2} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 1.6, height: 1.3} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 1.7, height: 2.3} },
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.42, height: 3.3} }
   ]
 };
 
