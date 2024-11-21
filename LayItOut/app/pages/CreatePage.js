@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';  // Import Firestore functions
@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 30,
-    marginBottom: 40,
+    marginTop: 5,
+    marginBottom: 25,
     fontFamily: "LondrinaSolid",
     letterSpacing: 2,
   },

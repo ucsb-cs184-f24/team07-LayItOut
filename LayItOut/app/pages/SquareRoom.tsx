@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView, ActivityIndicator } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { useFonts } from 'expo-font'; 
+
 
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
@@ -118,6 +120,16 @@ const SquareRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
   const viewShotRef = useRef(null);
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
+
+  //Load custom font
+  const [fontsLoaded] = useFonts({
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
+
 
   useEffect(() => {
     const setOrientation = async () => {
@@ -263,24 +275,27 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#045497',
     textAlign: 'center',
     paddingLeft: 9,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
   },
   dimensionText: {
     position: 'absolute', 
     color: '#A0A0A0', 
     fontWeight: 500, 
-    fontSize: 14,         //adjust size to be smaller if needed. 
+    fontSize: 14.5,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
-    letterSpacing: 0.75,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1.55,
   },
   topDimension: {
     top: 5,     //so its above the room
@@ -306,13 +321,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: '#045497',
-    borderRadius: 12,
+    borderRadius: 20,
     marginBottom: 12,
   },
   categoryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
   },
   expandIcon: {
     fontSize: 24,
