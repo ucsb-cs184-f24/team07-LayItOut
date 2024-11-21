@@ -8,8 +8,6 @@ import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import camera from '../../images/Camera.png';
 
-const scaleFactor = 25
-
 // Direct imports for all furniture
 import bathsink from '../../images/bathsink.png';
 import bathtub from '../../images/bathub 3.png';
@@ -42,17 +40,16 @@ import toilet from '../../images/toilet.png';
 import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
-import Chair from '../../images/Chair.png';
 import sink from '../../images/sink.png';
-import diningtable from '../../images/diningtable.png';
-import stovee from '../../images/stovee.png';
 import tv from '../../images/tv.png';
+
+const scaleFactor = 25
 
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4, height: 3} },
-    { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5, height: 3} },
+    { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 6, height: 3} },
     { name: 'Chair', image: chair, dimensions:{width: 2.8, height: 2} },
     { name: 'Side Table 1', image: side1, dimensions:{width: 2.5, height: 2.5} },
     { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
@@ -60,32 +57,34 @@ const furnitureCategories = {
     { name: 'Console Table', image: consoleTable, dimensions:{width: 4.8, height: 2.5} },
     { name: 'Fireplace', image: fireplace, dimensions:{width: 5.5, height: 3} },
     { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 3} },
-    { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} }
+    { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 6} },
+    { name: 'TV', image: tv, dimensions:{width: 5.3, height: 4} },
   ],
   'Bedroom': [
     { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.7} },
     { name: 'Bedside Table', image: sidebed, dimensions:{width: 2.5, height: 3} },
     { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3, height: 6.7} },
-    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.8, height: 1.5} },
-    { name: 'Table', image: table, dimensions:{width: 4.5, height: 3} }
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 2, height: 3} },
+    { name: 'Table', image: table, dimensions:{width: 4.5, height: 3} },
+    { name: 'Plant', image: p, dimensions:{width: 1.5, height:1.5} },
   ],
   'Kitchen': [
-    { name: 'Refrigerator', image: fridge, dimensions:{width: 2.4, height: 5.2} },
+    { name: 'Refrigerator', image: fridge, dimensions:{width: 2.4, height: 6} },
     { name: 'Sink', image: sink, dimensions:{width: 1.8, height: 2.5} }, 
     { name: 'Kitchen Island', image: kitchenIsland, dimensions:{width: 3.3, height: 6.6} },
     { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4, height: 2.5} },
     { name: 'Countertop', image: countertop, dimensions:{width: 4, height: 2} },
     { name: 'Oven', image: oven, dimensions:{width: 1.8, height: 2.5} },
-    { name: 'Stove', image: stovee, dimensions:{width: 1.8, height: 2.5} }, 
-    { name: 'Dining Set', image: diningtable, dimensions:{width: 4, height: 2.5} },
+    { name: 'Stove', image: stove, dimensions:{width: 1.8, height: 2.5} }, 
+    { name: 'Dining Set', image: dining, dimensions:{width: 4, height: 2.5} },
     { name: 'Dining Chair', image: chair2, dimensions:{width: 3, height: 4.5} },
     { name: 'Trash Can', image: trashcan, dimensions:{width: 3, height: 4} }, 
   ],
   'Bathroom': [
     { name: 'Bathtub', image: bathtub, dimensions:{width: 6, height: 3} },
-    { name: 'Sink', image: bathsink, dimensions:{width: 2.3, height: 3.8} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 2.3, height: 4} },
     { name: 'Toilet', image: toilet, dimensions:{width: 3, height: 4} },
-    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.2, height: 3} }
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 3, height: 3} }
   ]
 };
 
