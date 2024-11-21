@@ -10,6 +10,8 @@ well as any decisions we made and the merges we did in that meeting.
 
 My documentation began in Sprint03 and all those team meeting documentation contains the above goals. I also created the Design.md and Manual.md docs for the final. I created a user flow diagram for the Design.md document.
 
-Design: https://github.com/ucsb-cs184-f24/team07-LayItOut/blob/main/docs/DESIGN.md
-Manual: https://github.com/ucsb-cs184-f24/team07-LayItOut/blob/main/docs/MANUAL.md
+Design: https://github.com/ucsb-cs184-f24/team07-LayItOut/blob/main/docs/DESIGN.md  
+
+Manual: https://github.com/ucsb-cs184-f24/team07-LayItOut/blob/main/docs/MANUAL.md  
+
 Sprint03: https://github.com/ucsb-cs184-f24/team07-LayItOut/tree/main/team/sprint03
