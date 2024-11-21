@@ -52,7 +52,7 @@ const furnitureCategories = {
     { name: 'Chair', image: chair, dimensions:{width: 2.5, height: 2.5} },
     { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
     { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
-    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 2.5, height: 5.5} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 3, height: 5.5} },
     { name: 'Console Table', image: consoleTable, dimensions:{width: 3, height: 3} },
     { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
     { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 1.5} },
