@@ -4,10 +4,21 @@ import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, Dimen
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 import { collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { useFonts } from 'expo-font'; 
+
 
 const { height, width } = Dimensions.get('window');
 
 const HomePage = () => {
+
+  const [fontsLoaded] = useFonts({
+    'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
+
   const navigation = useNavigation();
 
   // This will be triggered when the user's authentication state changes
@@ -117,8 +128,8 @@ const styles = StyleSheet.create({
       width: '100%',
     },
     logo: {
-        width: 290, // Adjust the width to fit your logo size
-        height: 290, // Adjust the height as needed
+        width: 340, // Adjust the width to fit your logo size
+        height: 340, // Adjust the height as needed
     },
     innerContainer: {
       flex: 1,
@@ -148,26 +159,48 @@ const styles = StyleSheet.create({
     },
     button1: {
         backgroundColor: 'white',
-        paddingVertical: 25,
-        paddingHorizontal: 40,
-        borderRadius: 25,
+        paddingVertical: 20,
+        paddingHorizontal: 25,
+        borderRadius: 40,
         marginBottom: 15,
     },
     button2: {
         backgroundColor: 'white',
-        paddingVertical: 9,
+        paddingVertical: 10,
         paddingHorizontal: 15,
-        borderRadius: 25,
+        borderRadius: 40,
         marginBottom: 10,
         marginTop: 30,
     },
     buttonText: {
         color: '#006EB9',
-        fontSize: 19,
+        fontSize: 26,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: 'LondrinaSolid',
+        letterSpacing: 1,
     },
 });
   
   export default HomePage;
   
+
+
+
+
+  // button: {
+  //   backgroundColor: 'white',
+  //   paddingVertical: 12,
+  //   paddingHorizontal: 15,
+  //   borderRadius: 20,
+  //   width: 248,
+  //   alignSelf: 'center',
+  //   marginBottom: 18,
+  // },
+  // buttonText: {
+  //   color: '#006EB9',
+  //   fontSize: 30,
+  //   fontWeight: 'bold',
+  //   textAlign: 'center',
+  //   fontFamily: 'LondrinaSolid',
+  //   letterSpacing: 1.2,

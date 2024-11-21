@@ -243,18 +243,35 @@ const LongRectangleRoom = () => {
       }} />
       <View style={styles.mainContent} ref={viewShotRef}>
         {/* Added Room Dimensions */}
-        <Text 
+
+        {/* Width Text */}
+        <Text
           style={[
-            styles.dimensionText,
-            styles.leftDimension,
+            styles.dimensionText, 
+            styles.topDimension,
             {
-              left: roomDimensions.width / 2 - 20, 
-              top: roomDimensions.height / 2, 
+              top: -(roomDimensions.height / 2) - 20,  
+              left: roomDimensions.width / 2 - 50,
             },
           ]}
         >
-          Height: {roomDimensions.height / 50} ft 
+          Width: {roomDimensions.width / 50} ft
         </Text>
+
+        {/* Height Text */}
+        <Text
+          style={[
+            styles.dimensionText, 
+            styles.leftDimension,
+            {
+              top: roomDimensions.height  / 2 - 50,
+              left: -(roomDimensions.width / 2) - 50,          // + 300
+            },
+          ]}
+        >
+          Height: {roomDimensions.height / 50} ft
+        </Text>
+
 
       <View style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {furnitureItems.map((item, index) => (
@@ -339,17 +356,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.75,
   },
   topDimension: {
-    top: -20,     //so its above the room
-    left: '50%', 
+    // position: 'absolute',
+    // textAlign: 'center',
     transform: [{ translateX: -50 }], 
   },
   leftDimension: {
-    left: -35,    //so its to left of room
-    top: '50%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
-    transform: [
-      { translateX: 0 },
-      { rotate: '-90deg' }
-    ], 
+    // position: 'absolute',
+    // textAlign: 'center',
+    transform: [{ translateX: -50 }, { rotate: '-90deg' }], 
   },
   categoryContainer: {
     marginBottom: 5,

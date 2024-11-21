@@ -1,9 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, Dimensions, StatusBar, ActivityIndicator } from 'react-native';
+import { useFonts } from 'expo-font'; 
 
 const { height, width } = Dimensions.get('window');
 
 const SplashPage = ({ navigation }) => {
+  //Load custom font
+  const [fontsLoaded] = useFonts({
+    'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
+
   return (
     <View style={styles.container}>
         <StatusBar backgroundColor="transparent" translucent />
@@ -45,16 +56,20 @@ const styles = StyleSheet.create({
         padding: 0,
     },
     title: {
-        fontSize: 35,
+        fontSize: 40,
         color: '#fff',
         fontWeight: 'bold',
         marginBottom: 5,
+        fontFamily: 'LondrinaSolid',
+        letterSpacing: 1.3,
     },
     paragraph: {
-        fontSize: 16,
+        fontSize: 19,
         color: '#fff',
         textAlign: 'center',
         marginBottom: 10,
+        fontFamily: 'LondrinaLight',
+        letterSpacing: 1.2,
     },
     button: {
         backgroundColor: 'white',
@@ -65,9 +80,11 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#006EB9',
-        fontSize: 16,
+        fontSize: 22,
         fontWeight: 'bold',
         textAlign: 'center',
+        fontFamily: 'LondrinaSolid',
+        letterSpacing: 0.9,
     },
 });
   
