@@ -81,7 +81,7 @@ const furnitureCategories = {
   'Bathroom': [
     { name: 'Bathtub', image: bathtub, dimensions:{width: 5, height: 4} },
     { name: 'Sink', image: bathsink, dimensions:{width: 2, height: 2.5} },
-    { name: 'Toilet', image: toilet, dimensions:{width: 3, height: 4} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 2.5, height: 2.5} },
     { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.5, height: 3} }
   ]
 };
