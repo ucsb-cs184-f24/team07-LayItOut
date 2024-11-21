@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponde
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
+import { NavigationProp } from '@react-navigation/native';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import chair from '../../images/Chair.png';
 import bed from '../../images/Bed.png';
 import bookshelf from '../../images/bookshelf_2.png';
@@ -24,7 +26,7 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id, deleteMode}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -53,11 +55,14 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange }) => {
   ).current;
 
   return (
-    <Image
-      source={image}
-      style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}
-      {...panResponder.panHandlers}
-    />
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+      <Image source={image} style={styles.furnitureImage} {...panResponder.panHandlers} />
+      {deleteMode && (
+        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
+          <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
@@ -116,6 +121,16 @@ const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
   const viewShotRef = useRef(null);
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
+
+  const [deleteMode, setDeleteMode] = useState(false);
+
+  const toggleDeleteMode = () => {
+    setDeleteMode(!deleteMode);
+  };
+
+  const handleDelete = (id) => {
+    setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
+  };
 
   useEffect(() => {
     const setOrientation = async () => {
@@ -202,10 +217,12 @@ const RectangleRoom = () => {
                 const updatedItems = prevItems.map((furniture, idx) =>
                     idx === index ? { ...furniture, position: newPosition } : furniture
                 );
-                  //console.log('Furniture array after move:', updatedItems);
+                //console.log('Furniture array after move:', updatedItems);
                 return updatedItems;
               });
               }}
+            onDelete={handleDelete}
+            deleteMode={deleteMode}
             />
           ))}
         </View>
@@ -215,6 +232,10 @@ const RectangleRoom = () => {
             style={styles.buttonImage}
           />
         </TouchableOpacity>
+      <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
+        <Ionicons name="trash-outline" size={35} color="white" />
+        <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -323,6 +344,40 @@ const styles = StyleSheet.create({
   buttonImage: {
     width: 35,
     height: 35,
+  },
+  deleteButton: { 
+    position: 'absolute', 
+    top: -10, 
+    right: -10,  
+    width: 25,  // Set width of the circle slightly bigger than the icon
+    height: 25,  // Set height of the circle slightly bigger than the icon
+    backgroundColor: 'white',
+    borderRadius: 15,  // Half of the width/height to make it circular
+    justifyContent: 'center',  // Center the icon horizontally
+    alignItems: 'center',  // Center the icon vertically
+    fontWeight: 'bold'
+  },
+  deleteButtonText: { 
+    color: 'white', 
+    fontSize: 16 
+  },
+  globalDeleteButton: { 
+    position: 'absolute', 
+    right: 100, 
+    top: 10, 
+    width: 120,  // Set a fixed width for the background box
+    height: 50, // Set a fixed height for the background box
+    backgroundColor: 'red',
+    justifyContent: 'center', // Center contents vertically
+    alignItems: 'center', // Center contents horizontally
+    borderRadius: 20, // Optional: make the background box rounded
+    flexDirection: 'row', // Ensure the icon and text are in a row
+  },
+  
+  globalDeleteButtonText: { 
+    color: 'white',
+    textAlign: 'center',  // Center the text
+    marginLeft: 5,  // Optional: add space between icon and text
   },
 });
 
