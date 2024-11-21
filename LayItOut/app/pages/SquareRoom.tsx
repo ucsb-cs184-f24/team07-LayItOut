@@ -199,7 +199,7 @@ const SquareRoom = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
-      <View style={styles.mainContent} ref={viewShotRef}>
+      <View style={styles.mainContent}>
       <View ref={viewShotRef} style={styles.room}>
         {furnitureItems.map((item) => (
           <DraggableFurniture

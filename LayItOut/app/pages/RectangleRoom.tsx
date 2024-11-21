@@ -205,8 +205,8 @@ const RectangleRoom = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
-      <View style={styles.mainContent} ref={viewShotRef}>
-        <View style={styles.room}>
+      <View style={styles.mainContent}>
+        <View style={styles.room} ref={viewShotRef}>
           {furnitureItems.map((item, index) => (
             <DraggableFurniture
               key = {item.id}
