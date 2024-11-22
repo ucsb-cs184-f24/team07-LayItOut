@@ -130,10 +130,10 @@ const LongRectangleRoom = () => {
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
-  const [deleteMode, setDeleteMode] = useState(false);
+  const [isRed, setIsRed] = useState(false); // State to track the button color
 
   const toggleDeleteMode = () => {
-    setDeleteMode(!deleteMode);
+    setIsRed((prevState) => !prevState); // Toggle the color state
   };
 
   const handleDelete = (id) => {
@@ -254,7 +254,7 @@ const LongRectangleRoom = () => {
             });
           }}
           onDelete={handleDelete}
-          deleteMode={deleteMode}
+          deleteMode={isRed}
           />
     ))}
       </View>
@@ -264,9 +264,14 @@ const LongRectangleRoom = () => {
           style={styles.buttonImage}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
+      <TouchableOpacity
+        style={[
+          styles.globalDeleteButton,
+          { backgroundColor: isRed ? 'grey' : 'red' }, // Dynamically set background color
+        ]}
+        onPress={toggleDeleteMode}
+      >
         <Ionicons name="trash-outline" size={35} color="white" />
-        <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
       </View>
     </View>
@@ -361,8 +366,8 @@ const styles = StyleSheet.create({
   },
   screenshotButton: {
     position: 'absolute',
-    bottom: 57,
-    right: 15,
+    bottom: 25,
+    right: 20,
   },
   buttonImage: {
     width: 35,
@@ -375,7 +380,7 @@ const styles = StyleSheet.create({
     width: 25,  // Set width of the circle slightly bigger than the icon
     height: 25,  // Set height of the circle slightly bigger than the icon
     backgroundColor: 'white',
-    borderRadius: 15,  // Half of the width/height to make it circular
+    borderRadius: 10,  // Half of the width/height to make it circular
     justifyContent: 'center',  // Center the icon horizontally
     alignItems: 'center',  // Center the icon vertically
     fontWeight: 'bold'
@@ -386,11 +391,11 @@ const styles = StyleSheet.create({
   },
   globalDeleteButton: { 
     position: 'absolute', 
-    right: 100, 
-    top: 10, 
-    width: 120,  // Set a fixed width for the background box
+    right: 10, 
+    top: 200, 
+    width: 50,  // Set a fixed width for the background box
     height: 50, // Set a fixed height for the background box
-    backgroundColor: 'red',
+    //backgroundColor: 'red',
     justifyContent: 'center', // Center contents vertically
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded

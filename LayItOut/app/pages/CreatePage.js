@@ -69,7 +69,7 @@ const CreatePage = () => {
             <Text style={styles.title}>Choose a Room Option:</Text>
 
             <TouchableOpacity style={styles.button} onPress={handleSquareRoom}>
-              <Text style={styles.buttonText}>Square</Text>
+              <Text style={styles.buttonText}>Default Square</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={handleRectangleRoom}>
