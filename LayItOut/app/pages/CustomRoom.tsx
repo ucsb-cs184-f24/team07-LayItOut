@@ -11,29 +11,86 @@ import storage from '@react-native-firebase/storage';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import chair from '../../images/Chair.png';
-import bed from '../../images/Bed.png';
+// Direct imports for all furniture
+import bathsink from '../../images/bathsink.png';
+import bathtub from '../../images/bathtub3.png';
 import bookshelf from '../../images/bookshelf_2.png';
+import chair from '../../images/Chair.png';
+import chair2 from '../../images/chair2.png';
+import consoleTable from '../../images/consule.png';
+import countertop from '../../images/countertop.png';
+import dining from '../../images/dining.png';
+import fireplace from '../../images/fireplace.png';
+import fridge from '../../images/fridge.png';
+import kitchenTable from '../../images/kitchen table.png';
+import lamp from '../../images/lamp.png';
+import officeChair from '../../images/office chair.png';
+import oven from '../../images/oven.png';
+import p from '../../images/p.png';
+import queenbed from '../../images/queenbed.png';
+import side1 from '../../images/side1.png';
+import side2 from '../../images/side2.png';
+import sidebed from '../../images/sidebed.png';
+import sofa2 from '../../images/sofa2.png';
+import sofa3 from '../../images/sofa3.png';
+import stove from '../../images/stove.png';
+import table from '../../images/table.png';
+import table1 from '../../images/table1.png';
+import table2 from '../../images/table2.png';
+import table3 from '../../images/table3.png';
+import toilet from '../../images/toilet.png';
+import trashcan from '../../images/trashcan.png';
+import wardrobe from '../../images/wardropbe.png';
+import washingMachine from '../../images/washing machine.png';
+import sink from '../../images/sink.png';
+import tv from '../../images/tv.png';
 
-interface RouterProps {
-  navigation: NavigationProp<any, any>;
-}
+const scaleFactor = 25;
 
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Chair', image: chair },
-    { name: 'Bookshelf', image: bookshelf }
+    { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
+    { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5.8, height: 2.5} },
+    { name: 'Chair', image: chair, dimensions:{width: 2.5, height: 2.5} },
+    { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
+    { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 3, height: 5.5} },
+    { name: 'Console Table', image: consoleTable, dimensions:{width: 3, height: 3} },
+    { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
+    { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 1.5} },
+    { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} },
+    { name: 'TV', image: tv, dimensions:{width: 5.2, height: 5} },
   ],
   'Bedroom': [
-    { name: 'Bed', image: bed }
+    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 3.5} },
+    { name: 'Bedside Table', image: sidebed, dimensions:{width: 2, height: 2} },
+    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3.5, height: 6} },
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.7, height: 2} },
+    { name: 'Desk', image: table, dimensions:{width: 5, height: 2.7} },
+    { name: 'Plant', image: p, dimensions:{width: 1, height: 1} },
   ],
-  'Kitchen': [],
-  'Bathroom': []
+  'Kitchen': [
+    { name: 'Refrigerator', image: fridge, dimensions:{width: 2.5, height: 5.5} },
+    { name: 'Sink', image: sink, dimensions:{width: 2, height: 2.5} }, 
+    { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4.5, height: 2} },
+    { name: 'Countertop', image: countertop, dimensions:{width: 4, height: 3} },
+    { name: 'Oven', image: oven, dimensions:{width: 2.5, height: 3} },
+    { name: 'Stove', image: stove, dimensions:{width: 2.5, height: 3} }, 
+    { name: 'Dining Set', image: dining, dimensions:{width: 4.5, height: 2.5 } },
+    { name: 'Dining Chair', image: chair2, dimensions:{width: 2, height: 2.3} },
+    { name: 'Trash Can', image: trashcan, dimensions:{width: 2, height: 3 } }, 
+  ],
+  'Bathroom': [
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 5, height: 4} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 2, height: 2.5} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 2.5, height: 2.5} },
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.5, height: 3} }
+  ]
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id, deleteMode}) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -61,11 +118,22 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete
     })
   ).current;
 
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor
+
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
-      <Image source={image} style={styles.furnitureImage} {...panResponder.panHandlers} />
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}>
+      <Image 
+        source={image} 
+        style={styles.furnitureImage} 
+        resizeMode='stretch'
+        {...panResponder.panHandlers} 
+      />
       {deleteMode && (
-        <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
+        <TouchableOpacity 
+          style={[styles.deleteButton, { left: position.x + scaledWidth - 15, top: position.y - 15 }]} 
+          onPress={() => onDelete(id)}
+        >
           <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
         </TouchableOpacity>
       )}
@@ -109,7 +177,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
                   <TouchableOpacity 
                     key={`${category}-${index}`}
                     style={styles.furnitureItem} 
-                    onPress={() => addFurniture(item.name, item.image)}
+                    onPress={() => addFurniture(item.name, item.image, item.dimensions)}
                   >
                     <Image source={item.image} style={styles.furnitureImage} />
                     <Text style={styles.furnitureText}>{item.name}</Text>
@@ -125,7 +193,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
 };
 
 const LongRectangleRoom = () => {
-  const [roomDimensions, setRoomDimensions] = useState({ width: 625, height: 340 });
+  const [roomDimensions, setRoomDimensions] = useState({ width: 450, height: 300 });
   const [furnitureItems, setFurnitureItems] = useState([]);
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
@@ -154,12 +222,33 @@ const LongRectangleRoom = () => {
           const data = doc.data();
           // Check if the data contains valid width and height
           if (data.width && data.height) {
-            setRoomDimensions({
-              width: parseInt(data.width) * 50, // Adjust width if necessary
-              height: parseInt(data.height) * 50, // Adjust height if necessary
-            });
+            if (data.width > 18 && data.height > 12) {
+              setRoomDimensions({
+                width: parseInt(data.width) / 18 * 25, // Adjust width if necessary
+                height: parseInt(data.height) / 12 * 25, // Adjust height if necessary
+              });
+            }
+            else if (data.height > 12) {
+              setRoomDimensions({
+                width: data.width * 25, // Adjust width if necessary
+                height: parseInt(data.height) / 12 * 25, // Adjust height if necessary
+              });
+            }
+            else if (data.width > 18) {
+              setRoomDimensions({
+                width: parseInt(data.width) / 18 * 25, // Adjust width if necessary
+                height: data.height * 25, // Adjust height if necessary
+              });
+            }
+            else {
+              setRoomDimensions({
+                width: data.width * 25, // Adjust width if necessary
+                height: data.height * 25, // Adjust height if necessary
+              });
+            }
+            }            
           }
-        });
+        );
       } catch (error) {
         //console.error("Error fetching room data: ", error);
       }
@@ -232,8 +321,8 @@ const LongRectangleRoom = () => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
-      <FurnitureSidebar addFurniture={(name, image) => {
-        const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
+      <FurnitureSidebar addFurniture={(name, image, dimensions) => {
+        const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
@@ -243,6 +332,7 @@ const LongRectangleRoom = () => {
           key = {item.id}
           id = {item.id}
           image={item.image}
+          dimensions={item.dimensions}
           initialPosition={item.position}
           onPositionChange={(newPosition) => {
             setFurnitureItems((prevItems) => {
@@ -280,8 +370,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   room: {
-    width: 645,
-    height: 340,
+    width: 450,
+    height: 300,
     borderWidth: 3,
     borderColor: 'white',
     backgroundColor: '#045497',
