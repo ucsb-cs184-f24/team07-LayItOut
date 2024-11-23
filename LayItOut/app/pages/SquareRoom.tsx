@@ -42,7 +42,21 @@ const CustomDrawerContent = (props) => {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, wallX, onTargetLinePositionChange, onPositionChange, onTargetLineHeightChange, onDraggingChange }) => {
+const DraggableFurniture = ({ 
+  image, 
+  initialPosition,
+  wallX, 
+  onTargetLinePositionChange, 
+  onPositionChange, 
+  onTargetLineHeightChange, 
+  onDraggingChange, 
+  onBottomLinePositionChange,
+  onBottomFurnitureChange,
+  onLeftLinePositionChange, 
+  onLeftLineHeightChange,
+  onRightLinePositionChange,
+  onRightFurnitureChange
+ }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
@@ -61,9 +75,19 @@ const DraggableFurniture = ({ image, initialPosition, wallX, onTargetLinePositio
         setPosition(newPosition);
 
         // Calculate midpoint between furniture and the wall
-        const midpoint = (newPosition.x + wallX) / 2;
         onTargetLineHeightChange(newPosition.y + 5);
         onTargetLinePositionChange(newPosition.x + 25); // Update line position
+
+        onLeftLineHeightChange(newPosition.y + 25);
+        onLeftLinePositionChange(newPosition.x + 5);
+
+        const clampedBottomLineY = Math.min(newPosition.y + 50, 310);
+        onBottomLinePositionChange(newPosition.x + 25, clampedBottomLineY);
+        onBottomFurnitureChange(newPosition.y + 50);
+
+        const clampedRightLineX = Math.max(0, 310 - (newPosition.x + 50));
+        onRightLinePositionChange(clampedRightLineX, newPosition.y + 25);
+        onRightFurnitureChange(newPosition.x + 50);
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
@@ -76,6 +100,7 @@ const DraggableFurniture = ({ image, initialPosition, wallX, onTargetLinePositio
 
         // Hide the target line and text once the furniture is released
         onTargetLinePositionChange(null);
+        onBottomLinePositionChange(null, null);
         onDraggingChange(false);
       },
     })
@@ -94,12 +119,25 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
   const wallX = 100; // Example x-coordinate of the wall (width of room container)
   const [targetLinePosition, setTargetLinePosition] = useState(null);
   const [targetLineHeight, setTargetLineHeight] = useState(null);
+  const [bottomLinePosition, setBottomLinePosition] = useState(null);
+  const [bottomLineHeight, setBottomLineHeight] = useState(null);
+  const [bottomFurniture, setBottomFurniture] = useState(null);
+  const [leftLinePosition, setLeftLinePosition] = useState(null);
+  const [leftLineHeight, setLeftLineHeight] = useState(null);
+  const [rightLinePosition, setRightLinePosition] = useState(null);
+  const [rightLineHeight, setRightLineHeight] = useState(null);
+  const [rightFurniture, setRightFurniture] = useState(null);
   const [isDragging, setIsDragging] = useState(false); // Track dragging state
   const viewShotRef = useRef(null); // Create a ref using useRef
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
   const calculateDistanceText = (height) => {
-    return `${Math.round(height)} px`;
+    return `${Math.round(height)/25} ft`;
   };
+  const calculateBottomLineLength = (startX, endX) => {
+    const length = Math.abs(endX - startX); // Horizontal length in pixels
+    return `${Math.round(length)/25} ft`; // Convert pixels to feet (adjust scale as needed)
+  };
+  
 
   useEffect(() => {
     // Lock orientation to landscape when the component mounts
@@ -176,11 +214,51 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
               { height: targetLineHeight },
             ]}
           />
-          
+        )}
+        {bottomLinePosition !== null && (
+          <View
+            style={[
+              styles.targetLine,
+              { left: bottomLinePosition, top: bottomLineHeight },
+            ]}
+          />
+        )}
+        {isDragging && leftLinePosition !== null && leftLinePosition > 0 && (
+          <View
+            style={[
+              styles.horizontalLine,
+              { width: leftLinePosition },
+              { top: leftLineHeight },
+            ]}
+          />
+        )}
+        {isDragging && rightLinePosition !== null && (
+          <View
+            style={[
+              styles.horizontalLine,
+              { left: rightLinePosition },
+              { top: rightLineHeight },
+            ]}
+          />
         )}
         {isDragging && (
           <Text style={[styles.distanceText, { left: targetLinePosition + 5, top: targetLineHeight / 2 }]}>
             {calculateDistanceText(targetLineHeight - 22)}
+          </Text>
+        )}
+        {isDragging && (
+          <Text style={[styles.distanceText, { left: bottomLinePosition - 50, top: (bottomLineHeight + 230) / 2 }]}>
+            {calculateBottomLineLength(bottomFurniture, 310)}
+          </Text>
+        )}
+        {isDragging && (
+          <Text style={[styles.distanceText, { left: leftLinePosition / 2, top: leftLineHeight - 25 }]}>
+            {calculateDistanceText(leftLinePosition)}
+          </Text>
+        )}
+        {isDragging && (
+          <Text style={[styles.distanceText, { left: (rightLinePosition + 270) / 2, top: rightLineHeight + 5}]}>
+            {calculateBottomLineLength(rightFurniture, 310)}
           </Text>
         )}
         
@@ -197,6 +275,23 @@ const SquareRoomScreen = ({ furnitureItems, setFurnitureItems }, { navigation }:
               setFurnitureItems(updatedItems);
             }}
             onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
+
+            onBottomLinePositionChange={(x, y) => {
+              setBottomLinePosition(x);
+              setBottomLineHeight(y);
+            }}
+            onBottomFurnitureChange={(bottomY) => setBottomFurniture(bottomY)}
+
+            onLeftLinePositionChange={(position) => setLeftLinePosition(position)}
+            onLeftLineHeightChange={(positionY) => setLeftLineHeight(positionY)}
+
+            onRightLinePositionChange={(rightEdgeX, positionY) => {
+              const distanceFromRight = 310 - rightEdgeX; // Calculate distance from right wall
+              setRightLinePosition(distanceFromRight); // Set the correct position
+              setRightLineHeight(positionY + 5); // Update line's vertical alignment
+            }}
+            onRightFurnitureChange={(rightEdgePosition) => setRightFurniture(rightEdgePosition)}
+
             onDraggingChange={setIsDragging} // Track dragging state
           />
         ))}
@@ -349,6 +444,13 @@ const styles = StyleSheet.create({
     left: 10,
     fontSize: 14,
     color: 'black',
+  },
+  horizontalLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: 'red',
   },
 });
 
