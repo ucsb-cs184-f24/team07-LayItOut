@@ -42,7 +42,7 @@ import washingMachine from '../../images/washing machine.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 25
+const scaleFactor = 50
 
 // Furniture categories organization
 const furnitureCategories = {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    // using scale factor of 25 so this is a 12 x 12 room
+    // using scale factor of 50 so this is a 6 x 6 room
     width: 300,
     height: 300,
     aspectRatio: 1,
@@ -441,8 +441,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
     flexDirection: 'row', // Ensure the icon and text are in a row
-  },
-  
+  },  
   globalDeleteButtonText: { 
     color: 'white',
     textAlign: 'center',  // Center the text

@@ -43,7 +43,7 @@ import washingMachine from '../../images/washing machine.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 25
+const scaleFactor = 50
 
 // Furniture categories organization
 const furnitureCategories = {
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    // using scale factor of 25 so this is a 18 x 12 room
+    // using scale factor of 50 so this is a 9 x 6 room
     width: 450,
     height: 300,
     borderWidth: 3,

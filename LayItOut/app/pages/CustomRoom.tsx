@@ -45,7 +45,7 @@ import washingMachine from '../../images/washing machine.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 25;
+const scaleFactor = 15;
 
 // Furniture categories organization
 const furnitureCategories = {
@@ -242,8 +242,8 @@ const LongRectangleRoom = () => {
             }
             else {
               setRoomDimensions({
-                width: data.width * 25, // Adjust width if necessary
-                height: data.height * 25, // Adjust height if necessary
+                width: data.width * scaleFactor,
+                height: data.height * scaleFactor, 
               });
             }
             }            
@@ -369,24 +369,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'white',
   },
+  sidebar: {
+    width: 200,
+    backgroundColor: '#abc2da',
+    height: '100%',
+    paddingTop: 12,
+    paddingRight: 12,
+    paddingLeft: 1,
+  },
+  scrollViewContainer: {
+    flex: 1,
+    marginRight: -2,
+  },
+  scrollView: {
+    flex: 1,
+    marginBottom: 12,
+  },
+  scrollViewContent: {
+    paddingRight: 1,
+  },
+  scrollViewInner: {
+    paddingLeft: 9,
+  },
+  mainContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
   room: {
     width: 450,
     height: 300,
     borderWidth: 3,
     borderColor: 'white',
     backgroundColor: '#045497',
-    position: 'relative',
-  },
-  sidebar: {
-    width: 190,
-    backgroundColor: '#D5D5D5',
-    padding: 12,
-    height: '100%',
-  },
-  mainContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'relative',
   },
   longRoom: {
@@ -397,12 +413,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#045497',
     position: 'relative',
   },
+  // pretty sure this isn't being used ^^ 
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#045497',
     textAlign: 'center',
+    paddingLeft: 9,
   },
   categoryContainer: {
     marginBottom: 5,
@@ -441,7 +459,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   furnitureText: {
-    color: "black",
+    color: "#1c4f88",
     fontSize: 16,
   },
   furnitureInRoom: {
@@ -485,8 +503,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
     flexDirection: 'row', // Ensure the icon and text are in a row
-  },
-  
+  },  
   globalDeleteButtonText: { 
     color: 'white',
     textAlign: 'center',  // Center the text
