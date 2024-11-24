@@ -15,4 +15,4 @@ I also worked on design / UI of the whole project. For this I made all of the bu
 ### Vaani Arora
 
 ### Charlene Patenaude
-
+In our team project, I worked with Niyati and Hannah on my first few issues. Because I was asigned testing for my homework assignment, I ended up creating a unit test for the Login Page to ensure everything was working as intended. I also worked to ensure that the rooms would fit in the screen for each type of room that we are providing (default square, default rectangle, and custom rooms). This tied in with another issue that I worked on which required me to find the average size of each piece of furniture that we would have displayed in the app. I then added dimensions all of the furntiture in each of the room files so that they would all be unique. I also worked on making a standardized scaleFactor that would be used to convert pixels to feet in both the room display and the dimensions of the furniture. This was done in all rooms. The default rooms used a different scale than the custom so that the custom has more options and flexibility. This was also applied to the furniture. 
