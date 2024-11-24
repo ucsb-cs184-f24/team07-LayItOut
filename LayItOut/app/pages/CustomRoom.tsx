@@ -222,21 +222,21 @@ const LongRectangleRoom = () => {
           const data = doc.data();
           // Check if the data contains valid width and height
           if (data.width && data.height) {
-            if (data.width > 18 && data.height > 12) {
+            if (data.width > 30 && data.height > 20) {
               setRoomDimensions({
-                width: parseInt(data.width) / 18 * 25, // Adjust width if necessary
-                height: parseInt(data.height) / 12 * 25, // Adjust height if necessary
+                width: parseInt(data.width) / 30 * 25, // Adjust width if necessary
+                height: parseInt(data.height) / 20 * 25, // Adjust height if necessary
               });
             }
-            else if (data.height > 12) {
+            else if (data.height > 20) {
               setRoomDimensions({
                 width: data.width * 25, // Adjust width if necessary
-                height: parseInt(data.height) / 12 * 25, // Adjust height if necessary
+                height: parseInt(data.height) / 20 * 25, // Adjust height if necessary
               });
             }
-            else if (data.width > 18) {
+            else if (data.width > 30) {
               setRoomDimensions({
-                width: parseInt(data.width) / 18 * 25, // Adjust width if necessary
+                width: parseInt(data.width) / 30 * 25, // Adjust width if necessary
                 height: data.height * 25, // Adjust height if necessary
               });
             }

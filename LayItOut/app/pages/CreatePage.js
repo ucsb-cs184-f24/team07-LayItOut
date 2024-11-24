@@ -29,17 +29,17 @@ const CreatePage = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const handleSaveCustomRoom = async () => {
-    if (customWidth <= 18 && customHeight <= 12) {
-      if ((customWidth < 3 && customHeight < 3)) {
-        alert("Dimensions too small. You're room must be at least 3x3.")
+    if (customWidth <= 30 && customHeight <= 20) {
+      if ((customWidth < 5 && customHeight < 5)) {
+        alert("Dimensions too small. You're room must be at least 5x5.")
       }
-      else if ((customWidth < 3 && customHeight >= 3)) {
+      else if ((customWidth < 5 && customHeight >= 5)) {
         alert("Width too small")
       }
-      else if ((customWidth >= 3 && customHeight < 3)) {
+      else if ((customWidth >= 5 && customHeight < 5)) {
         alert("Height too small")
       }
-      else if (customWidth >= 3 && customHeight >= 3) {
+      else if (customWidth >= 5 && customHeight >= 5) {
         try {
           // Add room dimensions to Firestore
           const docRef = await addDoc(collection(FIREBASE_DB, `rooms/${uid}/userRooms`), {
@@ -64,7 +64,7 @@ const CreatePage = () => {
     }
     
     } else {
-      Alert.alert('Input Error', 'Please enter valid height and width values. \n Height must be <= 12 and width must be <= 18.');
+      Alert.alert('Input Error', 'Please enter valid height and width values. \n Height must be <= 20 and width must be <= 30.');
     }
   };
   
