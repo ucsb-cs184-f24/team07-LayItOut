@@ -1,7 +1,7 @@
 # HW04: Design Contribution
 
 ### Starting Point
-This branch shows my starting point: bw-uiChanges 
+This branch shows my starting point: https://github.com/ucsb-cs184-f24/team07-LayItOut/tree/bw-uiChanges
 - here, I had implemented the gridlines, but not the display layout and font & button changes.
 
 To describe the starting point, for the font/buttons, we see it on all of the pages (splash, Login, home, create, square, rectangle, custom) with their font and buttons. 
