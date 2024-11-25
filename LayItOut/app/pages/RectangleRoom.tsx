@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
-    left: -10,
+    left: -20,
   },
   title: {
     fontSize: 24,
