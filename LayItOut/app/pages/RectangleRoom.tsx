@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView, ActivityIndicator } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
@@ -8,6 +8,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useFonts } from 'expo-font'; 
 
 // Direct imports for all furniture
 import bathsink from '../../images/bathsink.png';
@@ -206,6 +207,16 @@ const RectangleRoom = () => {
     setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
   };
 
+  //Load custom font
+  const [fontsLoaded] = useFonts({
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
+
+
   useEffect(() => {
     const setOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
@@ -280,6 +291,8 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 18 ft</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 12 ft</Text>
         <View style={styles.room} ref={viewShotRef}>
           {furnitureItems.map((item, index) => (
             <DraggableFurniture
@@ -361,12 +374,40 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#045497',
     textAlign: 'center',
     paddingLeft: 9,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
+  },
+  dimensionText: {
+    position: 'absolute', 
+    color: '#A0A0A0', 
+    fontWeight: 500, 
+    fontSize: 14.5,         //adjust size to be smaller if needed. 
+    backgroundColor: 'transparent',
+    paddingVertical: 4, 
+    paddingHorizontal: 8, 
+    borderRadius: 4, 
+    zIndex: 10,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1.55,
+  },
+  topDimension: {
+    top: 10,     //so its above the room
+    left: '50%', 
+    transform: [{ translateX: -50 }], 
+  },
+  leftDimension: {
+    left: 75,    //so its to left of room
+    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+    transform: [
+      { translateX: -50 },
+      { rotate: '-90deg' }
+    ], 
   },
   categoryContainer: {
     marginBottom: 5,
@@ -379,13 +420,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: '#045497',
-    borderRadius: 12,
+    borderRadius: 20,
     marginBottom: 12,
   },
   categoryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
   },
   expandIcon: {
     fontSize: 24,

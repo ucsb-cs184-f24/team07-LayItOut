@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';  // Import Firestore functions
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../FirebaseConfig';  // Import Firestore database instance
+import { useFonts } from 'expo-font'; 
 
 const { height, width } = Dimensions.get('window');
 
@@ -13,6 +14,15 @@ const CreatePage = () => {
   const [showCustomInputs, setShowCustomInputs] = useState(false);
   const [customHeight, setCustomHeight] = useState('');
   const [customWidth, setCustomWidth] = useState('');
+
+  //Custom font 
+  const [fontsLoaded] = useFonts({
+    'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
 
   const handleSquareRoom = () => {
     navigation.navigate('SquareRoom');  // Navigate to SquareRoom
@@ -84,7 +94,7 @@ const CreatePage = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={handleRectangleRoom}>
-              <Text style={styles.buttonText}>Default Rectangle</Text>
+              <Text style={styles.buttonText}>Rectangle</Text>
             </TouchableOpacity>
 
             <View style={styles.customInputContainer}>
@@ -143,41 +153,48 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   title: {
-    fontSize: 28,
+    fontSize: 50,
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: 15,
+    textAlign: 'center',
+    marginTop: 5,
+    marginBottom: 25,
+    fontFamily: "LondrinaSolid",
+    letterSpacing: 2,
   },
   button: {
     backgroundColor: 'white',
-    paddingVertical: 15,
+    paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 15,
+    borderRadius: 35,
     width: 248,
     alignSelf: 'center',
-    marginBottom: 13,
+    marginBottom: 18,
   },
   buttonText: {
     color: '#006EB9',
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'LondrinaSolid',
+    letterSpacing: 1.2,
   },
   createButton: {
     paddingVertical: 8,
     paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 35,
     width: '100%',
     alignItems: 'center',
   },
   customInputContainer: {
     backgroundColor: '#FFFFFF',
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 35,
     width: 248,
     alignSelf: 'center',
     elevation: 5,
+    overflow: 'hidden',
   },
   inputRow: {
     flexDirection: 'row',
@@ -189,7 +206,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingHorizontal: 15,
     marginVertical: 5,
     marginHorizontal: 5,
@@ -200,7 +217,7 @@ const styles = StyleSheet.create({
     width: 150,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 25,
+    borderRadius: 35,
     marginTop: 10,
     alignSelf: 'center',
   },
