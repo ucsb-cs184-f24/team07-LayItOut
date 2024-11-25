@@ -87,30 +87,49 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode}) => {
+const DraggableFurniture = ({ image, initialPosition, rotation, onPositionChange, onRotationChange, dimensions, onDelete, id, deleteMode, rotateMode}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
+
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => {
+        if (rotateMode) {
+          console.log("Rotation mode enabled, allowing rotation");
+          return true; // Allow rotation gestures
+        }
+        console.log("Movement mode enabled, allowing dragging");
+        return true; // Allow movement gestures otherwise
+      },
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
-        const newPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        setPosition(newPosition);
+        console.log("PanResponder Move Triggered");
+        if (rotateMode) {
+          const newRotation = (rotation + gestureState.dx * 0.2) % 360; // Adjust sensitivity
+          console.log(`Rotating furniture with ID: ${id}, New Rotation: ${newRotation}`);
+          onRotationChange(id, newRotation);
+        } else {
+          const newPosition = {
+            x: positionRef.current.x + gestureState.dx * 0.5,
+            y: positionRef.current.y + gestureState.dy * 0.5,
+          };
+          console.log("Moving furniture:", newPosition);
+          setPosition(newPosition);
+          positionRef.current = newPosition; // Update positionRef to prevent drift
+          onPositionChange(newPosition);
+        }
       },
       onPanResponderRelease: (evt, gestureState) => {
-        const finalPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        positionRef.current = finalPosition;
-        setPosition(finalPosition);
-        onPositionChange(finalPosition);
+        if (!rotateMode) {
+          const finalPosition = {
+            x: positionRef.current.x + gestureState.dx * 0.5,
+            y: positionRef.current.y + gestureState.dy * 0.5,
+          };
+          positionRef.current = finalPosition;
+          setPosition(finalPosition);
+          onPositionChange(finalPosition);
+        }
       },
     })
   ).current;
@@ -119,13 +138,24 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
   const scaledHeight = dimensions.height * scaleFactor
 
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, transform: [{ rotate: `${rotation}deg`}], }]}>
       <Image
         source={image}
         style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
         resizeMode='stretch'
         {...panResponder.panHandlers}
       />
+      {rotateMode && (
+        <View
+          style={[
+            styles.rotationDot,
+            {
+              left: scaledWidth / 2 - 5, // Center the dot horizontally
+              top: scaledHeight / 2 - 5, // Center the dot vertically
+            },
+          ]}
+        />
+      )}
       {deleteMode && (
         <TouchableOpacity 
           style={[styles.deleteButton, { left: position.x + scaledWidth - 15, top: position.y - 15 }]} 
@@ -196,13 +226,30 @@ const SquareRoom = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const [deleteMode, setDeleteMode] = useState(false);
+  const[rotateMode, setRotateMode] = useState(false);
 
   const toggleDeleteMode = () => {
     setDeleteMode(!deleteMode);
   };
 
+  const toggleRotateMode = () => {
+    setRotateMode((prev) => {
+      console.log("Rotate mode is now:", !prev);
+      return !prev;
+    });
+  };
+
   const handleDelete = (id) => {
     setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
+  };
+
+  const handleRotationChange = (id, newRotation) => {
+    console.log(`Updating rotation for ID: ${id}, Rotation: ${newRotation}`);
+    setFurnitureItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, rotation: (newRotation + 360) % 360 } : item
+      )
+    );
   };
 
   useEffect(() => {
@@ -220,7 +267,7 @@ const SquareRoom = () => {
   }, []);
 
   const addFurniture = (name, image, dimensions) => {
-    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 } };
+    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 }, rotation:0 };
     setFurnitureItems((prevItems) => {
       const updatedItems = [...prevItems, newItem];
       //console.log('Furniture array after addition:', updatedItems);
@@ -288,8 +335,11 @@ const SquareRoom = () => {
                 return updatedItems;
               });
             }}
+            onRotationChange={handleRotationChange}
+            rotation={item.rotation}
             onDelete={handleDelete}
             deleteMode={deleteMode}
+            rotateMode={rotateMode}
           />
         ))}
       </View>
@@ -303,12 +353,51 @@ const SquareRoom = () => {
         <Ionicons name="trash-outline" size={35} color="white" />
         <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.globalRotateButton} onPress={toggleRotateMode}>
+          <Ionicons name="refresh-outline" size={35} color="white" />
+          <Text style={styles.globalRotateButtonText}>
+            {rotateMode ? "Done" : "Rotate"}
+          </Text>
+        </TouchableOpacity>
     </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  rotationDot: {
+    position: "absolute",
+    width: 10,
+    height: 10,
+    backgroundColor: "white",
+    borderRadius: 5,
+    top: "50%",
+    left: "50%",
+    transform: [{ translateX: -5 }, { translateY: -5 }],
+  },
+  rotationIndicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: "white",
+    borderRadius: 5,
+  },
+  globalRotateButton: {
+    position: "absolute",
+    right: 180,
+    top: 10,
+    width: 120,
+    height: 50,
+    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    flexDirection: "row",
+  },
+  globalRotateButtonText: {
+    color: "white",
+    textAlign: "center",
+    marginLeft: 5,
+  },
   container: {
     flex: 1,
     flexDirection: 'row',
