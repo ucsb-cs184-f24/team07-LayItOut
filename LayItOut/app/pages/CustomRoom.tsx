@@ -101,15 +101,15 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
       onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
-          x: positionRef.current.x + gestureState.dx,
-          y: positionRef.current.y + gestureState.dy,
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
         };
         setPosition(newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
-          x: positionRef.current.x + gestureState.dx,
-          y: positionRef.current.y + gestureState.dy,
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
         };
         positionRef.current = finalPosition;
         setPosition(finalPosition);
@@ -125,7 +125,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
     <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}>
       <Image 
         source={image} 
-        style={styles.furnitureImage} 
+        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
         resizeMode='stretch'
         {...panResponder.panHandlers} 
       />
@@ -322,12 +322,12 @@ const LongRectangleRoom = () => {
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={(name, image, dimensions) => {
-        const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
+        const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: ((roomDimensions.width/scaleFactor)/2), y: ((roomDimensions.height/scaleFactor/2)) } };
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
       <View ref={viewShotRef} style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
-      {furnitureItems.map((item, index) => (
+      {furnitureItems.map((item) => (
         <DraggableFurniture
           key = {item.id}
           id = {item.id}
@@ -336,8 +336,8 @@ const LongRectangleRoom = () => {
           initialPosition={item.position}
           onPositionChange={(newPosition) => {
             setFurnitureItems((prevItems) => {
-              const updatedItems = prevItems.map((furniture, idx) =>
-                idx === index ? { ...furniture, position: newPosition } : furniture
+              const updatedItems = prevItems.map((furniture) =>
+                furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
               );
               //console.log('Furniture array after move:', updatedItems);
               return updatedItems;
@@ -404,6 +404,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
+    left: -10,
   },
   longRoom: {
     width: 500,
