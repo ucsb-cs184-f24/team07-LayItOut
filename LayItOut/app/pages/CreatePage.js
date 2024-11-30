@@ -18,6 +18,7 @@ const CreatePage = () => {
   //Custom font 
   const [fontsLoaded] = useFonts({
     'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
   });
 
   if (!fontsLoaded) {
@@ -153,19 +154,19 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   title: {
-    fontSize: 50,
+    fontSize: 45,
     color: '#fff',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 5,
+    marginTop: -30,
     marginBottom: 25,
     fontFamily: "LondrinaSolid",
     letterSpacing: 2,
   },
   button: {
     backgroundColor: 'white',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 35,
     width: 248,
     alignSelf: 'center',
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#006EB9',
-    fontSize: 27,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'LondrinaSolid',
@@ -211,6 +212,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 5,
     backgroundColor: 'white',
+    fontFamily: "LondrinaLight",
+    letterSpacing: 1,
   },
   saveButton: {
     backgroundColor: '#006EB9',
@@ -226,6 +229,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: "LondrinaSolid",
+    letterSpacing: 1.5,
   },
 });
 

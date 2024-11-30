@@ -341,15 +341,15 @@ const LongRectangleRoom = () => {
             styles.dimensionText, 
             styles.topDimension,
             {
-              top: -(roomDimensions.height / 2) - 20,  
-              left: roomDimensions.width / 2 - 50,
+              top: -roomDimensions.height,  
+              left: -roomDimensions.width,
             },
           ]}
         >
           Width: {roomDimensions.width / 50} ft
         </Text>
 
-        {/* Height Text */}
+        {/* Height Text  --MAKE EDITS HERE*/}     
         <Text
           style={[
             styles.dimensionText, 
