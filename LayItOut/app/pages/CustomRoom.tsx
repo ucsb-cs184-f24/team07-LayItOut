@@ -341,12 +341,12 @@ const LongRectangleRoom = () => {
             styles.dimensionText, 
             styles.topDimension,
             {
-              top: -roomDimensions.height,  
-              left: -roomDimensions.width,
+              top: -(roomDimensions.height / 2) + 145,  
+              left: '50%',
             },
           ]}
         >
-          Width: {roomDimensions.width / 50} ft
+          Width: {roomDimensions.width / 25} ft
         </Text>
 
         {/* Height Text  --MAKE EDITS HERE*/}     
@@ -355,12 +355,12 @@ const LongRectangleRoom = () => {
             styles.dimensionText, 
             styles.leftDimension,
             {
-              top: roomDimensions.height  / 2 - 50,
-              left: -(roomDimensions.width / 2) - 50,          // + 300
+              top: "47%",
+              left: -(roomDimensions.width / 2) + 260,
             },
           ]}
         >
-          Height: {roomDimensions.height / 50} ft
+          Height: {roomDimensions.height / 25} ft
         </Text>
       <View ref={viewShotRef} style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {furnitureItems.map((item, index) => (
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     color: '#A0A0A0', 
     fontWeight: 500, 
-    fontSize: 14.5,         //adjust size to be smaller if needed. 
+    fontSize: 14,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
