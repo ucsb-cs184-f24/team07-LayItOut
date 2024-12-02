@@ -17,6 +17,7 @@ import chair2 from '../../images/chair2.png';
 import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
 import dining from '../../images/dining.png';
+import door from '../../images/door.png';
 import fireplace from '../../images/fireplace.png';
 import fridge from '../../images/fridge.png';
 import kitchenTable from '../../images/kitchen table.png';
@@ -47,6 +48,7 @@ const scaleFactor = 50
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
+    { name: 'Door', image: door, dimensions:{width: 3, height: 6.7} },
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
     { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5.8, height: 2.5} },
     { name: 'Chair', image: chair, dimensions:{width: 2.5, height: 2.5} },
