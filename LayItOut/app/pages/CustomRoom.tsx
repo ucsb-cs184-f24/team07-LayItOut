@@ -341,7 +341,7 @@ const LongRectangleRoom = () => {
             styles.dimensionText, 
             styles.topDimension,
             {
-              top: -(roomDimensions.height / 2) + 145,  
+              top: -(roomDimensions.height / 2) + 143,  
               left: '50%',
             },
           ]}
@@ -356,7 +356,7 @@ const LongRectangleRoom = () => {
             styles.leftDimension,
             {
               top: "47%",
-              left: -(roomDimensions.width / 2) + 260,
+              left: -(roomDimensions.width / 2) + 274,
             },
           ]}
         >
