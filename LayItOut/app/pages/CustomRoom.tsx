@@ -17,6 +17,7 @@ import bathtub from '../../images/bathtub3.png';
 import bookshelf from '../../images/bookshelf_2.png';
 import chair from '../../images/Chair.png';
 import chair2 from '../../images/chair2.png';
+import closet from '../../images/closet.png';
 import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
 import dining from '../../images/dining.png';
@@ -43,6 +44,7 @@ import toilet from '../../images/toilet.png';
 import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
+import window from '../../images/window.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
@@ -50,8 +52,13 @@ const scaleFactor = 15;
 
 // Furniture categories organization
 const furnitureCategories = {
-  'Living Room': [
+  'General': [
     { name: 'Door', image: door, dimensions:{width: 3, height: 6.7} },
+    { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
+    { name: 'Closet', image: closet, dimensions:{width: 3, height: .5} },
+  ],
+  'Living Room': [
+    { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
     { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5.8, height: 2.5} },
     { name: 'Chair', image: chair, dimensions:{width: 2.5, height: 2.5} },
