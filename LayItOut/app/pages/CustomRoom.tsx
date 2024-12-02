@@ -53,7 +53,7 @@ const scaleFactor = 15;
 // Furniture categories organization
 const furnitureCategories = {
   'General': [
-    { name: 'Door', image: door, dimensions:{width: 3, height: 6.7} },
+    { name: 'Door', image: door, dimensions:{width: 3, height: 3} },
     { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
     { name: 'Closet', image: closet, dimensions:{width: 3, height: .5} },
   ],
