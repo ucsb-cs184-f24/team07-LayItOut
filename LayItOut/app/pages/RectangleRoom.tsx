@@ -88,9 +88,10 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component stays the same
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode}) => {
+const DraggableFurniture = ({ image, rotation,initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode, onRotationChange}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
+  const [currentRotation, setCurrentRotation] = useState(rotation);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -116,6 +117,13 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
     })
   ).current;
 
+  const handleRotate = () => {
+    // Rotate 90 degrees each time
+    const newRotation = (rotation + 90) % 360;
+    setCurrentRotation(newRotation);
+    onRotationChange(newRotation);
+  };
+
   const scaledWidth = dimensions.width * scaleFactor
   const scaledHeight = dimensions.height * scaleFactor
 
@@ -123,7 +131,7 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
     <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
       <Image
         source={image}
-        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight, transform:[{rotate: `${currentRotation}deg`}] }]}
         resizeMode='stretch'
         {...panResponder.panHandlers}
       />
@@ -221,7 +229,7 @@ const RectangleRoom = () => {
   }, []);
 
   const addFurniture = (name, image, dimensions) => {
-    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 } };
+    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 }, rotation:0 };
     setFurnitureItems((prevItems) => {
       const updatedItems = [...prevItems, newItem];
       console.log('Furniture array after addition:', updatedItems);
@@ -296,7 +304,15 @@ const RectangleRoom = () => {
                 //console.log('Furniture array after move:', updatedItems);
                 return updatedItems;
               });
-              }}
+            }}
+            onRotationChange={(newRotation) =>{
+              setFurnitureItems((prevItems => {
+                const updatedItems = prevItems.map((furniture, idx) =>
+                  idx === index ? {...furniture, rotation:newRotation} : furniture
+                );
+                return updatedItems;
+              }))
+            }}
             onDelete={handleDelete}
             deleteMode={deleteMode}
             />
@@ -322,6 +338,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+  },
+  rotateButton:{
+    position: 'absolute', 
+    top: -10, 
+    right: -10,  
+    width: 25,  
+    height: 25,  
+    backgroundColor: 'white',
+    borderRadius: 15,  
+    justifyContent: 'center',  
+    alignItems: 'center', 
   },
   sidebar: {
     width: 200,
