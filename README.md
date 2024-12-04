@@ -16,7 +16,7 @@ Our team is working toward creating a layout planner app that helps with visuali
 * Framework: React Native
 * Database: Firebase
 * Deployment: Expo Go
-* Authentication: Google OAuth (restricted to UCSB emails)
+* Authentication: Firebase OAuth 
 
 # User Roles:
 #### Registered User:
