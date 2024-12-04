@@ -87,83 +87,83 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, rotation, onPositionChange, onRotationChange, dimensions, onDelete, id, deleteMode, rotateMode}) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, onRotationChange, dimensions, onDelete, id, deleteMode, showRotateButton}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
-
+  const [currentRotation, setCurrentRotation] = useState(0);
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => {
-        if (rotateMode) {
-          console.log("Rotation mode enabled, allowing rotation");
-          return true; // Allow rotation gestures
-        }
-        console.log("Movement mode enabled, allowing dragging");
-        return true; // Allow movement gestures otherwise
-      },
+      onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
-        console.log("PanResponder Move Triggered");
-        if (rotateMode) {
-          const newRotation = (rotation + gestureState.dx * 0.2) % 360; // Adjust sensitivity
-          console.log(`Rotating furniture with ID: ${id}, New Rotation: ${newRotation}`);
-          onRotationChange(id, newRotation);
-        } else {
-          const newPosition = {
-            x: positionRef.current.x + gestureState.dx * 0.5,
-            y: positionRef.current.y + gestureState.dy * 0.5,
-          };
-          console.log("Moving furniture:", newPosition);
-          setPosition(newPosition);
-          positionRef.current = newPosition; // Update positionRef to prevent drift
-          onPositionChange(newPosition);
-        }
+        const newPosition = {
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
+        };
+        setPosition(newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
-        if (!rotateMode) {
-          const finalPosition = {
-            x: positionRef.current.x + gestureState.dx * 0.5,
-            y: positionRef.current.y + gestureState.dy * 0.5,
-          };
-          positionRef.current = finalPosition;
-          setPosition(finalPosition);
-          onPositionChange(finalPosition);
-        }
+        const finalPosition = {
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
+        };
+        positionRef.current = finalPosition;
+        setPosition(finalPosition);
+        onPositionChange(finalPosition);
       },
     })
   ).current;
+
+  const handleRotate = () => {
+    // Ensure currentRotation is a number before performing calculations
+  const safeRotation = isNaN(currentRotation) ? 0 : currentRotation;
+
+  // Add 90 degrees and wrap within 360
+  const newRotation = (safeRotation + 10) % 360;
+
+  // Update the state
+  setCurrentRotation(newRotation);
+
+  // Notify parent component
+  onRotationChange(id,newRotation);
+  };
 
   const scaledWidth = dimensions.width * scaleFactor
   const scaledHeight = dimensions.height * scaleFactor
 
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, transform: [{ rotate: `${rotation}deg`}], }]}>
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, transform: [{ rotate: `${currentRotation}deg` }], }]}>
       <Image
         source={image}
-        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+        style={[styles.furnitureInRoom, { width: scaledWidth, height: scaledHeight, transform:[{rotate: `${currentRotation}deg`}] }]}
         resizeMode='stretch'
         {...panResponder.panHandlers}
       />
-      {rotateMode && (
-        <View
-          style={[
-            styles.rotationDot,
-            {
-              left: scaledWidth / 2 - 5, // Center the dot horizontally
-              top: scaledHeight / 2 - 5, // Center the dot vertically
-            },
-          ]}
-        />
-      )}
       {deleteMode && (
         <TouchableOpacity 
-          style={[styles.deleteButton, { left: position.x + scaledWidth - 15, top: position.y - 15 }]} 
+          style={styles.deleteButton} 
           onPress={() => onDelete(id)}
         >
           <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>        
+      )}
+      {showRotateButton && (
+        <TouchableOpacity
+          style={[
+            styles.rotateButton,
+            {
+              left: scaledWidth / 2 - 12, // Adjust for button positioning
+              top: scaledHeight + 10,
+            },
+          ]}
+          onPress={handleRotate}
+        >
+          <Ionicons name="refresh-outline" size={20} color="black" />
         </TouchableOpacity>
       )}
+      
     </View>
   );
 };
@@ -227,30 +227,21 @@ const SquareRoom = () => {
 
   const [deleteMode, setDeleteMode] = useState(false);
   const[rotateMode, setRotateMode] = useState(false);
+  const [showRotateButtons, setShowRotateButtons] = useState(false);
 
   const toggleDeleteMode = () => {
     setDeleteMode(!deleteMode);
   };
 
-  const toggleRotateMode = () => {
-    setRotateMode((prev) => {
-      console.log("Rotate mode is now:", !prev);
-      return !prev;
-    });
+  const toggleRotateButtons = () => {
+    setShowRotateButtons((prev) => !prev);
   };
 
   const handleDelete = (id) => {
     setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
   };
 
-  const handleRotationChange = (id, newRotation) => {
-    console.log(`Updating rotation for ID: ${id}, Rotation: ${newRotation}`);
-    setFurnitureItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, rotation: (newRotation + 360) % 360 } : item
-      )
-    );
-  };
+  
 
   useEffect(() => {
     const setOrientation = async () => {
@@ -274,6 +265,13 @@ const SquareRoom = () => {
       return updatedItems;
     });
   };
+
+  useEffect(() => {
+    //console.log('Furniture items updated:');
+    furnitureItems.forEach((item, idx) => {
+      //console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
+    });
+  }, [furnitureItems]);
 
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
@@ -335,11 +333,17 @@ const SquareRoom = () => {
                 return updatedItems;
               });
             }}
-            onRotationChange={handleRotationChange}
-            rotation={item.rotation}
+            onRotationChange={(id, newRotation) =>{
+              setFurnitureItems((prevItems => {
+                const updatedItems = prevItems.map((furniture, idx) =>
+                  furniture.id === id ? {...furniture, rotation:newRotation} : furniture
+                );
+                return updatedItems;
+              }))
+            }}
             onDelete={handleDelete}
             deleteMode={deleteMode}
-            rotateMode={rotateMode}
+            showRotateButton={showRotateButtons}
           />
         ))}
       </View>
@@ -353,55 +357,54 @@ const SquareRoom = () => {
         <Ionicons name="trash-outline" size={35} color="white" />
         <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.globalRotateButton} onPress={toggleRotateMode}>
-          <Ionicons name="refresh-outline" size={35} color="white" />
-          <Text style={styles.globalRotateButtonText}>
-            {rotateMode ? "Done" : "Rotate"}
-          </Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.globalToggleRotateButton} onPress={toggleRotateButtons}>
+        <Ionicons name="refresh-circle-outline" size={35} color="white" />
+        <Text style={styles.globalToggleRotateButtonText}>
+          {showRotateButtons ? 'Done' : 'Rotate'}
+        </Text>
+      </TouchableOpacity>
     </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  rotationDot: {
-    position: "absolute",
-    width: 10,
-    height: 10,
-    backgroundColor: "white",
-    borderRadius: 5,
-    top: "50%",
-    left: "50%",
-    transform: [{ translateX: -5 }, { translateY: -5 }],
-  },
-  rotationIndicator: {
-    width: 10,
-    height: 10,
-    backgroundColor: "white",
-    borderRadius: 5,
-  },
-  globalRotateButton: {
-    position: "absolute",
-    right: 180,
-    top: 10,
-    width: 120,
-    height: 50,
-    backgroundColor: "blue",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    flexDirection: "row",
-  },
-  globalRotateButtonText: {
-    color: "white",
-    textAlign: "center",
-    marginLeft: 5,
-  },
+  
   container: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+  },
+  globalToggleRotateButton: {
+    position: 'absolute',
+    right: 10,
+    top: 70,
+    width: 100,
+    height: 40,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    flexDirection: 'row',
+  },
+  globalToggleRotateButtonText: {
+    color: 'white',
+    marginLeft: 5,
+    fontSize: 12,
+  },
+  rotateButton:{
+    position: "absolute",
+    width: 20,
+    height: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 15, // Circular button
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, 
   },
   sidebar: {
     width: 200,

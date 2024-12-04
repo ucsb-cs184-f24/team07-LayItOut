@@ -11,9 +11,41 @@ import storage from '@react-native-firebase/storage';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import chair from '../../images/Chair.png';
-import bed from '../../images/Bed.png';
+import bathsink from '../../images/bathsink.png';
+import bathtub from '../../images/bathtub3.png';
 import bookshelf from '../../images/bookshelf_2.png';
+import chair from '../../images/Chair.png';
+import chair2 from '../../images/chair2.png';
+import consoleTable from '../../images/consule.png';
+import countertop from '../../images/countertop.png';
+import dining from '../../images/dining.png';
+import fireplace from '../../images/fireplace.png';
+import fridge from '../../images/fridge.png';
+import kitchenTable from '../../images/kitchen table.png';
+import lamp from '../../images/lamp.png';
+import officeChair from '../../images/office chair.png';
+import oven from '../../images/oven.png';
+import p from '../../images/p.png';
+import queenbed from '../../images/queenbed.png';
+import side1 from '../../images/side1.png';
+import side2 from '../../images/side2.png';
+import sidebed from '../../images/sidebed.png';
+import sofa2 from '../../images/sofa2.png';
+import sofa3 from '../../images/sofa3.png';
+import stove from '../../images/stove.png';
+import table from '../../images/table.png';
+import table1 from '../../images/table1.png';
+import table2 from '../../images/table2.png';
+import table3 from '../../images/table3.png';
+import toilet from '../../images/toilet.png';
+import trashcan from '../../images/trashcan.png';
+import wardrobe from '../../images/wardropbe.png';
+import washingMachine from '../../images/washing machine.png';
+import sink from '../../images/sink.png';
+import tv from '../../images/tv.png';
+
+
+const scaleFactor = 15;
 
 interface RouterProps {
   navigation: NavigationProp<any, any>;
@@ -22,20 +54,50 @@ interface RouterProps {
 // Furniture categories organization
 const furnitureCategories = {
   'Living Room': [
-    { name: 'Chair', image: chair },
-    { name: 'Bookshelf', image: bookshelf }
+    { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
+    { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5.8, height: 2.5} },
+    { name: 'Chair', image: chair, dimensions:{width: 2.5, height: 2.5} },
+    { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
+    { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
+    { name: 'Bookshelf', image: bookshelf, dimensions:{width: 3, height: 5.5} },
+    { name: 'Console Table', image: consoleTable, dimensions:{width: 3, height: 3} },
+    { name: 'Fireplace', image: fireplace, dimensions:{width: 3, height: 2.5} },
+    { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 1.5} },
+    { name: 'Lamp', image: lamp, dimensions:{width: 2, height: 5} },
+    { name: 'TV', image: tv, dimensions:{width: 5.2, height: 5} },
   ],
   'Bedroom': [
-    { name: 'Bed', image: bed }
+    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 3.5} },
+    { name: 'Bedside Table', image: sidebed, dimensions:{width: 2, height: 2} },
+    { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3.5, height: 6} },
+    { name: 'Office Chair', image: officeChair, dimensions:{width: 1.7, height: 2} },
+    { name: 'Desk', image: table, dimensions:{width: 5, height: 2.7} },
+    { name: 'Plant', image: p, dimensions:{width: 1, height: 1} },
   ],
-  'Kitchen': [],
-  'Bathroom': []
+  'Kitchen': [
+    { name: 'Refrigerator', image: fridge, dimensions:{width: 2.5, height: 5.5} },
+    { name: 'Sink', image: sink, dimensions:{width: 2, height: 2.5} }, 
+    { name: 'Kitchen Table', image: kitchenTable, dimensions:{width: 4.5, height: 2} },
+    { name: 'Countertop', image: countertop, dimensions:{width: 4, height: 3} },
+    { name: 'Oven', image: oven, dimensions:{width: 2.5, height: 3} },
+    { name: 'Stove', image: stove, dimensions:{width: 2.5, height: 3} }, 
+    { name: 'Dining Set', image: dining, dimensions:{width: 4.5, height: 2.5 } },
+    { name: 'Dining Chair', image: chair2, dimensions:{width: 2, height: 2.3} },
+    { name: 'Trash Can', image: trashcan, dimensions:{width: 2, height: 3 } }, 
+  ],
+  'Bathroom': [
+    { name: 'Bathtub', image: bathtub, dimensions:{width: 5, height: 4} },
+    { name: 'Sink', image: bathsink, dimensions:{width: 2, height: 2.5} },
+    { name: 'Toilet', image: toilet, dimensions:{width: 2.5, height: 2.5} },
+    { name: 'Washing Machine', image: washingMachine, dimensions:{width: 2.5, height: 3} }
+  ]
 };
 
 // Draggable furniture component
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete, id, deleteMode}) => {
+const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode, onRotationChange, showRotateButton}) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
+  const [currentRotation, setCurrentRotation] = useState(0);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -44,15 +106,15 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete
       onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
         const newPosition = {
-          x: positionRef.current.x + gestureState.dx,
-          y: positionRef.current.y + gestureState.dy,
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
         };
         setPosition(newPosition);
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
-          x: positionRef.current.x + gestureState.dx,
-          y: positionRef.current.y + gestureState.dy,
+          x: positionRef.current.x + gestureState.dx * 0.5,
+          y: positionRef.current.y + gestureState.dy * 0.5,
         };
         positionRef.current = finalPosition;
         setPosition(finalPosition);
@@ -61,12 +123,48 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, onDelete
     })
   ).current;
 
+  const handleRotate = () => {
+    // Ensure currentRotation is a number before performing calculations
+  const safeRotation = isNaN(currentRotation) ? 0 : currentRotation;
+  
+
+  // Add 90 degrees and wrap within 360
+  const newRotation = (safeRotation + 10) % 360;
+
+  // Update the state
+  setCurrentRotation(newRotation);
+
+  // Notify parent component
+  onRotationChange(newRotation);
+  };
+
+  const scaledWidth = (dimensions?.width || 1) * scaleFactor; // Default width to 1
+  const scaledHeight = (dimensions?.height || 1) * scaleFactor;
+
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, transform: [{ translateX: scaledWidth / 2 },
+      { translateY: scaledHeight / 2 },
+      { rotate: `${currentRotation}deg` },
+      { translateX: -scaledWidth / 2 },
+      { translateY: -scaledHeight / 2 },] }]}>
       <Image source={image} style={styles.furnitureImage} {...panResponder.panHandlers} />
       {deleteMode && (
         <TouchableOpacity style={styles.deleteButton} onPress={() => onDelete(id)}>
           <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>
+      )}
+      {showRotateButton && (
+        <TouchableOpacity
+          style={[
+            styles.rotateButton,
+            {
+              left: scaledWidth / 2 - 12, // Adjust for button positioning
+              top: scaledHeight + 10,
+            },
+          ]}
+          onPress={handleRotate}
+        >
+          <Ionicons name="refresh-outline" size={20} color="black" />
         </TouchableOpacity>
       )}
     </View>
@@ -109,7 +207,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
                   <TouchableOpacity 
                     key={`${category}-${index}`}
                     style={styles.furnitureItem} 
-                    onPress={() => addFurniture(item.name, item.image)}
+                    onPress={() => addFurniture(item.name, item.image, item.dimensions)}
                   >
                     <Image source={item.image} style={styles.furnitureImage} />
                     <Text style={styles.furnitureText}>{item.name}</Text>
@@ -131,9 +229,13 @@ const LongRectangleRoom = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const [deleteMode, setDeleteMode] = useState(false);
+  const [showRotateButtons, setShowRotateButtons] = useState(false);
 
   const toggleDeleteMode = () => {
     setDeleteMode(!deleteMode);
+  };
+  const toggleRotateButtons = () => {
+    setShowRotateButtons((prev) => !prev);
   };
 
   const handleDelete = (id) => {
@@ -168,6 +270,8 @@ const LongRectangleRoom = () => {
     // Call fetchRoomData function to fetch data when component mounts
     fetchRoomData();
   }, [uid]);
+
+
   
   useEffect(() => {
     const setOrientation = async () => {
@@ -182,6 +286,15 @@ const LongRectangleRoom = () => {
       unlockOrientation();
     };
   }, []);
+
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 }, rotation:0 };
+    setFurnitureItems((prevItems) => {
+      const updatedItems = [...prevItems, newItem];
+      //console.log('Furniture array after addition:', updatedItems);
+      return updatedItems;
+    });
+  };
   // Add the debugging useEffect here
   useEffect(() => {
     //console.log('Furniture items updated:');
@@ -232,8 +345,8 @@ const LongRectangleRoom = () => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
-      <FurnitureSidebar addFurniture={(name, image) => {
-        const newItem = { id: `${name}-${Date.now()}`, name, image, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
+      <FurnitureSidebar addFurniture={(name, image, dimensions) => {
+        const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: roomDimensions.width/2, y: roomDimensions.height/2 } };
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
@@ -253,8 +366,17 @@ const LongRectangleRoom = () => {
               return updatedItems;
             });
           }}
+          onRotationChange={(newRotation) =>{
+            setFurnitureItems((prevItems => {
+              const updatedItems = prevItems.map((furniture, idx) =>
+                idx === index ? {...furniture, rotation:newRotation} : furniture
+              );
+              return updatedItems;
+            }))
+          }}
           onDelete={handleDelete}
           deleteMode={deleteMode}
+          showRotateButton={showRotateButtons}
           />
     ))}
       </View>
@@ -268,6 +390,12 @@ const LongRectangleRoom = () => {
         <Ionicons name="trash-outline" size={35} color="white" />
         <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.globalToggleRotateButton} onPress={toggleRotateButtons}>
+        <Ionicons name="refresh-circle-outline" size={35} color="white" />
+        <Text style={styles.globalToggleRotateButtonText}>
+          {showRotateButtons ? 'Done' : 'Rotate'}
+        </Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -278,6 +406,37 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+  },
+  globalToggleRotateButton: {
+    position: 'absolute',
+    right: 10,
+    top: 70,
+    width: 100,
+    height: 40,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    flexDirection: 'row',
+  },
+  globalToggleRotateButtonText: {
+    color: 'white',
+    marginLeft: 5,
+    fontSize: 12,
+  },
+  rotateButton:{
+    position: "absolute",
+    width: 20,
+    height: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 15, // Circular button
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, 
   },
   room: {
     width: 645,
