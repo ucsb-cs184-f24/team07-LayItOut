@@ -43,7 +43,7 @@ import washingMachine from '../../images/washing machine.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 50
+const scaleFactor = 27.27
 
 // Furniture categories organization
 const furnitureCategories = {
@@ -92,26 +92,34 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
 
+  const roomWidth = 450; // Adjust if your room dimensions change
+  const roomHeight = 300; // Adjust if your room dimensions change
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {},
       onPanResponderMove: (evt, gestureState) => {
-        const newPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        setPosition(newPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
+
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
+
+        setPosition({ x: clampedX, y: clampedY });
       },
       onPanResponderRelease: (evt, gestureState) => {
-        const finalPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        positionRef.current = finalPosition;
-        setPosition(finalPosition);
-        onPositionChange(finalPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
+
+        // Clamp the final positions to ensure the furniture stays within bounds
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
+
+        positionRef.current = { x: clampedX, y: clampedY };
+        setPosition({ x: clampedX, y: clampedY });
+        onPositionChange({ x: clampedX, y: clampedY });
       },
     })
   ).current;
@@ -120,7 +128,16 @@ const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensio
   const scaledHeight = dimensions.height * scaleFactor
 
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+    <View style={[
+      styles.furnitureInRoom, { 
+        position: "absolute",
+        left: position.x, 
+        top: position.y,
+        width: dimensions.width,
+        height: dimensions.height,
+      }]}
+      {...panResponder.panHandlers}
+      >
       <Image
         source={image}
         style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
@@ -357,7 +374,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    // using scale factor of 50 so this is a 9 x 6 room
+    // using scale factor of 27.27 so this is a 16.5 x 11 room
     width: 450,
     height: 300,
     borderWidth: 3,
