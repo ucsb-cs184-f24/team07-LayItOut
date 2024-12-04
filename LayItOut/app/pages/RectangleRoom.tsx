@@ -52,8 +52,8 @@ const scaleFactor = 50
 const furnitureCategories = {
   'General': [
     { name: 'Door', image: door, dimensions:{width: 3, height: 3} },
-    { name: 'Window', image: door, dimensions:{width: 3, height: .5} },
-    { name: 'Closet', image: door, dimensions:{width: 5, height: .5} },
+    { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
+    { name: 'Closet', image: window, dimensions:{width: 5, height: .5} },
   ],
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
