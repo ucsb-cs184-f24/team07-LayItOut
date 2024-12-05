@@ -368,8 +368,8 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 18 ft</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 12 ft</Text>
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 9 ft</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text>
         <View style={styles.room} ref={viewShotRef}>
           {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -555,13 +555,13 @@ const styles = StyleSheet.create({
     letterSpacing: 1.55,
   },
   topDimension: {
-    top: 10,     //so its above the room
-    left: '50%', 
+    top: -7,     //so its above the room
+    left: '51%', 
     transform: [{ translateX: -50 }], 
   },
   leftDimension: {
-    left: 75,    //so its to left of room
-    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+    left: 40,    //so its to left of room
+    top: '47%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
     transform: [
       { translateX: -50 },
       { rotate: '-90deg' }

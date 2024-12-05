@@ -371,8 +371,8 @@ const SquareRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 12 ft</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 12 ft</Text>
+        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 6 ft</Text>
+        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text>
       <View ref={viewShotRef} style={styles.room}>
         {/* Conditionally render the target line at a dynamic position */}
         {targetLinePosition !== null && (
@@ -558,13 +558,13 @@ const styles = StyleSheet.create({
     letterSpacing: 1.55,
   },
   topDimension: {
-    top: 5,     //so its above the room
-    left: '50%', 
+    top: -8,     //so its above the room
+    left: '51%', 
     transform: [{ translateX: -50 }], 
   },
   leftDimension: {
-    left: 130,    //so its to left of room
-    top: '48%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+    left: 113,    //so its to left of room
+    top: '45%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
     transform: [
       { translateX: -50 },
       { rotate: '-90deg' }
