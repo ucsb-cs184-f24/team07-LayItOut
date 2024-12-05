@@ -95,7 +95,7 @@ const CreatePage = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={handleRectangleRoom}>
-              <Text style={styles.buttonText}>Rectangle</Text>
+              <Text style={styles.buttonText}>Default Rectangle</Text>
             </TouchableOpacity>
 
             <View style={styles.customInputContainer}>
