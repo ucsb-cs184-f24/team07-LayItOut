@@ -111,7 +111,9 @@ const DraggableFurniture = ({
   dimensions, 
   onDelete, 
   id, 
-  deleteMode
+  deleteMode,
+  onRotationChange,
+  showRotateButton
  }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
@@ -120,6 +122,7 @@ const DraggableFurniture = ({
   const roomHeight = 300; // Adjust if your room dimensions change
   const scaledWidth = dimensions.width * scaleFactor
   const scaledHeight = dimensions.height * scaleFactor
+  const [currentRotation, setCurrentRotation] = useState(0);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -172,6 +175,20 @@ const DraggableFurniture = ({
     })
   ).current;
 
+  const handleRotate = () => {
+    // Ensure currentRotation is a number before performing calculations
+    const safeRotation = isNaN(currentRotation) ? 0 : currentRotation;
+
+    // Add 90 degrees and wrap within 360
+    const newRotation = (safeRotation + 10) % 360;
+
+    // Update the state
+    setCurrentRotation(newRotation);
+
+    // Notify parent component
+    onRotationChange(id,newRotation);
+  };
+
   return (
     <View style={[
       styles.furnitureInRoom, { 
@@ -180,24 +197,43 @@ const DraggableFurniture = ({
         top: position.y,
         width: dimensions.width,
         height: dimensions.height,
+        transform: [{ rotate: `${currentRotation}deg` }],
       }]}
       {...panResponder.panHandlers}
       >
     
       <Image
         source={image}
-        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
+        style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight, transform:[{rotate: `${currentRotation}deg`}] }]}
         resizeMode='stretch'
         {...panResponder.panHandlers}
       />
       {deleteMode && (
         <TouchableOpacity 
-          style={[styles.deleteButton, { left: position.x + scaledWidth - 15, top: position.y - 15 }]} 
-          onPress={() => onDelete(id)}
+          style={[styles.deleteButton, { left: position.x + scaledWidth - 15, top: position.y - 15 }]}
+          onPress={() => {
+            console.log("Delete button pressed for id:", id);
+            onDelete(id);
+          }}
         >
           <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>      
+      )}
+      {showRotateButton && (
+        <TouchableOpacity
+          style={[
+            styles.rotateButton,
+            {
+              left: scaledWidth / 2 - 12, // Adjust for button positioning
+              top: scaledHeight + 10,
+            },
+          ]}
+          onPress={handleRotate}
+        >
+          <Ionicons name="refresh-outline" size={20} color="black" />
         </TouchableOpacity>
       )}
+      
     </View>
   );
 };
@@ -268,11 +304,18 @@ const SquareRoom = () => {
   const [rightFurniture, setRightFurniture] = useState(null);
   const [isDragging, setIsDragging] = useState(false); // Track dragging state
   const viewShotRef = useRef(null);
-  const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
   const [isRed, setIsRed] = useState(false); // State to track the button color
+  //const [rotateMode, setRotateMode] = useState(false);
+  const [showRotateButtons, setShowRotateButtons] = useState(false);
+  const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const toggleDeleteMode = () => {
     setIsRed((prevState) => !prevState); // Toggle the color state
+    console.log("Delete mode toggled. Current state:", !isRed);
+  };
+
+  const toggleRotateButtons = () => {
+    setShowRotateButtons((prev) => !prev);
   };
 
   const handleDelete = (id) => {
@@ -307,7 +350,7 @@ const SquareRoom = () => {
   }, []);
 
   const addFurniture = (name, image, dimensions) => {
-    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 } };
+    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 }, rotation: 0 };
     setFurnitureItems((prevItems) => {
       const updatedItems = [...prevItems, newItem];
       //console.log('Furniture array after addition:', updatedItems);
@@ -432,6 +475,14 @@ const SquareRoom = () => {
                 return updatedItems;
               });
             }}
+            onRotationChange={(newRotation) =>{
+              setFurnitureItems((prevItems) => {
+                const updatedItems = prevItems.map((furniture) =>
+                  furniture.id === item.id ? {...furniture, rotation: newRotation} : furniture
+                );
+                return updatedItems;
+              });
+            }}
             onDelete={handleDelete}
             deleteMode={isRed}
             onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
@@ -453,6 +504,7 @@ const SquareRoom = () => {
             onRightFurnitureChange={(rightEdgePosition) => setRightFurniture(rightEdgePosition)}
 
             onDraggingChange={setIsDragging} // Track dragging state
+            showRotateButton={showRotateButtons}
           />
         ))}
       </View>
@@ -471,16 +523,54 @@ const SquareRoom = () => {
       >
         <Ionicons name="trash-outline" size={35} color="white" />
       </TouchableOpacity>
+      <TouchableOpacity style={styles.globalToggleRotateButton} onPress={toggleRotateButtons}>
+        <Ionicons name="refresh-circle-outline" size={35} color="white" />
+        <Text style={styles.globalToggleRotateButtonText}>
+          {showRotateButtons ? 'Done' : 'Rotate'}
+        </Text>
+      </TouchableOpacity>
     </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+  },
+  globalToggleRotateButton: {
+    position: 'absolute',
+    right: 10,
+    top: 70,
+    width: 100,
+    height: 40,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    flexDirection: 'row',
+  },
+  globalToggleRotateButtonText: {
+    color: 'white',
+    marginLeft: 5,
+    fontSize: 12,
+  },
+  rotateButton:{
+    position: "absolute",
+    width: 20,
+    height: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 15, // Circular button
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, 
   },
   sidebar: {
     width: 200,

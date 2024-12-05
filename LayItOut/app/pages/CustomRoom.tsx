@@ -116,10 +116,13 @@ const DraggableFurniture = ({
   roomdimensions,
   onDelete, 
   id, 
-  deleteMode
- }) => {
+  deleteMode,
+  onRotationChange,
+  showRotateButton
+  }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
+  const [currentRotation, setCurrentRotation] = useState(0);
   const scaledWidth = dimensions.width * scaleFactor
   const scaledHeight = dimensions.height * scaleFactor
 
@@ -178,8 +181,23 @@ const DraggableFurniture = ({
     })
   ).current;
 
+  const handleRotate = () => {
+    // Ensure currentRotation is a number before performing calculations
+  const safeRotation = isNaN(currentRotation) ? 0 : currentRotation;
+  // Add 90 degrees and wrap within 360
+  const newRotation = (safeRotation + 10) % 360;
+  // Update the state
+  setCurrentRotation(newRotation);
+  // Notify parent component
+  onRotationChange(newRotation);
+  };
+
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}>
+    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight, transform: [{ translateX: scaledWidth / 2 },
+      { translateY: scaledHeight / 2 },
+      { rotate: `${currentRotation}deg` },
+      { translateX: -scaledWidth / 2 },
+      { translateY: -scaledHeight / 2 },] }]}>
       <Image 
         source={image} 
         style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
@@ -192,6 +210,20 @@ const DraggableFurniture = ({
           onPress={() => onDelete(id)}
         >
           <Ionicons name="close-circle-outline" size={25} color="red" style={{ fontWeight: 'bold'}}/>
+        </TouchableOpacity>
+      )}
+      {showRotateButton && (
+        <TouchableOpacity
+          style={[
+            styles.rotateButton,
+            {
+              left: scaledWidth / 2 - 12, // Adjust for button positioning
+              top: scaledHeight + 10,
+            },
+          ]}
+          onPress={handleRotate}
+        >
+          <Ionicons name="refresh-outline" size={20} color="black" />
         </TouchableOpacity>
       )}
     </View>
@@ -267,9 +299,13 @@ const LongRectangleRoom = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const [isRed, setIsRed] = useState(false); // State to track the button color
+  const [showRotateButtons, setShowRotateButtons] = useState(false);
 
   const toggleDeleteMode = () => {
     setIsRed((prevState) => !prevState); // Toggle the color state
+  };
+  const toggleRotateButtons = () => {
+    setShowRotateButtons((prev) => !prev);
   };
 
   const handleDelete = (id) => {
@@ -338,6 +374,8 @@ const LongRectangleRoom = () => {
     // Call fetchRoomData function to fetch data when component mounts
     fetchRoomData();
   }, [uid]);
+
+
   
   useEffect(() => {
     const setOrientation = async () => {
@@ -352,6 +390,15 @@ const LongRectangleRoom = () => {
       unlockOrientation();
     };
   }, []);
+
+  const addFurniture = (name, image, dimensions) => {
+    const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 }, rotation:0 };
+    setFurnitureItems((prevItems) => {
+      const updatedItems = [...prevItems, newItem];
+      //console.log('Furniture array after addition:', updatedItems);
+      return updatedItems;
+    });
+  };
   // Add the debugging useEffect here
   useEffect(() => {
     //console.log('Furniture items updated:');
@@ -481,28 +528,37 @@ const LongRectangleRoom = () => {
                   return updatedItems;
                 });
               }}
-              onDelete={handleDelete}
-              deleteMode={isRed}
-              onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
+              onRotationChange={(newRotation) =>{
+              setFurnitureItems((prevItems => {
+                const updatedItems = prevItems.map((furniture, idx) =>
+                  furniture.id === item.id ? {...furniture, rotation:newRotation} : furniture
+                );
+                return updatedItems;
+              }))
+            }}
+            onDelete={handleDelete}
+            deleteMode={isRed}
+            onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
 
-              onBottomLinePositionChange={(x, y) => {
-                setBottomLinePosition(x);
-                setBottomLineHeight(y);
-              }}
-              onBottomFurnitureChange={(bottomY) => setBottomFurniture(bottomY)}
+            onBottomLinePositionChange={(x, y) => {
+              setBottomLinePosition(x);
+              setBottomLineHeight(y);
+            }}
+            onBottomFurnitureChange={(bottomY) => setBottomFurniture(bottomY)}
 
-              onLeftLinePositionChange={(position) => setLeftLinePosition(position)}
-              onLeftLineHeightChange={(positionY) => setLeftLineHeight(positionY)}
+            onLeftLinePositionChange={(position) => setLeftLinePosition(position)}
+            onLeftLineHeightChange={(positionY) => setLeftLineHeight(positionY)}
 
-              onRightLinePositionChange={(rightEdgeX, positionY) => {
-                const distanceFromRight = roomDimensions.width - rightEdgeX; // Calculate distance from right wall
-                setRightLinePosition(distanceFromRight); // Set the correct position
-                setRightLineHeight(positionY + 5); // Update line's vertical alignment
-              }}
-              onRightFurnitureChange={(rightEdgePosition) => setRightFurniture(rightEdgePosition)}
+            onRightLinePositionChange={(rightEdgeX, positionY) => {
+              const distanceFromRight = roomDimensions.width - rightEdgeX; // Calculate distance from right wall
+              setRightLinePosition(distanceFromRight); // Set the correct position
+              setRightLineHeight(positionY + 5); // Update line's vertical alignment
+            }}
+            onRightFurnitureChange={(rightEdgePosition) => setRightFurniture(rightEdgePosition)}
 
-              onDraggingChange={setIsDragging} // Track dragging state
-            />
+            onDraggingChange={setIsDragging} // Track dragging state
+            showRotateButton={showRotateButtons}
+          />
           ))}
       </View>
       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
@@ -520,6 +576,12 @@ const LongRectangleRoom = () => {
       >
         <Ionicons name="trash-outline" size={35} color="white" />
       </TouchableOpacity>
+      <TouchableOpacity style={styles.globalToggleRotateButton} onPress={toggleRotateButtons}>
+        <Ionicons name="refresh-circle-outline" size={35} color="white" />
+        <Text style={styles.globalToggleRotateButtonText}>
+          {showRotateButtons ? 'Done' : 'Rotate'}
+        </Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -530,6 +592,37 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'white',
+  },
+  globalToggleRotateButton: {
+    position: 'absolute',
+    right: 10,
+    top: 70,
+    width: 100,
+    height: 40,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    flexDirection: 'row',
+  },
+  globalToggleRotateButtonText: {
+    color: 'white',
+    marginLeft: 5,
+    fontSize: 12,
+  },
+  rotateButton:{
+    position: "absolute",
+    width: 20,
+    height: 20,
+    backgroundColor: "#4CAF50",
+    borderRadius: 15, // Circular button
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, 
   },
   sidebar: {
     width: 200,
