@@ -47,8 +47,8 @@ const CreatePage = () => {
             width: customWidth,
             createdAt: new Date(),
           });
-          console.log('Room saved with ID:', docRef.id);
-          Alert.alert('Alert', 'Custom room dimensions saved successfully!');
+          //console.log('Room saved with ID:', docRef.id);
+          //Alert.alert('Alert', 'Custom room dimensions saved successfully!');
           
           // Clear inputs and navigate to CustomRoom
           setShowCustomInputs(false);
