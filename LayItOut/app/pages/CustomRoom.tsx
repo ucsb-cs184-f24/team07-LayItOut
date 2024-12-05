@@ -126,7 +126,11 @@ const DraggableFurniture = ({
           x: positionRef.current.x + gestureState.dx * 0.5,
           y: positionRef.current.y + gestureState.dy * 0.5,
         };
-        setPosition(newPosition);
+
+        const clampedX = Math.max(0, Math.min(roomdimensions.width/2-5 - scaledWidth/2, newPosition.x));
+        const clampedY = Math.max(0, Math.min(roomdimensions.height/2-5 - scaledHeight/2, newPosition.y));
+
+        setPosition({ x: clampedX, y: clampedY });
 
         onTargetLineHeightChange(newPosition.y*2);
         onTargetLinePositionChange(newPosition.x*2 + scaledWidth/2); // Update line position
@@ -147,9 +151,13 @@ const DraggableFurniture = ({
           x: positionRef.current.x + gestureState.dx * 0.5,
           y: positionRef.current.y + gestureState.dy * 0.5,
         };
-        positionRef.current = finalPosition;
-        setPosition(finalPosition);
-        onPositionChange(finalPosition);
+
+        const clampedX = Math.max(0, Math.min(roomdimensions.width/2-5 - scaledWidth/2, finalPosition.x));
+        const clampedY = Math.max(0, Math.min(roomdimensions.height/2-5 - scaledHeight/2, finalPosition.y));
+
+        positionRef.current = { x: clampedX, y: clampedY };
+        setPosition({ x: clampedX, y: clampedY });
+        onPositionChange({ x: clampedX, y: clampedY });
 
         // Hide the target line and text once the furniture is released
         onTargetLinePositionChange(null);
