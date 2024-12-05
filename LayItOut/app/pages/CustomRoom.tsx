@@ -132,19 +132,19 @@ const DraggableFurniture = ({
 
         setPosition({ x: clampedX, y: clampedY });
 
-        onTargetLineHeightChange(newPosition.y*2);
-        onTargetLinePositionChange(newPosition.x*2 + scaledWidth/2); // Update line position
+        onTargetLineHeightChange(clampedY*2);
+        onTargetLinePositionChange(clampedX*2 + scaledWidth/2); // Update line position
 
-        onLeftLineHeightChange(newPosition.y*2 + scaledHeight/2);
-        onLeftLinePositionChange(newPosition.x*2);
+        onLeftLineHeightChange(clampedY*2 + scaledHeight/2);
+        onLeftLinePositionChange(clampedX*2);
 
-        const clampedBottomLineY = Math.min(newPosition.y*2 + scaledHeight, roomdimensions.height);
-        onBottomLinePositionChange(newPosition.x*2 + scaledWidth/2, clampedBottomLineY);
-        onBottomFurnitureChange(newPosition.y*2 + scaledHeight);
+        const clampedBottomLineY = Math.min(clampedY*2 + scaledHeight + 5, roomdimensions.height);
+        onBottomLinePositionChange(clampedX*2 + scaledWidth/2, clampedBottomLineY);
+        onBottomFurnitureChange(clampedY*2 + scaledHeight);
 
-        const clampedRightLineX = Math.max(0, roomdimensions.width - (newPosition.x*2 + scaledWidth));
-        onRightLinePositionChange(clampedRightLineX, (newPosition.y*2 + scaledHeight/2));
-        onRightFurnitureChange((newPosition.x*2 + scaledWidth));
+        const clampedRightLineX = Math.max(0, roomdimensions.width - 5 - (clampedX*2 + scaledWidth));
+        onRightLinePositionChange(clampedRightLineX, (clampedY*2 + scaledHeight/2));
+        onRightFurnitureChange((clampedX*2 + scaledWidth));
       },
       onPanResponderRelease: (evt, gestureState) => {
         const finalPosition = {
@@ -441,8 +441,8 @@ const LongRectangleRoom = () => {
             </Text>
           )}
           {isDragging && (
-            <Text style={[styles.distanceText, { left: bottomLinePosition - 75, top: (bottomLineHeight + (roomDimensions.height*0.8)) / 2 }]}>
-              {calculateBottomLineLength(bottomFurniture, roomDimensions.height)}
+            <Text style={[styles.distanceText, { left: bottomLinePosition - 65, top: (bottomLineHeight + (roomDimensions.height*0.8)) / 2 }]}>
+              {calculateBottomLineLength(bottomFurniture, roomDimensions.height-10)}
             </Text>
           )}
           {isDragging && (
@@ -452,7 +452,7 @@ const LongRectangleRoom = () => {
           )}
           {isDragging && (
             <Text style={[styles.distanceText, { left: (rightLinePosition + (roomDimensions.width*0.9)) / 2, top: rightLineHeight + 5}]}>
-              {calculateBottomLineLength(rightFurniture, roomDimensions.width)}
+              {calculateBottomLineLength(rightFurniture, roomDimensions.width-10)}
             </Text>
           )}
           {furnitureItems.map((item, index) => (
