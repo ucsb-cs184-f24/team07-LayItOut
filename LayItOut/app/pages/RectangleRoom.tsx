@@ -46,7 +46,7 @@ import window from '../../images/window.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 50
+const scaleFactor = 27.27
 
 // Furniture categories organization
 const furnitureCategories = {
@@ -116,6 +116,9 @@ const DraggableFurniture = ({
  }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
+
+  const roomWidth = 450; // Adjust if your room dimensions change
+  const roomHeight = 300; // Adjust if your room dimensions change
   const scaledWidth = dimensions.width * scaleFactor
   const scaledHeight = dimensions.height * scaleFactor
 
@@ -127,35 +130,39 @@ const DraggableFurniture = ({
         onDraggingChange(true); // Notify parent that dragging has started
       },
       onPanResponderMove: (evt, gestureState) => {
-        const newPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        
-        setPosition(newPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
 
-        onTargetLineHeightChange(newPosition.y*2);
-        onTargetLinePositionChange(newPosition.x*2 + scaledWidth/2); // Update line position
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
 
-        onLeftLineHeightChange(newPosition.y*2 + scaledHeight/2);
-        onLeftLinePositionChange(newPosition.x*2);
+        setPosition({ x: clampedX, y: clampedY });
 
-        const clampedBottomLineY = Math.min(newPosition.y*2 + scaledHeight, 300);
-        onBottomLinePositionChange(newPosition.x*2 + scaledWidth/2, clampedBottomLineY);
-        onBottomFurnitureChange(newPosition.y*2 + scaledHeight);
+        onTargetLineHeightChange(clampedY*2);
+        onTargetLinePositionChange(clampedX*2 + scaledWidth/2); // Update line position
 
-        const clampedRightLineX = Math.max(0, 450 - (newPosition.x*2 + scaledWidth));
-        onRightLinePositionChange(clampedRightLineX, (newPosition.y*2 + scaledHeight/2));
-        onRightFurnitureChange((newPosition.x*2 + scaledWidth));
+        onLeftLineHeightChange(clampedY*2 + scaledHeight/2);
+        onLeftLinePositionChange(clampedX*2);
+
+        const clampedBottomLineY = Math.min(clampedY*2 + scaledHeight + 5, 300);
+        onBottomLinePositionChange(clampedX*2 + scaledWidth/2, clampedBottomLineY);
+        onBottomFurnitureChange(clampedY*2 + scaledHeight);
+
+        const clampedRightLineX = Math.max(0, 450 - 5 - (clampedX*2 + scaledWidth));
+        onRightLinePositionChange(clampedRightLineX, (clampedY*2 + scaledHeight/2));
+        onRightFurnitureChange((clampedX*2 + scaledWidth));
       },
       onPanResponderRelease: (evt, gestureState) => {
-        const finalPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        positionRef.current = finalPosition;
-        setPosition(finalPosition);
-        onPositionChange(finalPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
+
+        // Clamp the final positions to ensure the furniture stays within bounds
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
+
+        positionRef.current = { x: clampedX, y: clampedY };
+        setPosition({ x: clampedX, y: clampedY });
+        onPositionChange({ x: clampedX, y: clampedY });
         
         // Hide the target line and text once the furniture is released
         onTargetLinePositionChange(null);
@@ -166,7 +173,16 @@ const DraggableFurniture = ({
   ).current;
 
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+    <View style={[
+      styles.furnitureInRoom, { 
+        position: "absolute",
+        left: position.x, 
+        top: position.y,
+        width: dimensions.width,
+        height: dimensions.height,
+      }]}
+      {...panResponder.panHandlers}
+      >
       <Image
         source={image}
         style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
@@ -385,7 +401,7 @@ const RectangleRoom = () => {
           )}
           {isDragging && (
             <Text style={[styles.distanceText, { left: bottomLinePosition - 75, top: (bottomLineHeight + 230) / 2 }]}>
-              {calculateBottomLineLength(bottomFurniture, 300)}
+              {calculateBottomLineLength(bottomFurniture, 300 - 10)}
             </Text>
           )}
           {isDragging && (
@@ -395,7 +411,7 @@ const RectangleRoom = () => {
           )}
           {isDragging && (
             <Text style={[styles.distanceText, { left: (rightLinePosition + 400) / 2, top: rightLineHeight + 5}]}>
-              {calculateBottomLineLength(rightFurniture, 450)}
+              {calculateBottomLineLength(rightFurniture, 450 - 10)}
             </Text>
           )}
           {furnitureItems.map((item, index) => (
@@ -493,7 +509,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    // using scale factor of 50 so this is a 9 x 6 room
+    // using scale factor of 27.27 so this is a 16.5 x 11 room
     width: 450,
     height: 300,
     borderWidth: 3,
