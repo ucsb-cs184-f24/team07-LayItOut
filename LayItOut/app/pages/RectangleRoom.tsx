@@ -99,7 +99,6 @@ const furnitureCategories = {
 const DraggableFurniture = ({ 
   image, 
   initialPosition,
-  wallX, 
   onTargetLinePositionChange, 
   onPositionChange, 
   onTargetLineHeightChange, 
@@ -240,7 +239,6 @@ const FurnitureSidebar = ({ addFurniture }) => {
 // Main component
 const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
-  const wallX = 100; // Example x-coordinate of the wall (width of room container)
   const [targetLinePosition, setTargetLinePosition] = useState(null);
   const [targetLineHeight, setTargetLineHeight] = useState(null);
   const [bottomLinePosition, setBottomLinePosition] = useState(null);
@@ -407,7 +405,6 @@ const RectangleRoom = () => {
               image={item.image}
               dimensions={item.dimensions}
               initialPosition={item.position}
-              wallX={wallX} // Pass wall x-coordinate to DraggableFurniture
               onTargetLinePositionChange={(position) => setTargetLinePosition(position)}
               onPositionChange={(newPosition) => {
                 setFurnitureItems((prevItems) => {
