@@ -366,13 +366,61 @@ const SquareRoom = () => {
     }
   };
 
+  // return (
+  //   <View style={styles.container}>
+  //     <StatusBar backgroundColor="black" />
+  //     <View style={styles.sidebarContainer}>
+  //       <FurnitureSidebar addFurniture={addFurniture} />
+  //       <Text style={styles.dimensionOverlay}>H: 6 ft{"\n"}W: 6 ft</Text>
+  //     </View>
+  //     <View style={styles.mainContent}>
+  //       <View ref={viewShotRef} style={styles.room}>
+  //         {furnitureItems.map((item) => (
+  //           <DraggableFurniture
+  //             key={item.id}
+  //             id={item.id}
+  //             image={item.image}
+  //             dimensions={item.dimensions}
+  //             initialPosition={item.position}
+  //             onPositionChange={(newPosition) => {
+  //               setFurnitureItems((prevItems) => {
+  //                 const updatedItems = prevItems.map((furniture) =>
+  //                   furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
+  //                 );
+  //                 return updatedItems;
+  //               });
+  //             }}
+  //             onDelete={handleDelete}
+  //             deleteMode={deleteMode}
+  //           />
+  //         ))}
+  //       </View>
+  //       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
+  //         <Image
+  //           source={require('../../images/Camera.png')} // Update with your image path
+  //           style={styles.buttonImage}
+  //         />
+  //       </TouchableOpacity>
+  //       <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
+  //         <Ionicons name="trash-outline" size={35} color="white" />
+  //         <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   </View>
+  // );
+  
+  
+
+
+// ORIGINAL
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 6 ft</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 6 ft</Text>
+        {/* <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text> */}
       <View ref={viewShotRef} style={styles.room}>
         {/* Conditionally render the target line at a dynamic position */}
         {targetLinePosition !== null && (
@@ -557,19 +605,19 @@ const styles = StyleSheet.create({
     fontFamily: 'LondrinaLight',
     letterSpacing: 1.55,
   },
-  topDimension: {
-    top: -8,     //so its above the room
-    left: '51%', 
+  showDimension: {
+    top: 290,     //so its above the room
+    left: 50, 
     transform: [{ translateX: -50 }], 
   },
-  leftDimension: {
-    left: 113,    //so its to left of room
-    top: '45%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
-    transform: [
-      { translateX: -50 },
-      { rotate: '-90deg' }
-    ], 
-  },
+  // leftDimension: {
+  //   left: 113,    //so its to left of room
+  //   top: '45%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
+  //   transform: [
+  //     { translateX: -50 },
+  //     { rotate: '-90deg' }
+  //   ], 
+  // },
   categoryContainer: {
     marginBottom: 5,
     width: '100%',
@@ -682,12 +730,33 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
     flexDirection: 'row', // Ensure the icon and text are in a row
-  },  
+  },
   globalDeleteButtonText: { 
     color: 'white',
     textAlign: 'center',  // Center the text
     marginLeft: 5,  // Optional: add space between icon and text
   },
+  sidebarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 200, // Same width as the sidebar
+    position: 'relative',
+  },
+  dimensionOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    color: '#A0A0A0',
+    fontWeight: 'bold',
+    fontSize: 14.5,
+    backgroundColor: 'transparent',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    zIndex: 10,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1.55,
+  },  
 });
 
 export default SquareRoom;

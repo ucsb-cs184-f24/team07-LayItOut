@@ -368,8 +368,8 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.topDimension]}>Width: 9 ft</Text>
-        <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 6 ft</Text>
+        {/* <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text> */}
         <View style={styles.room} ref={viewShotRef}>
           {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
-    left: -20,
+    left: 15,
   },
   title: {
     fontSize: 26,
@@ -543,29 +543,21 @@ const styles = StyleSheet.create({
   },
   dimensionText: {
     position: 'absolute', 
-    color: '#A0A0A0', 
+    color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 14.5,         //adjust size to be smaller if needed. 
+    fontSize: 13.5,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 1.55,
+    letterSpacing: 0.7,
   },
-  topDimension: {
-    top: -7,     //so its above the room
-    left: '51%', 
+  showDimension: {
+    top: 290,     //so its above the room
+    left: 50, 
     transform: [{ translateX: -50 }], 
-  },
-  leftDimension: {
-    left: 40,    //so its to left of room
-    top: '47%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
-    transform: [
-      { translateX: -50 },
-      { rotate: '-90deg' }
-    ], 
   },
   categoryContainer: {
     marginBottom: 5,
