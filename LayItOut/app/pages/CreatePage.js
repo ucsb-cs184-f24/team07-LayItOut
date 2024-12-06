@@ -41,8 +41,13 @@ const CreatePage = () => {
 
   function hasMultipleDecimals(input) { 
     const parts = input.split(".")
-    if (parts[1].length > 1) {
-      return true
+    if (parts.length > 1){
+      if (parts[1].length > 1) {
+        return true
+      }
+      else {
+        return false
+      }
     }
     else {
       return false
