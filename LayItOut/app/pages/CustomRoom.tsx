@@ -417,32 +417,7 @@ const LongRectangleRoom = () => {
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
-      <Text
-          style={[
-            styles.dimensionText, 
-            styles.topDimension,
-            {
-              top: -(roomDimensions.height / 2) + 143,  
-              left: '50%',
-            },
-          ]}
-        >
-          Width: {roomDimensions.width / 25} ft
-        </Text>
-
-        {/* Height Text  --MAKE EDITS HERE*/}     
-        <Text
-          style={[
-            styles.dimensionText, 
-            styles.leftDimension,
-            {
-              top: "47%",
-              left: -(roomDimensions.width / 2) + 274,
-            },
-          ]}
-        >
-          Height: {roomDimensions.height / 25} ft
-        </Text>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: {roomDimensions.height / 25} ft{"\n"}W: {roomDimensions.width / 25} ft</Text>
       <View ref={viewShotRef} style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -624,26 +599,21 @@ const styles = StyleSheet.create({
   },
   dimensionText: {
     position: 'absolute', 
-    color: '#A0A0A0', 
+    color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 14,         //adjust size to be smaller if needed. 
+    fontSize: 16,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 1.55,
+    letterSpacing: 1.7,
   },
-  topDimension: {
-    // position: 'absolute',
-    // textAlign: 'center',
+  showDimension: {
+    top: 12,     //so its above the room
+    left: 516, 
     transform: [{ translateX: -50 }], 
-  },
-  leftDimension: {
-    // position: 'absolute',
-    // textAlign: 'center',
-    transform: [{ translateX: -50 }, { rotate: '-90deg' }], 
   },
   categoryContainer: {
     marginBottom: 5,
