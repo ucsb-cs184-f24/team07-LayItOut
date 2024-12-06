@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 0.75,
+    letterSpacing: 0.64,
   },
   showDimension: {
     top: 12,     //so its above the room

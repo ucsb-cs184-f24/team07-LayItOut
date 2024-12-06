@@ -39,6 +39,16 @@ const CreatePage = () => {
 
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
+  function hasMultipleDecimals(input) { 
+    const parts = input.split(".")
+    if (parts[1].length > 1) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
   const handleSaveCustomRoom = async () => {
     if (customWidth <= 30 && customHeight <= 20) {
       if ((customWidth < 5 && customHeight < 5)) {
@@ -49,6 +59,9 @@ const CreatePage = () => {
       }
       else if ((customWidth >= 5 && customHeight < 5)) {
         alert("Height too small")
+      }
+      else if ((hasMultipleDecimals(customWidth) || hasMultipleDecimals(customHeight))) {
+        alert("Height or Width cannot have more than one decimal place.")
       }
       else if (customWidth >= 5 && customHeight >= 5) {
         try {
