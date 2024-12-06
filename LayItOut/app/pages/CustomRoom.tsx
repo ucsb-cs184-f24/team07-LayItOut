@@ -417,7 +417,7 @@ const LongRectangleRoom = () => {
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.showDimension]}>H: {roomDimensions.height / 25} ft{"\n"}W: {roomDimensions.width / 25} ft</Text>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: {roomDimensions.height / 15} ft{"\n"}W: {roomDimensions.width / 15} ft</Text>
       <View ref={viewShotRef} style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -601,18 +601,18 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 16,         //adjust size to be smaller if needed. 
+    fontSize: 15,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 1.7,
+    letterSpacing: 0.75,
   },
   showDimension: {
     top: 12,     //so its above the room
-    left: 516, 
+    left: 514.5, 
     transform: [{ translateX: -50 }], 
   },
   categoryContainer: {

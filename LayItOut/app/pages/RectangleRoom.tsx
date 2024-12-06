@@ -368,7 +368,7 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 9 ft</Text>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: 11 ft{"\n"}W: 16.5 ft</Text>
         <View style={styles.room} ref={viewShotRef}>
           {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -544,18 +544,18 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 16,         //adjust size to be smaller if needed. 
+    fontSize: 15,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 1.7,
+    letterSpacing: 0.75,
   },
   showDimension: {
     top: 12,     //so its above the room
-    left: 516, 
+    left: 514.5, 
     transform: [{ translateX: -50 }], 
   },
   categoryContainer: {
