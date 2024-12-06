@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, TouchableOpacity, PanResponder, ScrollView, ActivityIndicator } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import { NavigationProp } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from
 import storage from '@react-native-firebase/storage';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../FirebaseConfig';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useFonts } from 'expo-font';
 
 // Direct imports for all furniture
 import bathsink from '../../images/bathsink.png';
@@ -22,6 +23,9 @@ import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
 import dining from '../../images/dining.png';
 import door from '../../images/door.png';
+import doorTop from '../../images/doorTop.png';
+import doorLeft from '../../images/doorLeft.png';
+import doorRight from '../../images/doorRight.png';
 import fireplace from '../../images/fireplace.png';
 import fridge from '../../images/fridge.png';
 import kitchenTable from '../../images/kitchen table.png';
@@ -45,6 +49,7 @@ import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
 import window from '../../images/window.png';
+import vertWindow from '../../images/vertWindow.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
@@ -53,9 +58,14 @@ const scaleFactor = 15;
 // Furniture categories organization
 const furnitureCategories = {
   'General': [
-    { name: 'Door', image: door, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Right)', image: door, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Top)', image: doorTop, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Left)', image: doorRight, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Bottom)', image: doorLeft, dimensions:{width: 3, height: 3} },
     { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
-    { name: 'Closet', image: window, dimensions:{width: 5, height: .5} },
+    { name: 'Window', image: vertWindow, dimensions:{width: .8, height: 3} },
+    { name: 'In Wall Closet', image: window, dimensions:{width: 5, height: .5} },
+    { name: 'In Wall Closet', image: vertWindow, dimensions:{width: .8, height: 3} },
   ],
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
@@ -72,7 +82,11 @@ const furnitureCategories = {
     { name: 'TV', image: tv, dimensions:{width: 5.2, height: 5} },
   ],
   'Bedroom': [
-    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 3.5} },
+    { name: 'King Bed', image: queenbed, dimensions:{width: 6.3, height: 6.67} },
+    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.67} },
+    { name: 'Full Bed', image: queenbed, dimensions:{width: 4.5, height: 6.25} },
+    { name: 'Twin XL Bed', image: queenbed, dimensions:{width: 3.2, height: 6.67} },
+    { name: 'Twin Bed', image: queenbed, dimensions:{width: 3.2, height: 6.25} },
     { name: 'Bedside Table', image: sidebed, dimensions:{width: 2, height: 2} },
     { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3.5, height: 6} },
     { name: 'Office Chair', image: officeChair, dimensions:{width: 1.7, height: 2} },
@@ -276,6 +290,15 @@ const LongRectangleRoom = () => {
     setFurnitureItems((prevItems) => prevItems.filter(item => item.id !== id));
   };
 
+  //Load custom font
+  const [fontsLoaded] = useFonts({
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
+
   const calculateDistanceText = (height) => {
     const feet = Math.floor(height / 15); // Convert height to feet (whole number part)
     const inches = ((height / 15) % 1) * 12; // Convert the fractional part to inches
@@ -407,6 +430,7 @@ const LongRectangleRoom = () => {
         setFurnitureItems((prevItems) => [...prevItems, newItem]);
       }} />
       <View style={styles.mainContent}>
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: {roomDimensions.height / 15} ft{"\n"}W: {roomDimensions.width / 15} ft</Text>
       <View ref={viewShotRef} style={[styles.room, { width: roomDimensions.width, height: roomDimensions.height }]}>
       {/* Conditionally render the target line at a dynamic position */}
           {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
@@ -578,12 +602,31 @@ const styles = StyleSheet.create({
   },
   // pretty sure this isn't being used ^^ 
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#045497',
     textAlign: 'center',
-    paddingLeft: 9,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
+  },
+  dimensionText: {
+    position: 'absolute', 
+    color: '#4A4A4A', 
+    fontWeight: 500, 
+    fontSize: 15,         //adjust size to be smaller if needed. 
+    backgroundColor: 'transparent',
+    paddingVertical: 4, 
+    paddingHorizontal: 8, 
+    borderRadius: 4, 
+    zIndex: 10,
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 0.64,
+  },
+  showDimension: {
+    top: 12,     //so its above the room
+    left: 514.5, 
+    transform: [{ translateX: -50 }], 
   },
   categoryContainer: {
     marginBottom: 5,
@@ -596,13 +639,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: '#045497',
-    borderRadius: 12,
+    borderRadius: 20,
     marginBottom: 12,
   },
   categoryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    fontFamily: 'LondrinaLight',
+    letterSpacing: 1,
   },
   expandIcon: {
     fontSize: 24,
