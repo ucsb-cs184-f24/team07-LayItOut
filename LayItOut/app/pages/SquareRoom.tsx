@@ -366,54 +366,6 @@ const SquareRoom = () => {
     }
   };
 
-  // return (
-  //   <View style={styles.container}>
-  //     <StatusBar backgroundColor="black" />
-  //     <View style={styles.sidebarContainer}>
-  //       <FurnitureSidebar addFurniture={addFurniture} />
-  //       <Text style={styles.dimensionOverlay}>H: 6 ft{"\n"}W: 6 ft</Text>
-  //     </View>
-  //     <View style={styles.mainContent}>
-  //       <View ref={viewShotRef} style={styles.room}>
-  //         {furnitureItems.map((item) => (
-  //           <DraggableFurniture
-  //             key={item.id}
-  //             id={item.id}
-  //             image={item.image}
-  //             dimensions={item.dimensions}
-  //             initialPosition={item.position}
-  //             onPositionChange={(newPosition) => {
-  //               setFurnitureItems((prevItems) => {
-  //                 const updatedItems = prevItems.map((furniture) =>
-  //                   furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
-  //                 );
-  //                 return updatedItems;
-  //               });
-  //             }}
-  //             onDelete={handleDelete}
-  //             deleteMode={deleteMode}
-  //           />
-  //         ))}
-  //       </View>
-  //       <TouchableOpacity style={styles.screenshotButton} onPress={takeScreenshot}>
-  //         <Image
-  //           source={require('../../images/Camera.png')} // Update with your image path
-  //           style={styles.buttonImage}
-  //         />
-  //       </TouchableOpacity>
-  //       <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
-  //         <Ionicons name="trash-outline" size={35} color="white" />
-  //         <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
-  //       </TouchableOpacity>
-  //     </View>
-  //   </View>
-  // );
-  
-  
-
-
-// ORIGINAL
-
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" />
@@ -610,14 +562,6 @@ const styles = StyleSheet.create({
     left: 50, 
     transform: [{ translateX: -50 }], 
   },
-  // leftDimension: {
-  //   left: 113,    //so its to left of room
-  //   top: '45%',         // change to adjust the center (don't want to be 50 bc room is note exactly half.)
-  //   transform: [
-  //     { translateX: -50 },
-  //     { rotate: '-90deg' }
-  //   ], 
-  // },
   categoryContainer: {
     marginBottom: 5,
     width: '100%',

@@ -16,9 +16,11 @@ import bathtub from '../../images/bathtub3.png';
 import bookshelf from '../../images/bookshelf_2.png';
 import chair from '../../images/Chair.png';
 import chair2 from '../../images/chair2.png';
+import closet from '../../images/closet.png';
 import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
 import dining from '../../images/dining.png';
+import door from '../../images/door.png';
 import fireplace from '../../images/fireplace.png';
 import fridge from '../../images/fridge.png';
 import kitchenTable from '../../images/kitchen table.png';
@@ -41,13 +43,19 @@ import toilet from '../../images/toilet.png';
 import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
+import window from '../../images/window.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
-const scaleFactor = 25
+const scaleFactor = 27.27
 
 // Furniture categories organization
 const furnitureCategories = {
+  'General': [
+    { name: 'Door', image: door, dimensions:{width: 3, height: 3} },
+    { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
+    { name: 'Closet', image: window, dimensions:{width: 5, height: .5} },
+  ],
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
     { name: 'Sofa (3-Seater)', image: sofa3, dimensions:{width: 5.8, height: 2.5} },
@@ -89,39 +97,93 @@ const furnitureCategories = {
 };
 
 // Draggable furniture component stays the same
-const DraggableFurniture = ({ image, initialPosition, onPositionChange, dimensions, onDelete, id, deleteMode}) => {
+const DraggableFurniture = ({ 
+  image, 
+  initialPosition,
+  onTargetLinePositionChange, 
+  onPositionChange, 
+  onTargetLineHeightChange, 
+  onDraggingChange, 
+  onBottomLinePositionChange,
+  onBottomFurnitureChange,
+  onLeftLinePositionChange, 
+  onLeftLineHeightChange,
+  onRightLinePositionChange,
+  onRightFurnitureChange, 
+  dimensions, 
+  onDelete, 
+  id, 
+  deleteMode
+ }) => {
   const positionRef = useRef(initialPosition);
   const [position, setPosition] = useState(initialPosition);
+
+  const roomWidth = 450; // Adjust if your room dimensions change
+  const roomHeight = 300; // Adjust if your room dimensions change
+  const scaledWidth = dimensions.width * scaleFactor
+  const scaledHeight = dimensions.height * scaleFactor
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {},
+      onPanResponderGrant: () => {
+        onDraggingChange(true); // Notify parent that dragging has started
+      },
       onPanResponderMove: (evt, gestureState) => {
-        const newPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        setPosition(newPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
+
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
+
+        setPosition({ x: clampedX, y: clampedY });
+
+        onTargetLineHeightChange(clampedY*2);
+        onTargetLinePositionChange(clampedX*2 + scaledWidth/2); // Update line position
+
+        onLeftLineHeightChange(clampedY*2 + scaledHeight/2);
+        onLeftLinePositionChange(clampedX*2);
+
+        const clampedBottomLineY = Math.min(clampedY*2 + scaledHeight + 5, 300);
+        onBottomLinePositionChange(clampedX*2 + scaledWidth/2, clampedBottomLineY);
+        onBottomFurnitureChange(clampedY*2 + scaledHeight);
+
+        const clampedRightLineX = Math.max(0, 450 - 5 - (clampedX*2 + scaledWidth));
+        onRightLinePositionChange(clampedRightLineX, (clampedY*2 + scaledHeight/2));
+        onRightFurnitureChange((clampedX*2 + scaledWidth));
       },
       onPanResponderRelease: (evt, gestureState) => {
-        const finalPosition = {
-          x: positionRef.current.x + gestureState.dx * 0.5,
-          y: positionRef.current.y + gestureState.dy * 0.5,
-        };
-        positionRef.current = finalPosition;
-        setPosition(finalPosition);
-        onPositionChange(finalPosition);
+        const newX = positionRef.current.x + gestureState.dx * 0.5;
+        const newY = positionRef.current.y + gestureState.dy * 0.5;
+
+        // Clamp the final positions to ensure the furniture stays within bounds
+        const clampedX = Math.max(0, Math.min(roomWidth/2-5 - scaledWidth/2, newX));
+        const clampedY = Math.max(0, Math.min(roomHeight/2-5 - scaledHeight/2, newY));
+
+        positionRef.current = { x: clampedX, y: clampedY };
+        setPosition({ x: clampedX, y: clampedY });
+        onPositionChange({ x: clampedX, y: clampedY });
+        
+        // Hide the target line and text once the furniture is released
+        onTargetLinePositionChange(null);
+        onBottomLinePositionChange(null, null);
+        onDraggingChange(false);
       },
     })
   ).current;
 
-  const scaledWidth = dimensions.width * scaleFactor
-  const scaledHeight = dimensions.height * scaleFactor
-
   return (
-    <View style={[styles.furnitureInRoom, { left: position.x, top: position.y }]}>
+    <View style={[
+      styles.furnitureInRoom, { 
+        position: "absolute",
+        left: position.x, 
+        top: position.y,
+        width: dimensions.width,
+        height: dimensions.height,
+      }]}
+      {...panResponder.panHandlers}
+      >
       <Image
         source={image}
         style={[styles.furnitureInRoom, { left: position.x, top: position.y, width: scaledWidth, height: scaledHeight }]}
@@ -178,7 +240,7 @@ const FurnitureSidebar = ({ addFurniture }) => {
                     style={styles.furnitureItem} 
                     onPress={() => addFurniture(item.name, item.image, item.dimensions)}
                   >
-                    <Image source={item.image} style={styles.furnitureImage} />
+                    <Image source={item.image} style={styles.furnitureImage} resizeMode="contain"/>
                     <Text style={styles.furnitureText}>{item.name}</Text>
                   </TouchableOpacity>
                 ))}
@@ -194,13 +256,23 @@ const FurnitureSidebar = ({ addFurniture }) => {
 // Main component
 const RectangleRoom = () => {
   const [furnitureItems, setFurnitureItems] = useState([]);
+  const [targetLinePosition, setTargetLinePosition] = useState(null);
+  const [targetLineHeight, setTargetLineHeight] = useState(null);
+  const [bottomLinePosition, setBottomLinePosition] = useState(null);
+  const [bottomLineHeight, setBottomLineHeight] = useState(null);
+  const [bottomFurniture, setBottomFurniture] = useState(null);
+  const [leftLinePosition, setLeftLinePosition] = useState(null);
+  const [leftLineHeight, setLeftLineHeight] = useState(null);
+  const [rightLinePosition, setRightLinePosition] = useState(null);
+  const [rightLineHeight, setRightLineHeight] = useState(null);
+  const [rightFurniture, setRightFurniture] = useState(null);
+  const [isDragging, setIsDragging] = useState(false); // Track dragging state
   const viewShotRef = useRef(null);
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
-
-  const [deleteMode, setDeleteMode] = useState(false);
+  const [isRed, setIsRed] = useState(false); // State to track the button color
 
   const toggleDeleteMode = () => {
-    setDeleteMode(!deleteMode);
+    setIsRed((prevState) => !prevState); // Toggle the color state
   };
 
   const handleDelete = (id) => {
@@ -216,6 +288,19 @@ const RectangleRoom = () => {
     return <ActivityIndicator size="large" color="#000ff" />;
   }
 
+
+  const calculateDistanceText = (height) => {
+    const feet = Math.floor(height / 50); // Convert height to feet (whole number part)
+    const inches = ((height / 50) % 1) * 12; // Convert the fractional part to inches
+    return `${feet} ft ${inches.toFixed(1)} in`;
+  };
+  
+  const calculateBottomLineLength = (startX, endX) => {
+    const length = Math.abs(endX - startX); // Horizontal length in pixels
+    const feet = Math.floor(length / 50); // Convert length to feet (whole number part)
+    const inches = ((length / 50) % 1) * 12; // Convert the fractional part to inches
+    return `${feet} ft ${inches.toFixed(1)} in`;
+  };
 
   useEffect(() => {
     const setOrientation = async () => {
@@ -235,17 +320,9 @@ const RectangleRoom = () => {
     const newItem = { id: `${name}-${Date.now()}`, name, image, dimensions, position: { x: 20, y: 20 } };
     setFurnitureItems((prevItems) => {
       const updatedItems = [...prevItems, newItem];
-      console.log('Furniture array after addition:', updatedItems);
       return updatedItems;
     });
   };
-
-  useEffect(() => {
-    //console.log('Furniture items updated:');
-    furnitureItems.forEach((item, idx) => {
-      //console.log(`Furniture ${idx}: ${item.name}, Position: x=${item.position.x}, y=${item.position.y}`);
-    });
-  }, [furnitureItems]);
 
   const takeScreenshot = async () => {
     if (viewShotRef.current) {
@@ -291,27 +368,101 @@ const RectangleRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 6 ft</Text>
-        {/* <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text> */}
+        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 9 ft</Text>
         <View style={styles.room} ref={viewShotRef}>
+          {/* Conditionally render the target line at a dynamic position */}
+          {isDragging && targetLinePosition !== null && targetLinePosition > 0 && (
+            <View
+              style={[
+                styles.targetLine,
+                { left: targetLinePosition },
+                { height: targetLineHeight },
+              ]}
+            />
+          )}
+          {bottomLinePosition !== null && (
+            <View
+              style={[
+                styles.targetLine,
+                { left: bottomLinePosition, top: bottomLineHeight },
+              ]}
+            />
+          )}
+          {isDragging && leftLinePosition !== null && leftLinePosition > 0 && (
+            <View
+              style={[
+                styles.horizontalLine,
+                { width: leftLinePosition },
+                { top: leftLineHeight },
+              ]}
+            />
+          )}
+          {isDragging && rightLinePosition !== null && (
+            <View
+              style={[
+                styles.horizontalLine,
+                { left: rightLinePosition },
+                { top: rightLineHeight },
+              ]}
+            />
+          )}
+          {isDragging && (
+            <Text style={[styles.distanceText, { left: targetLinePosition + 5, top: targetLineHeight / 2 }]}>
+              {calculateDistanceText(targetLineHeight)}
+            </Text>
+          )}
+          {isDragging && (
+            <Text style={[styles.distanceText, { left: bottomLinePosition - 75, top: (bottomLineHeight + 230) / 2 }]}>
+              {calculateBottomLineLength(bottomFurniture, 300 - 10)}
+            </Text>
+          )}
+          {isDragging && (
+            <Text style={[styles.distanceText, { left: (leftLinePosition - 100) / 2, top: leftLineHeight - 25 }]}>
+              {calculateDistanceText(leftLinePosition)}
+            </Text>
+          )}
+          {isDragging && (
+            <Text style={[styles.distanceText, { left: (rightLinePosition + 400) / 2, top: rightLineHeight + 5}]}>
+              {calculateBottomLineLength(rightFurniture, 450 - 10)}
+            </Text>
+          )}
           {furnitureItems.map((item, index) => (
             <DraggableFurniture
-              key = {item.id}
+              key={item.id}
               id={item.id}
               image={item.image}
               dimensions={item.dimensions}
               initialPosition={item.position}
+              onTargetLinePositionChange={(position) => setTargetLinePosition(position)}
               onPositionChange={(newPosition) => {
                 setFurnitureItems((prevItems) => {
-                const updatedItems = prevItems.map((furniture, idx) =>
-                    idx === index ? { ...furniture, position: newPosition } : furniture
-                );
-                //console.log('Furniture array after move:', updatedItems);
-                return updatedItems;
-              });
+                  const updatedItems = prevItems.map((furniture) =>
+                    furniture.id === item.id ? { ...furniture, position: newPosition } : furniture
+                  );
+                  return updatedItems;
+                });
               }}
-            onDelete={handleDelete}
-            deleteMode={deleteMode}
+              onDelete={handleDelete}
+              deleteMode={isRed}
+              onTargetLineHeightChange={(positionY) => setTargetLineHeight(positionY)}
+
+              onBottomLinePositionChange={(x, y) => {
+                setBottomLinePosition(x);
+                setBottomLineHeight(y);
+              }}
+              onBottomFurnitureChange={(bottomY) => setBottomFurniture(bottomY)}
+
+              onLeftLinePositionChange={(position) => setLeftLinePosition(position)}
+              onLeftLineHeightChange={(positionY) => setLeftLineHeight(positionY)}
+
+              onRightLinePositionChange={(rightEdgeX, positionY) => {
+                const distanceFromRight = 450 - rightEdgeX; // Calculate distance from right wall
+                setRightLinePosition(distanceFromRight); // Set the correct position
+                setRightLineHeight(positionY + 5); // Update line's vertical alignment
+              }}
+              onRightFurnitureChange={(rightEdgePosition) => setRightFurniture(rightEdgePosition)}
+
+              onDraggingChange={setIsDragging} // Track dragging state
             />
           ))}
         </View>
@@ -321,9 +472,14 @@ const RectangleRoom = () => {
           style={styles.buttonImage}
         />
         </TouchableOpacity>
-      <TouchableOpacity style={styles.globalDeleteButton} onPress={toggleDeleteMode}>
+        <TouchableOpacity
+        style={[
+          styles.globalDeleteButton,
+          { backgroundColor: isRed ? 'grey' : 'red' }, // Dynamically set background color
+        ]}
+        onPress={toggleDeleteMode}
+      >
         <Ionicons name="trash-outline" size={35} color="white" />
-        <Text style={styles.globalDeleteButtonText}>{deleteMode ? 'Done' : 'Delete'}</Text>
       </TouchableOpacity>
       </View>
     </View>
@@ -365,14 +521,14 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   room: {
-    // using scale factor of 25 so this is a 18 x 12 room
+    // using scale factor of 27.27 so this is a 16.5 x 11 room
     width: 450,
     height: 300,
     borderWidth: 3,
     borderColor: 'white',
     backgroundColor: '#045497',
     position: 'relative',
-    left: 15,
+    left: -20,
   },
   title: {
     fontSize: 26,
@@ -388,18 +544,18 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 13.5,         //adjust size to be smaller if needed. 
+    fontSize: 16,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 0.7,
+    letterSpacing: 1.7,
   },
   showDimension: {
-    top: 290,     //so its above the room
-    left: 50, 
+    top: 12,     //so its above the room
+    left: 519, 
     transform: [{ translateX: -50 }], 
   },
   categoryContainer: {
@@ -452,7 +608,7 @@ const styles = StyleSheet.create({
   screenshotButton: {
     position: 'absolute',
     bottom: 25,
-    right: 70,
+    right: 20,
   },
   buttonImage: {
     width: 35,
@@ -465,7 +621,7 @@ const styles = StyleSheet.create({
     width: 25,  // Set width of the circle slightly bigger than the icon
     height: 25,  // Set height of the circle slightly bigger than the icon
     backgroundColor: 'white',
-    borderRadius: 15,  // Half of the width/height to make it circular
+    borderRadius: 10,  // Half of the width/height to make it circular
     justifyContent: 'center',  // Center the icon horizontally
     alignItems: 'center',  // Center the icon vertically
     fontWeight: 'bold'
@@ -476,11 +632,11 @@ const styles = StyleSheet.create({
   },
   globalDeleteButton: { 
     position: 'absolute', 
-    right: 100, 
-    top: 10, 
-    width: 120,  // Set a fixed width for the background box
+    right: 10, 
+    top: 200, 
+    width: 50,  // Set a fixed width for the background box
     height: 50, // Set a fixed height for the background box
-    backgroundColor: 'red',
+    //backgroundColor: 'red',
     justifyContent: 'center', // Center contents vertically
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
@@ -491,6 +647,35 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',  // Center the text
     marginLeft: 5,  // Optional: add space between icon and text
+  },
+  distanceText: {
+    position: 'absolute',
+    fontSize: 12,
+    color: 'black',
+    fontWeight: 'bold',
+    backgroundColor: 'white',
+    padding: 2,
+    borderRadius: 3,
+  },
+  targetLine: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 2,
+    backgroundColor: 'red',
+  },
+  targetText: {
+    position: 'absolute',
+    left: 10,
+    fontSize: 14,
+    color: 'black',
+  },
+  horizontalLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: 'red',
   },
 });
 
