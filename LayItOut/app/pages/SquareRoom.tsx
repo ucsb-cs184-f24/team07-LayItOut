@@ -371,8 +371,7 @@ const SquareRoom = () => {
       <StatusBar backgroundColor="black" />
       <FurnitureSidebar addFurniture={addFurniture} />
       <View style={styles.mainContent}>
-        <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 6 ft</Text>
-        {/* <Text style={[styles.dimensionText, styles.leftDimension]}>Height: 6 ft</Text> */}
+      <Text style={[styles.dimensionText, styles.showDimension]}>H: 6 ft{"\n"}W: 6 ft</Text>
       <View ref={viewShotRef} style={styles.room}>
         {/* Conditionally render the target line at a dynamic position */}
         {targetLinePosition !== null && (
@@ -546,20 +545,20 @@ const styles = StyleSheet.create({
   },
   dimensionText: {
     position: 'absolute', 
-    color: '#A0A0A0', 
+    color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 14.5,         //adjust size to be smaller if needed. 
+    fontSize: 16,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
     borderRadius: 4, 
     zIndex: 10,
     fontFamily: 'LondrinaLight',
-    letterSpacing: 1.55,
+    letterSpacing: 1.7,
   },
   showDimension: {
-    top: 290,     //so its above the room
-    left: 50, 
+    top: 12,     //so its above the room
+    left: 519, 
     transform: [{ translateX: -50 }], 
   },
   categoryContainer: {
@@ -674,33 +673,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
     flexDirection: 'row', // Ensure the icon and text are in a row
-  },
+  },  
   globalDeleteButtonText: { 
     color: 'white',
     textAlign: 'center',  // Center the text
     marginLeft: 5,  // Optional: add space between icon and text
   },
-  sidebarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 200, // Same width as the sidebar
-    position: 'relative',
-  },
-  dimensionOverlay: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    color: '#A0A0A0',
-    fontWeight: 'bold',
-    fontSize: 14.5,
-    backgroundColor: 'transparent',
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-    zIndex: 10,
-    fontFamily: 'LondrinaLight',
-    letterSpacing: 1.55,
-  },  
 });
 
 export default SquareRoom;
