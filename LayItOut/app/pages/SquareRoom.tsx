@@ -19,6 +19,9 @@ import consoleTable from '../../images/consule.png';
 import countertop from '../../images/countertop.png';
 import dining from '../../images/dining.png';
 import door from '../../images/door.png';
+import doorTop from '../../images/doorTop.png';
+import doorLeft from '../../images/doorLeft.png';
+import doorRight from '../../images/doorRight.png';
 import fireplace from '../../images/fireplace.png';
 import fridge from '../../images/fridge.png';
 import kitchenTable from '../../images/kitchen table.png';
@@ -42,6 +45,7 @@ import trashcan from '../../images/trashcan.png';
 import wardrobe from '../../images/wardropbe.png';
 import washingMachine from '../../images/washing machine.png';
 import window from '../../images/window.png';
+import vertWindow from '../../images/vertWindow.png';
 import sink from '../../images/sink.png';
 import tv from '../../images/tv.png';
 
@@ -50,9 +54,14 @@ const scaleFactor = 27.27
 // Furniture categories organization
 const furnitureCategories = {
   'General': [
-    { name: 'Door', image: door, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Right)', image: door, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Top)', image: doorTop, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Left)', image: doorRight, dimensions:{width: 3, height: 3} },
+    { name: 'Door (Bottom)', image: doorLeft, dimensions:{width: 3, height: 3} },
     { name: 'Window', image: window, dimensions:{width: 3, height: .5} },
-    { name: 'Closet', image: window, dimensions:{width: 5, height: .5} },
+    { name: 'Window', image: vertWindow, dimensions:{width: .8, height: 3} },
+    { name: 'In Wall Closet', image: window, dimensions:{width: 5, height: .5} },
+    { name: 'In Wall Closet', image: vertWindow, dimensions:{width: .8, height: 3} },
   ],
   'Living Room': [
     { name: 'Sofa (2-Seater)', image: sofa2, dimensions:{width: 4.5, height: 2.5} },
@@ -68,7 +77,11 @@ const furnitureCategories = {
     { name: 'TV', image: tv, dimensions:{width: 5.2, height: 5} },
   ],
   'Bedroom': [
-    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 3.5} },
+    { name: 'King Bed', image: queenbed, dimensions:{width: 6.3, height: 6.67} },
+    { name: 'Queen Bed', image: queenbed, dimensions:{width: 5, height: 6.67} },
+    { name: 'Full Bed', image: queenbed, dimensions:{width: 4.5, height: 6.25} },
+    { name: 'Twin XL Bed', image: queenbed, dimensions:{width: 3.2, height: 6.67} },
+    { name: 'Twin Bed', image: queenbed, dimensions:{width: 3.2, height: 6.25} },
     { name: 'Bedside Table', image: sidebed, dimensions:{width: 2, height: 2} },
     { name: 'Wardrobe', image: wardrobe, dimensions:{width: 3.5, height: 6} },
     { name: 'Office Chair', image: officeChair, dimensions:{width: 1.7, height: 2} },
