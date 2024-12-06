@@ -29,31 +29,42 @@ const CreatePage = () => {
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
   const handleSaveCustomRoom = async () => {
-    if (customHeight && customWidth) {
-      try {
-        // Add room dimensions to Firestore
-        const docRef = await addDoc(collection(FIREBASE_DB, `rooms/${uid}/userRooms`), {
-          height: customHeight,
-          width: customWidth,
-          createdAt: new Date(),
-        });
-        console.log('Room saved with ID:', docRef.id);
-        Alert.alert('Alert', 'Custom room dimensions saved successfully!');
-        
-        // Clear inputs and navigate to CustomRoom
-        setShowCustomInputs(false);
-        setCustomHeight('');
-        setCustomWidth('');
-        
-        // Navigate to CustomRoom
-        navigation.navigate('CustomRoom');
-        
-      } catch (error) {
-        console.error('Error saving custom room dimensions: ', error);
-        Alert.alert('Error', 'Failed to save custom room dimensions.');
+    if (customWidth <= 30 && customHeight <= 20) {
+      if ((customWidth < 5 && customHeight < 5)) {
+        alert("Dimensions too small. You're room must be at least 5x5.")
       }
+      else if ((customWidth < 5 && customHeight >= 5)) {
+        alert("Width too small")
+      }
+      else if ((customWidth >= 5 && customHeight < 5)) {
+        alert("Height too small")
+      }
+      else if (customWidth >= 5 && customHeight >= 5) {
+        try {
+          // Add room dimensions to Firestore
+          const docRef = await addDoc(collection(FIREBASE_DB, `rooms/${uid}/userRooms`), {
+            height: customHeight,
+            width: customWidth,
+            createdAt: new Date(),
+          });
+          //console.log('Room saved with ID:', docRef.id);
+          //Alert.alert('Alert', 'Custom room dimensions saved successfully!');
+          
+          // Clear inputs and navigate to CustomRoom
+          setShowCustomInputs(false);
+          setCustomHeight('');
+          setCustomWidth('');
+  
+          navigation.navigate('CustomRoom');    
+          
+        } catch (error) {
+          console.error('Error saving custom room dimensions: ', error);
+          Alert.alert('Error', 'Failed to save custom room dimensions.');
+        }
+    }
+    
     } else {
-      Alert.alert('Input Error', 'Please enter valid height and width values.');
+      Alert.alert('Input Error', 'Please enter valid height and width values. \n Height must be <= 20 and width must be <= 30.');
     }
   };
   
@@ -69,7 +80,7 @@ const CreatePage = () => {
             <Text style={styles.title}>Choose a Room Option:</Text>
 
             <TouchableOpacity style={styles.button} onPress={handleSquareRoom}>
-              <Text style={styles.buttonText}>Square</Text>
+              <Text style={styles.buttonText}>Default Square</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={handleRectangleRoom}>
