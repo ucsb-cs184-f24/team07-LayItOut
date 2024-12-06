@@ -6,6 +6,7 @@ import createAccountButtonImage from '../../images/createAccountButton.png';
 import backgroundImage from '../../images/splash.png';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { NavigationProp } from '@react-navigation/native';
+import { useFonts } from 'expo-font'; 
 
 const { height, width } = Dimensions.get('window');
 
@@ -19,6 +20,15 @@ const Login = ({ navigation }: RouterProps) => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false); 
     const auth = FIREBASE_AUTH;
+
+    //Load custom font
+    const [fontsLoaded] = useFonts({
+        'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+    });
+
+    if (!fontsLoaded) {
+        return <ActivityIndicator size="large" color="#000ff" />;
+    }
 
     const signIn = async () => {
         setLoading(true);
@@ -57,7 +67,7 @@ const Login = ({ navigation }: RouterProps) => {
     return (
         <ImageBackground source={backgroundImage} style={styles.background}>
             <View style={styles.container}>
-                <Text style={styles.title}> Log In/Sign Up</Text>
+                <Text style={styles.title, {fontFamily: 'LondrinaSolid', color: '#fff', fontSize: 43 }}>Log In/Sign Up</Text>
                 <KeyboardAvoidingView behavior='padding'>
                 <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
                 <TextInput secureTextEntry={true} value={password} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
@@ -66,10 +76,10 @@ const Login = ({ navigation }: RouterProps) => {
                 ) : ( 
                     <>
                             <TouchableOpacity style={styles.button} onPress={signIn}>
-                                <Image source={loginButtonImage} style={styles.buttonImage} />
+                                <Text style={styles.buttonText}>Log In</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button]} onPress={signUp}>
-                                <Image source={createAccountButtonImage} style={styles.buttonImage} />
+                            <TouchableOpacity style={styles.button2} onPress={signUp}>
+                                <Text style={styles.buttonText}>Create Account</Text>
                             </TouchableOpacity>
                         </>
                 )}
@@ -99,7 +109,7 @@ const styles = StyleSheet.create({
     container: {
         marginHorizontal: 20,
         flex: 1, 
-        justifyContent: 'center'
+        justifyContent: 'center',
     }, 
     input: {
         marginVertical: 5, 
@@ -116,13 +126,29 @@ const styles = StyleSheet.create({
         textAlign: 'left' // Aligns text to the left
     },
     button: {
-        justifyContent: 'center',
+        backgroundColor: 'white',
+        paddingVertical: 7,
+        paddingHorizontal: 5,
+        borderRadius: 35,
+        marginBottom: 10,
+        marginTop: 25,
         alignItems: 'center',
-        marginVertical: 2,
     },
-    buttonImage: {
-        width: '100%', // Adjust based on your design
-        height: 30,    // Adjust based on your design
-        resizeMode: 'contain', // or 'cover' based on your design
+    button2: {
+        backgroundColor: 'white',
+        paddingVertical: 7,
+        paddingHorizontal: 5,
+        borderRadius: 35,
+        marginBottom: 0,
+        marginTop: 0,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#006EB9',
+        fontSize: 18.5,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'LondrinaSolid',
+        letterSpacing: 1.5,
     }
 })

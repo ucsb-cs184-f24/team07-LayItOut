@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Dimensions, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { collection, addDoc } from 'firebase/firestore';  // Import Firestore functions
 import { FIREBASE_DB, FIREBASE_AUTH } from '../../FirebaseConfig';  // Import Firestore database instance
+import { useFonts } from 'expo-font'; 
 
 const { height, width } = Dimensions.get('window');
 
@@ -13,6 +14,16 @@ const CreatePage = () => {
   const [showCustomInputs, setShowCustomInputs] = useState(false);
   const [customHeight, setCustomHeight] = useState('');
   const [customWidth, setCustomWidth] = useState('');
+
+  //Custom font 
+  const [fontsLoaded] = useFonts({
+    'LondrinaSolid': require('../../assets/fonts/LondrinaSolidRegular.ttf'),
+    'LondrinaLight': require('../../assets/fonts/LondrinaSolidLight.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color="#000ff" />;
+  }
 
   const handleSquareRoom = () => {
     navigation.navigate('SquareRoom');  // Navigate to SquareRoom
@@ -28,6 +39,16 @@ const CreatePage = () => {
 
   const uid = FIREBASE_AUTH.currentUser ? FIREBASE_AUTH.currentUser.uid : null;
 
+  function hasMultipleDecimals(input) { 
+    const parts = input.split(".")
+    if (parts[1].length > 1) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
   const handleSaveCustomRoom = async () => {
     if (customWidth <= 30 && customHeight <= 20) {
       if ((customWidth < 5 && customHeight < 5)) {
@@ -38,6 +59,9 @@ const CreatePage = () => {
       }
       else if ((customWidth >= 5 && customHeight < 5)) {
         alert("Height too small")
+      }
+      else if ((hasMultipleDecimals(customWidth) || hasMultipleDecimals(customHeight))) {
+        alert("Height or Width cannot have more than one decimal place.")
       }
       else if (customWidth >= 5 && customHeight >= 5) {
         try {
@@ -143,41 +167,48 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   title: {
-    fontSize: 28,
+    fontSize: 45,
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: 15,
+    textAlign: 'center',
+    marginTop: -30,
+    marginBottom: 25,
+    fontFamily: "LondrinaSolid",
+    letterSpacing: 2,
   },
   button: {
     backgroundColor: 'white',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 35,
     width: 248,
     alignSelf: 'center',
-    marginBottom: 13,
+    marginBottom: 18,
   },
   buttonText: {
     color: '#006EB9',
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'LondrinaSolid',
+    letterSpacing: 1.2,
   },
   createButton: {
     paddingVertical: 8,
     paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 35,
     width: '100%',
     alignItems: 'center',
   },
   customInputContainer: {
     backgroundColor: '#FFFFFF',
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 35,
     width: 248,
     alignSelf: 'center',
     elevation: 5,
+    overflow: 'hidden',
   },
   inputRow: {
     flexDirection: 'row',
@@ -189,18 +220,20 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: 'gray',
-    borderRadius: 10,
+    borderRadius: 20,
     paddingHorizontal: 15,
     marginVertical: 5,
     marginHorizontal: 5,
     backgroundColor: 'white',
+    fontFamily: "LondrinaLight",
+    letterSpacing: 1,
   },
   saveButton: {
     backgroundColor: '#006EB9',
     width: 150,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 25,
+    borderRadius: 35,
     marginTop: 10,
     alignSelf: 'center',
   },
@@ -209,6 +242,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: "LondrinaSolid",
+    letterSpacing: 1.5,
   },
 });
 
