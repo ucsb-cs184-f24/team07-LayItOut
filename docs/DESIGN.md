@@ -15,6 +15,8 @@ and so we chose React Native instead as it was compatible with all our devices.
    
 5. Showing the distance between the furniture and the four walls so that the user will be able to have more details when choosing where to place their furniture.
 
+6. React defaults the origin of our furniture to the upper left corner and we tried to initialize the origin to be the center of furniture instead, but when rotating an image, react defaults it back to the upper left corner. Because of these issues, we decided to instead give the options of the furniture already rotated in the furniture drawer.
+
 ## User Experience (UX) considerations
 1. **Welcome Page**: Shows a splash page of our theme and a _Get Started_ button that navigates the user to the Log In/Create Account page.
 
