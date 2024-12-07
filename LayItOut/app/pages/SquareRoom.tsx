@@ -925,7 +925,7 @@ const styles = StyleSheet.create({
   },
   showDimension: {
     top: 12,     //so its above the room
-    left: 514.5, 
+    left: 525, 
     transform: [{ translateX: -50 }], 
   },
   categoryContainer: {
