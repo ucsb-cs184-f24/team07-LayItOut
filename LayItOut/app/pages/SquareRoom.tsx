@@ -190,20 +190,32 @@ const furnitureCategories = {
         { name: 'Chair', image: chair2C, dimensions:{width: 2.5, height: 2.5} }, 
       ]
     },
-    { name: 'Tables ', 
+    { name: 'Dainty Side Tables ', 
       subcategories: [
         { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 1', image: side1A, dimensions:{width: 2, height: 1.5} }, 
         { name: 'Side Table 1', image: side1B, dimensions:{width: 1.5, height: 2} }, 
         { name: 'Side Table 1', image: side1C, dimensions:{width: 2, height: 1.5} }, 
+        ]
+    },
+    { name: 'Side Tables ', 
+      subcategories: [
         { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 2', image: side2A, dimensions:{width: 2, height: 1.5} }, 
         { name: 'Side Table 2', image: side2B, dimensions:{width: 1.5, height: 2} }, 
         { name: 'Side Table 2', image: side2C, dimensions:{width: 2, height: 1.5} }, 
+        ]
+    },
+    { name: 'Console Tables ', 
+      subcategories: [
         { name: 'Console Table', image: consoleTable, dimensions:{width: 3, height: 3} },
         { name: 'Console Table', image: consoleTableA, dimensions:{width: 3, height: 3} }, 
         { name: 'Console Table', image: consoleTableB, dimensions:{width: 3, height: 3} }, 
         { name: 'Console Table', image: consoleTableC, dimensions:{width: 3, height: 3} }, 
+        ]
+    },
+    { name: 'Coffee Tables ', 
+      subcategories: [
         { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 1.5} },
         { name: 'Coffee Table', image: table1A, dimensions:{width: 1.5, height: 3} }, 
         { name: 'Coffee Table', image: table1B, dimensions:{width: 3, height: 1.5} }, 
@@ -921,7 +933,7 @@ const styles = StyleSheet.create({
   },
   furnitureText: {
     color: "#1c4f88",
-    fontSize: 16,
+    fontSize: 15,
   },
   furnitureInRoom: {
     width: 50,

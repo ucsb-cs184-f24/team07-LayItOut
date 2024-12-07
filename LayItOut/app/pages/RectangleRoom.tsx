@@ -191,7 +191,7 @@ const furnitureCategories = {
         { name: 'Chair', image: chair2C, dimensions:{width: 2.5, height: 2.5} }, 
       ]
     },
-    { name: 'Side Table 1s ', 
+    { name: 'Dainty Side Tables ', 
       subcategories: [
         { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 1', image: side1A, dimensions:{width: 2, height: 1.5} }, 
@@ -199,7 +199,7 @@ const furnitureCategories = {
         { name: 'Side Table 1', image: side1C, dimensions:{width: 2, height: 1.5} }, 
         ]
     },
-    { name: 'Side Table 2s ', 
+    { name: 'Side Tables ', 
       subcategories: [
         { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 2', image: side2A, dimensions:{width: 2, height: 1.5} }, 
@@ -932,7 +932,7 @@ const styles = StyleSheet.create({
   },
   furnitureText: {
     color: "#1c4f88",
-    fontSize: 16,
+    fontSize: 15,
     textAlign: "left",
   },
   furnitureInRoom: {
