@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     tintColor: 'white',  // Optional: Add tint color if you want the icon to be white
   },
   fullScreenImage: {
-    width: '115%',
+    width: '90%',
     height: '90%',
   },
   deleteButton: {
