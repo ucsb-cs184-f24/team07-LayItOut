@@ -914,7 +914,7 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     color: '#4A4A4A', 
     fontWeight: 500, 
-    fontSize: 15,         //adjust size to be smaller if needed. 
+    fontSize: 12.75,         //adjust size to be smaller if needed. 
     backgroundColor: 'transparent',
     paddingVertical: 4, 
     paddingHorizontal: 8, 
