@@ -31,7 +31,7 @@ Users can create an account or log in via the home screen using their UCSB or pe
 6. Install the required npm dependencies. Run this command in your terminal: npm install
 7. To build the app, run this command in your terminal: npx expo start.
 8. To deploy it on Expo Go, scan the QR code that appears on your terminal. If you are facing issues with the QR code, follow this documentation: https://docs.expo.dev/eas-update/introduction/
-9. To deploy it on iOS simulator, run this command in your terminal: i. Select iPhone 16 Pro as your device.
+9. To deploy it on iOS simulator, run this command in your terminal: i. Select iPhone 16 as your device.
 11. LayItOut will load on your device and be ready to use. Enjoy our app!!
 
 # User Manual
