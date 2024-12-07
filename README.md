@@ -34,6 +34,9 @@ Users can create an account or log in via the home screen using their UCSB or pe
 9. To deploy it on iOS simulator, run this command in your terminal: i. Select iPhone 16 as your device.
 11. LayItOut will load on your device and be ready to use. Enjoy our app!!
 
+# Deployment
+[Tagged Release](https://github.com/ucsb-cs184-f24/team07-LayItOut/releases/tag/v2.0.0)
+
 # User Manual
 **Get Started:** Welcome to LayItOut! Click on 'Get Started' to sign-in or login to our app.
 
