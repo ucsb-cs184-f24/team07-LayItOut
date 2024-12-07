@@ -23,14 +23,16 @@ Our team is working toward creating a layout planner app that helps with visuali
 Users can create an account or log in via the home screen using their UCSB or personal email. Registered users can input room dimensions, save multiple room layouts, and fully customize their designs for future reference.
 
 # Installation Instructions
-1. Install the Expo Go app on your smartphone. Follow this link: https://expo.dev/go 
-2. Install Node.js on your laptop/computer. Follow this link: https://nodejs.org/en/download/package-manager
-3. Git clone our team's project repo. Run this command in your terminal: git clone https://github.com/ucsb-cs184-f24/team07-LayItOut.git
-4. Once you have cloned our team's project repo, cd into the LayItOut folder.
-5. Install the required npm dependencies. Run this command in your terminal: npm install
-6. Build the app and deploy it on the Expo Go app. Run this command in your terminal: npx expo start
-7. Then scan the QR code that appears on your terminal. If you are facing issues with the QR code, follow this documentation: https://docs.expo.dev/eas-update/introduction/
-8. LayItOut will load on your device and be ready to use. Enjoy our app!!
+1. Install the Expo Go app on your smartphone. Follow this link: https://expo.dev/go
+2. Intall Xcode on your computer (this is for iOS simulator). Follow this link: https://developer.apple.com/xcode/
+3. Install Node.js on your laptop/computer. Follow this link: https://nodejs.org/en/download/package-manager
+4. Git clone our team's project repo. Run this command in your terminal: git clone https://github.com/ucsb-cs184-f24/team07-LayItOut.git
+5. Once you have cloned our team's project repo, cd into the LayItOut folder.
+6. Install the required npm dependencies. Run this command in your terminal: npm install
+7. To build the app, run this command in your terminal: npx expo start.
+8. To deploy it on Expo Go, scan the QR code that appears on your terminal. If you are facing issues with the QR code, follow this documentation: https://docs.expo.dev/eas-update/introduction/
+9. To deploy it on iOS simulator, run this command in your terminal: i. Select iPhone 16 Pro as your device.
+11. LayItOut will load on your device and be ready to use. Enjoy our app!!
 
 # User Manual
 **Get Started:** Welcome to LayItOut! Click on 'Get Started' to sign-in or login to our app.
