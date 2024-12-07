@@ -577,7 +577,6 @@ const FurnitureSidebar = ({ addFurniture }) => {
                           : addFurniture(item.name, item.image, item.dimensions);
                       }}
                     >
-                      <Image source={item.image} style={styles.furnitureImage} resizeMode="contain" />
                       <Text style={styles.furnitureText}>{item.name}</Text>
                       {item.subcategories && (
                         <Text style={styles.expandIcon}>
@@ -591,11 +590,10 @@ const FurnitureSidebar = ({ addFurniture }) => {
                       item.subcategories?.map((subItem, subIndex) => (
                         <TouchableOpacity
                           key={`${category}-${index}-${subIndex}`}
-                          style={styles.subcategoryItem}
+                          style={[styles.furnitureItem, {marginLeft: 0}]}
                           onPress={() => addFurniture(subItem.name, subItem.image, subItem.dimensions)}
                         >
                           <Image source={subItem.image} style={styles.furnitureImage} resizeMode="contain" />
-                          <Text style={styles.subcategoryText}>{subItem.name}</Text>
                         </TouchableOpacity>
                       ))}
                   </View>

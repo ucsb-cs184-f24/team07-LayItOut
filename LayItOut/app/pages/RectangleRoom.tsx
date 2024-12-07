@@ -191,20 +191,32 @@ const furnitureCategories = {
         { name: 'Chair', image: chair2C, dimensions:{width: 2.5, height: 2.5} }, 
       ]
     },
-    { name: 'Tables ', 
+    { name: 'Side Table 1s ', 
       subcategories: [
         { name: 'Side Table 1', image: side1, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 1', image: side1A, dimensions:{width: 2, height: 1.5} }, 
         { name: 'Side Table 1', image: side1B, dimensions:{width: 1.5, height: 2} }, 
         { name: 'Side Table 1', image: side1C, dimensions:{width: 2, height: 1.5} }, 
+        ]
+    },
+    { name: 'Side Table 2s ', 
+      subcategories: [
         { name: 'Side Table 2', image: side2, dimensions:{width: 1.5, height: 2} },
         { name: 'Side Table 2', image: side2A, dimensions:{width: 2, height: 1.5} }, 
         { name: 'Side Table 2', image: side2B, dimensions:{width: 1.5, height: 2} }, 
         { name: 'Side Table 2', image: side2C, dimensions:{width: 2, height: 1.5} }, 
+        ]
+    },
+    { name: 'Console Tables ', 
+      subcategories: [
         { name: 'Console Table', image: consoleTable, dimensions:{width: 3, height: 3} },
         { name: 'Console Table', image: consoleTableA, dimensions:{width: 3, height: 3} }, 
         { name: 'Console Table', image: consoleTableB, dimensions:{width: 3, height: 3} }, 
         { name: 'Console Table', image: consoleTableC, dimensions:{width: 3, height: 3} }, 
+        ]
+    },
+    { name: 'Coffee Tables ', 
+      subcategories: [
         { name: 'Coffee Table', image: table1, dimensions:{width: 3, height: 1.5} },
         { name: 'Coffee Table', image: table1A, dimensions:{width: 1.5, height: 3} }, 
         { name: 'Coffee Table', image: table1B, dimensions:{width: 3, height: 1.5} }, 
@@ -576,7 +588,6 @@ const FurnitureSidebar = ({ addFurniture }) => {
                           : addFurniture(item.name, item.image, item.dimensions);
                       }}
                     >
-                      <Image source={item.image} style={styles.furnitureImage} resizeMode="contain" />
                       <Text style={styles.furnitureText}>{item.name}</Text>
                       {item.subcategories && (
                         <Text style={styles.expandIcon}>
@@ -590,11 +601,10 @@ const FurnitureSidebar = ({ addFurniture }) => {
                       item.subcategories?.map((subItem, subIndex) => (
                         <TouchableOpacity
                           key={`${category}-${index}-${subIndex}`}
-                          style={styles.subcategoryItem}
+                          style={[styles.furnitureItem, {marginLeft: 0}]}
                           onPress={() => addFurniture(subItem.name, subItem.image, subItem.dimensions)}
                         >
                           <Image source={subItem.image} style={styles.furnitureImage} resizeMode="contain" />
-                          <Text style={styles.subcategoryText}>{subItem.name}</Text>
                         </TouchableOpacity>
                       ))}
                   </View>
@@ -923,11 +933,22 @@ const styles = StyleSheet.create({
   furnitureText: {
     color: "#1c4f88",
     fontSize: 16,
+    textAlign: "left",
   },
   furnitureInRoom: {
     width: 50,
     height: 50,
     position: 'absolute',
+  },
+  subcategoryItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 20, // Indents subcategory to align visually
+    marginVertical: 5, // Adds spacing between subcategories
+  },
+  subcategoryText: {
+    fontSize: 14, // Smaller font for subcategories
+    color: '#555', // Dimmed text color
   },
   screenshotButton: {
     position: 'absolute',
@@ -965,8 +986,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Center contents horizontally
     borderRadius: 20, // Optional: make the background box rounded
     flexDirection: 'row', // Ensure the icon and text are in a row
-  },
-  
+  }, 
   globalDeleteButtonText: { 
     color: 'white',
     textAlign: 'center',  // Center the text
